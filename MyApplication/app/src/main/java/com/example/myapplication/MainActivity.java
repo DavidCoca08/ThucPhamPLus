@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("message");
         DatabaseReference databaseReference = database.getReference();
         myRef.setValue("Hello, World!");
-
+        Model model = new Model(2,"nữ");
+        databaseReference.child("Model").setValue(model);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
