@@ -12,7 +12,7 @@ public class  DbSqlServer {
     final String TAG = "zzzzzz";
 
     public Connection openConnect(){
-        String ip = "192.168.1.101",
+        String ip = "10.24.60.98",
                 port = "1433",
                 user = "sa",
                 pass = "123",

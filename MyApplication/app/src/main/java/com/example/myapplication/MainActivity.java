@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Display;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,6 +19,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,8 +52,10 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("message");
         DatabaseReference databaseReference = database.getReference();
         myRef.setValue("Hello, World!");
-        Model model = new Model(2,"nữ");
+        Model model = new Model(4,"nam123");
         databaseReference.child("Model").setValue(model);
+//        databaseReference.child("SanPham").child("2").setValue(model);
+//        databaseReference.child("SanPham").child("1").updateChildren(model);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
