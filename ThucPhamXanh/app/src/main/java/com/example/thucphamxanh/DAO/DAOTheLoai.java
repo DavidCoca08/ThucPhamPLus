@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DAOTheLoai {
     FirebaseDatabase database;
@@ -22,6 +23,7 @@ public class DAOTheLoai {
     }
     public void addTheLoai(TheLoai tl){
         List<TheLoai> list = new ArrayList<>();
+//        lấy dữ liệu từ trên firebase về list. để lấy mã id cuối cùng làm id tiếp theo cho thằng thể loại tiếp theo.
         reference.child("TheLoai").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -36,16 +38,20 @@ public class DAOTheLoai {
 
             }
         });
+        // nếu list chưa có gì thì id sản phẩm đầu tiên =1
         if (list.size()==0){
             tl.setMaLoai(1);
             tl.setTenLoai(tl.getTenLoai());
             reference.child("1").setValue(tl);
-        }else {
+        }else { // nếu list đã có thì lấy cái thằng id của sản phẩm cuối cùng +1 làm mã id của thằng kế tiếp.(tự sinh ID như SQL)
             int i = list.size()-1;
             int id = list.get(i).getMaLoai()+1;
             tl.setMaLoai(id);
             tl.setTenLoai(tl.getTenLoai());
             reference.child(""+id).setValue(tl);
         }
+    }
+    public void editTheLoai(TheLoai tl){
+        reference.child("TheLoai/"+tl.getMaLoai()).updateChildren((Map<String, Object>) tl);
     }
 }
