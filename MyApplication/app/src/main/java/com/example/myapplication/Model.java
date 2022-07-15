@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Model {
     int id;
     String name;
@@ -26,5 +29,10 @@ public class Model {
 
     public void setName(String name) {
         this.name = name;
+    }
+    public Map<String, Object> toMap(){
+        HashMap<String,Object > reslut = new HashMap<>();
+        reslut.put("name",name);
+        return reslut;
     }
 }

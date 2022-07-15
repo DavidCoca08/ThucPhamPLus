@@ -1,5 +1,8 @@
 package com.example.thucphamxanh.Model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TheLoai {
     private int maLoai;
     private String tenLoai;
@@ -26,5 +29,10 @@ public class TheLoai {
 
     public void setTenLoai(String tenLoai) {
         this.tenLoai = tenLoai;
+    }
+    public Map<String, Object> toMap(){
+        HashMap<String,Object > reslut = new HashMap<>();
+        reslut.put("tenLoai",getTenLoai());
+        return reslut;
     }
 }
