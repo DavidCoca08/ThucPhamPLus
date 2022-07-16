@@ -1,5 +1,6 @@
 package com.example.thucphamxanh.DAO;
 
+import android.util.Log;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -18,48 +19,53 @@ import java.util.Map;
 public class DAOTheLoai {
     FirebaseDatabase database;
     DatabaseReference reference;
-
+    List<TheLoai> list;
     public DAOTheLoai() {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
+        list = new ArrayList<>();
     }
     public void addTheLoai(TheLoai tl){
-        List<TheLoai> list = new ArrayList<>();
-//        lấy dữ liệu từ trên firebase về list. để lấy mã id cuối cùng làm id tiếp theo cho thằng thể loại tiếp theo.
         reference.child("TheLoai").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snapshot1: snapshot.getChildren()){
-                    TheLoai theLoai = (TheLoai) snapshot1.getValue();
-                    list.add(theLoai);
-                }
+                    for (DataSnapshot snap: snapshot.getChildren()){
+                        TheLoai theLoai = snap.getValue(TheLoai.class);
+                        list.add(theLoai);
+                        Log.d("zzzzz",list.get(0).getTenLoai());
+                        Log.d("zzzzz", String.valueOf(list.get(0).getMaLoai()));
+                        Log.d("zzzzzzzzzzzz", String.valueOf(list.size()));
+                    }
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
 
-        // nếu list chưa có gì thì id sản phẩm đầu tiên =1
+        });
+        Log.d("aaaaaaaaaa", String.valueOf(getAll().size()));
+
         if (list.size()==0){
             tl.setMaLoai(1);
             tl.setTenLoai(tl.getTenLoai());
             reference.child("TheLoai/1").setValue(tl);
-        }else { // nếu list đã có thì lấy cái thằng id của sản phẩm cuối cùng +1 làm mã id của thằng kế tiếp.(tự sinh ID như SQL)
+        }else if (list.size()!=0){ // nếu list đã có thì lấy cái thằng id của sản phẩm cuối cùng +1 làm mã id của thằng kế tiếp.(tự sinh ID như SQL)
             int i = list.size()-1;
             int id = list.get(i).getMaLoai() + 1;
             tl.setMaLoai(id);
             tl.setTenLoai(tl.getTenLoai());
-            reference.child("TheLoai/"+id).setValue(tl);
+            reference.child("TheLoai").child(""+id).setValue(tl);
+            Log.d("zzzzzzzzzzzz", String.valueOf(id));
         }
     }
     public void deleteTheLoai(TheLoai tl){
         reference.child("TheLoai/"+tl.getMaLoai()).removeValue();
 //        reference.child("theLoai").child(String.valueOf(tl.getMaLoai())).removeValue();
     }
-    public void updateTheLoai(TheLoai tl,String modelEdTenLoai){
-        tl.setTenLoai(modelEdTenLoai.toString());
+    public void updateTheLoai(TheLoai tl,String tenLoai){
+        tl.setTenLoai(tenLoai);
         reference.child("TheLoai/"+tl.getMaLoai()).updateChildren(tl.toMap());
     }
     public List<TheLoai> getAll(){
@@ -67,10 +73,15 @@ public class DAOTheLoai {
         reference.child("TheLoai").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snapshot1: snapshot.getChildren()){
-                    TheLoai theLoai = (TheLoai) snapshot1.getValue();
-                    list.add(theLoai);
+                try {
+                    for (DataSnapshot snapshot1: snapshot.getChildren()){
+                        TheLoai theLoai = snapshot1.getValue(TheLoai.class);
+                        list.add(theLoai);
+                    }
+                }catch (Exception e){
+                    Log.d("zzzzzzz","list dữ liệu rỗng k thể đọc");
                 }
+
             }
 
             @Override
