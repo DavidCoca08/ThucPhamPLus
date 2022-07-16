@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="20dp"
     android:gravity="center"
-    tools:context=".SignInActivity">
+    tools:context=".Activity.SignInActivity">
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/form_SignInActivity_email"
         android:layout_width="match_parent"

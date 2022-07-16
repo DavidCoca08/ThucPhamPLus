@@ -1,4 +1,4 @@
-package com.example.thucphamxanh;
+package com.example.thucphamxanh.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.thucphamxanh.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -27,9 +28,9 @@ public class SplashActivity extends AppCompatActivity {
 
     private void nextActivity() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Intent intent = new Intent(this, com.example.thucphamxanh.SignInActivity.class);
+        Intent intent = new Intent(this, SignInActivity.class);
         if (user != null) {
-            intent = new Intent(this, com.example.thucphamxanh.SignInActivity.class);
+            intent = new Intent(this, SignInActivity.class);
         }
         startActivity(intent);
         finish();

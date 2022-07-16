@@ -1,4 +1,4 @@
-package com.example.thucphamxanh;
+package com.example.thucphamxanh.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.thucphamxanh.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -69,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
                                 FirebaseUser user = auth.getCurrentUser();
-                                Intent intent = new Intent(SignUpActivity.this, com.example.thucphamxanh.SignInActivity.class);
+                                Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
                                 //
                                 startActivity(intent);
                                 finishAffinity();

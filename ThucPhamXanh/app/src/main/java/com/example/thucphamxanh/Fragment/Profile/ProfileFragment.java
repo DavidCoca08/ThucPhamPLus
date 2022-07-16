@@ -1,6 +1,6 @@
 package com.example.thucphamxanh.Fragment.Profile;
 
-import static com.example.thucphamxanh.MainActivity.MY_REQUEST_CODE;
+import static com.example.thucphamxanh.Activity.MainActivity.MY_REQUEST_CODE;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -24,7 +24,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
-import com.example.thucphamxanh.MainActivity;
+import com.example.thucphamxanh.Activity.MainActivity;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.FragmentProfileBinding;
