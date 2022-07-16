@@ -113,13 +113,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                         .setAction("Action", null).show();
             }
         });
-<<<<<<< HEAD:ThucPhamXanh/app/src/main/java/com/example/thucphamxanh/MainActivity.java
-=======
-        DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
-//        DrawerLayout drawer = binding.drawerLayout;
-//        NavigationView navigationView = binding.navView;
->>>>>>> cbc7f73784096203b656345aece6e4e821b830dd:ThucPhamXanh/app/src/main/java/com/example/thucphamxanh/Activity/MainActivity.java
         //khởi tạo các view
         initUI();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
@@ -224,11 +217,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-<<<<<<< HEAD:ThucPhamXanh/app/src/main/java/com/example/thucphamxanh/MainActivity.java
-=======
         getMenuInflater().inflate(R.menu.main, menu);
         // Inflate the menu; this adds items to the action bar if it is present.
->>>>>>> cbc7f73784096203b656345aece6e4e821b830dd:ThucPhamXanh/app/src/main/java/com/example/thucphamxanh/Activity/MainActivity.java
         getMenuInflater().inflate(R.menu.main_activity, menu);
         return true;
     }
