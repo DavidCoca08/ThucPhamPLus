@@ -15,6 +15,7 @@ import com.example.thucphamxanh.Model.TheLoai;
 import com.example.thucphamxanh.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
+
     EditText maLoai,tenLoai;
     Button btnAdd,btnUpdate,btnDelete;
     DAOTheLoai daoTheLoai;
