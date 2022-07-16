@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">DuAn1</string>
+
+    <string name="first_slide_title">Slide 1</string>
+    <string name="second_slide_title">Slide 2</string>
+    <string name="third_slide_title">Slide 3</string>
+
+    <string name="slide1_heading">Xin chào!</string>
+    <string name="slide2_heading">Chất lượng hàng đầu</string>
+    <string name="slide3_heading">Lựa chọn đa dạng</string>
+
+    <string name="slide1_infor">Mua sắm thông minh chỉ trong vài bước chạm</string>
+    <string name="slide2_infor">Sản phẩm Hữu cơ: Tươi - Sạch - Đáng tin cậy</string>
+    <string name="slide3_infor">Sản phẩm đa dạng, mức giá hợp lý</string>
+
+    <string name="skip_btn">Skip</string>
+    <string name="next_btn">Next</string>
+    <string name="started_btn">Bắt đầu</string>
+
+
+</resources>
