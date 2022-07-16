@@ -52,10 +52,12 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("message");
         DatabaseReference databaseReference = database.getReference();
         myRef.setValue("Hello, World!");
-        Model model = new Model(4,"nam123");
-        databaseReference.child("Model").setValue(model);
+        Model model = new Model(6,"qunag123");
+//        model.setName();
+//        databaseReference.child("Model").setValue(model);
 //        databaseReference.child("SanPham").child("2").setValue(model);
-//        databaseReference.child("SanPham").child("1").updateChildren(model);
+        databaseReference.child("SanPham/1").updateChildren(model.toMap());
+        databaseReference.child()
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

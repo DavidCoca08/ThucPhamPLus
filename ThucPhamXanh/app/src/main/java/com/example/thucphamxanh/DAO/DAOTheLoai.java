@@ -1,5 +1,7 @@
 package com.example.thucphamxanh.DAO;
 
+import android.widget.EditText;
+
 import androidx.annotation.NonNull;
 
 import com.example.thucphamxanh.Model.TheLoai;
@@ -38,20 +40,44 @@ public class DAOTheLoai {
 
             }
         });
+
         // nếu list chưa có gì thì id sản phẩm đầu tiên =1
         if (list.size()==0){
             tl.setMaLoai(1);
             tl.setTenLoai(tl.getTenLoai());
-            reference.child("1").setValue(tl);
+            reference.child("TheLoai/1").setValue(tl);
         }else { // nếu list đã có thì lấy cái thằng id của sản phẩm cuối cùng +1 làm mã id của thằng kế tiếp.(tự sinh ID như SQL)
             int i = list.size()-1;
-            int id = list.get(i).getMaLoai()+1;
+            int id = list.get(i).getMaLoai() + 1;
             tl.setMaLoai(id);
             tl.setTenLoai(tl.getTenLoai());
-            reference.child(""+id).setValue(tl);
+            reference.child("TheLoai/"+id).setValue(tl);
         }
     }
-    public void editTheLoai(TheLoai tl){
-        reference.child("TheLoai/"+tl.getMaLoai()).updateChildren((Map<String, Object>) tl);
+    public void deleteTheLoai(TheLoai tl){
+        reference.child("TheLoai/"+tl.getMaLoai()).removeValue();
+//        reference.child("theLoai").child(String.valueOf(tl.getMaLoai())).removeValue();
+    }
+    public void updateTheLoai(TheLoai tl,String modelEdTenLoai){
+        tl.setTenLoai(modelEdTenLoai.toString());
+        reference.child("TheLoai/"+tl.getMaLoai()).updateChildren(tl.toMap());
+    }
+    public List<TheLoai> getAll(){
+        List<TheLoai> list = new ArrayList<>();
+        reference.child("TheLoai").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapshot1: snapshot.getChildren()){
+                    TheLoai theLoai = (TheLoai) snapshot1.getValue();
+                    list.add(theLoai);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return list;
     }
 }
