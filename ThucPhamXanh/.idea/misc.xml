@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Asus/Documents/GitHub/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/drawable/ic_next.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Documents/GitHub/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/activity_intro.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Documents/GitHub/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/activity_splash.xml" value="0.1" />
+        <entry key="..\:/Users/Asus/Documents/GitHub/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/fragment_home.xml" value="0.1796875" />
+        <entry key="..\:/Users/Asus/Documents/GitHub/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/slides_layout.xml" value="0.1" />
         <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.1135" />
         <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1135" />
         <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/activity_main.xml" value="0.2" />
