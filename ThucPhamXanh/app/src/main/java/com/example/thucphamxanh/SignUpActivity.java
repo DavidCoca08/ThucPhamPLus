@@ -92,7 +92,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if (strEmail.isEmpty()
                 || strPassword.isEmpty()
                 || strConfirmPassword.isEmpty())
-        return false;
+            return false;
         return true;
     }
 }

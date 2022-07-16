@@ -30,9 +30,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -64,25 +66,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
 
 
-    private final Observer<User> userObserver = new Observer<User>() {
-        @Override
-        public void onChanged(User user1) {
-            Log.d(TAG, "onChanged: change user information");
-            user.setBitmapAvatar(user1.getBitmapAvatar());
-            user.setName(user1.getName());
-            user.setEmail(user1.getEmail());
-            changeUserInfo();
-        }
 
-        private void changeUserInfo() {
-            //Glide.with(MainActivity.this).load(userAuth.getPhotoUrl()).error(R.drawable.ic_avatar_default).into(ivAvatar);
-            if (user.getName() != null)
-                if (!user.getName().isEmpty())
-                    Log.d(TAG, "changeUserInfo: visibility");
-                    tvUserName.setVisibility(View.VISIBLE);
-                     tvUserName.setText(user.getName());
-        }
-    };
     //TODO: thử chuyển method sang ProfileFragment
     private final ActivityResultLauncher<Intent> mActivityResultLauncher =
             registerForActivityResult(
@@ -102,9 +86,9 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                                         e.printStackTrace();
                                     }
                                     Log.d(TAG, "onActivityResult: ");
-                                    User userTemp = new User();
-                                    userTemp.setBitmapAvatar(selectedImageBitmap);
-                                    profileViewModel.setUser(userTemp);
+                                    user.setBitmapAvatar(selectedImageBitmap);
+                                    profileViewModel.setUser(user);
+                                    //thay đổi viewmodel
                                     chooseAvatarBitmap = selectedImageBitmap;
                                 }
 
@@ -114,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //khởi tạo user được xác thực bằng FirebaseAuthentication
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -126,35 +111,59 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                         .setAction("Action", null).show();
             }
         });
-//        DrawerLayout drawer = binding.drawerLayout;
-//        NavigationView navigationView = binding.navView;
         //khởi tạo các view
         initUI();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
         initViewModel();
+        /*
+         * khởi tạo observer cho user khi thay đổi thông tin user bên ProfileFragment
+         * */
+        //setUserViewModelObserver();
+        //show thông tin user lên nav header khi đăng nhập
         showUserInformation();
+        profileViewModel.setUser(user);
         //set thông tin user vào viewmodel để giao tiếp
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_my_profile, R.id.nav_change_password, R.id.nav_sign_out)
+                R.id.nav_home,
+                R.id.nav_gallery,
+                R.id.nav_slideshow,
+                R.id.nav_my_profile,
+                R.id.nav_change_password,
+                R.id.nav_sign_out)
                 .setOpenableLayout(mDrawerLayout)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(mNavigationView, navController);
 
-        //implement logout navigation
+        //set event khi click vào logout navigation
         mNavigationView.getMenu().findItem(R.id.nav_sign_out).setOnMenuItemClickListener(this::onMenuItemClick);
 
     }
 
+    private void setUserViewModelObserver() {
+        final Observer<User> userObserver = new Observer<User>() {
+            @Override
+            public void onChanged(User user1) {
+                Log.d(TAG, "onChanged: change user information");
+                user.setBitmapAvatar(user1.getBitmapAvatar());
+                user.setName(user1.getName());
+                user.setEmail(user1.getEmail());
+                Log.d(TAG, "onChanged: " + user.toString());
+                changeUserInfo();
+            }
+
+            private void changeUserInfo() {
+                syncView();
+            }
+        };
+        profileViewModel.getUser().observe(this, userObserver);
+    }
+
     private void initViewModel() {
         this.profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        //profileViewModel.setUser(user);
-        //Log.d(TAG, "initViewModel: " + user.toString());
-        //this.profileViewModel.getUser().observe(this, userObserver);
 
     }
 
@@ -166,48 +175,46 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         tvUserEmail = mNavigationView.getHeaderView(0).findViewById(R.id.tv_MainActivity_userEmail);
     }
     public void showUserInformation() {
-        if (userAuth == null) {
-            Log.d(TAG, "showUserInformation: userAuth null");
-            return;
-        }
-        String name = userAuth.getDisplayName();
-        String email = userAuth.getEmail();
-        Uri photoUrl = userAuth.getPhotoUrl();
+        loadUserInfo();
+        tvUserEmail.setText(user.getEmail());
+        tvUserName.setText(user.getName());
+        tvUserName.setVisibility(View.VISIBLE);
 
-        Log.d(TAG, "showUserInformation: info: " + name + " - " + email + " - " + photoUrl);
-        if (name == null) {
-            tvUserName.setVisibility(View.GONE);
-        } else {
-            tvUserName.setVisibility(View.VISIBLE);
-            tvUserName.setText(name);
-        }
-        tvUserEmail.setText(email);
-        //syncView();
-        this.user.setName(name);
-        this.user.setEmail(email);
-        this.user.setBitmapAvatar(((BitmapDrawable)ivAvatar.getDrawable()).getBitmap());
-        Log.d(TAG, "showUserInformation: " + user.toString());
-        profileViewModel.setUser(this.user);
-        Log.d(TAG, "showUserInformation: end method");
-        /*this.user.setName(name);
-        this.user.setEmail(email);
-        try {
-            Glide.with(this).load(photoUrl).error(R.drawable.ic_avatar_default).into(ivAvatar);
-        } catch (Exception e) {
-            Log.e(TAG, "showUserInformation: ", e);
-        }
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference pathRef = storage
+                .getReference()
+                .child((user.getUriAvatar().getPath()).substring(1));
+        pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                user.setStrUriAvatar(uri.toString());
+                Log.d(TAG, "onSuccess: ");
+                Log.d(TAG, "loadUserInfo: " + user.toString());
+                Glide.with(MainActivity.this)
+                        .load(user.getStrUriAvatar())
+                        .error(R.drawable.ic_avatar_default)
+                        .into(ivAvatar);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "onFailure: ", e);
 
+            }
+        });
+    }
 
-        ivAvatar.buildDrawingCache();
-        this.user.setBitmapAvatar(ivAvatar.getDrawingCache());
-        //this.user.setUriAvatar(photoUrl.toString());
-        Log.d(TAG, "showUserInformation: " + user.toString());
-*/
+    private void loadUserInfo() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        user.setUriAvatar(firebaseUser.getPhotoUrl());
+        user.setName(firebaseUser.getDisplayName());
+        user.setEmail(firebaseUser.getEmail());
+        user.setId(firebaseUser.getUid());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_activity, menu);
         return true;
     }
@@ -223,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     protected void onDestroy() {
         super.onDestroy();
     }
-    //logout application
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.nav_sign_out) {
@@ -232,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         }
         return false;
     }
-
     private void logout() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(MainActivity.this, SignInActivity.class);
@@ -252,14 +257,13 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             }
         }
     }
-
+    //mở thư mục ảnh để chọn và set lên imageview trong ProfileFragment
     public void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         mActivityResultLauncher.launch(Intent.createChooser(intent, "Select picture"));
         Log.d(TAG, "openGallery: openGallery method");
-
     }
     public void syncView() {
         StorageReference storageReference = FirebaseStorage.getInstance().
