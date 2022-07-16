@@ -3,6 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.1135" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1135" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/activity_sign_in.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/activity_sign_up.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/activity_splash.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/app_bar_main.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/content_main.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/fragment_gallery.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/fragment_profile.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/fragment_slideshow.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/layout/nav_header_main.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/menu/activity_main_drawer.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/menu/main.xml" value="0.2" />
+        <entry key="..\:/Users/PC/AndroidStudioProjects/DuAn1_Nhom3/ThucPhamXanh/app/src/main/res/menu/main_activity.xml" value="0.2" />
         <entry key="..\:/Users/quang/OneDrive/Documents/GitHub/DuAn1_Nhom3/ThucPhamXanh2/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/quang/OneDrive/Documents/GitHub/DuAn1_Nhom3/ThucPhamXanh2/app/src/main/res/layout/app_bar_main.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/quang/OneDrive/Documents/GitHub/DuAn1_Nhom3/ThucPhamXanh2/app/src/main/res/layout/content_main.xml" value="0.22826086956521738" />

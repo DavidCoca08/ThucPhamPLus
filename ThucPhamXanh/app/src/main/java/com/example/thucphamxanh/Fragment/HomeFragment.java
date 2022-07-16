@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.thucphamxanh.databinding.FragmentHomeBinding;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
