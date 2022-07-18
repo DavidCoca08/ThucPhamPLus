@@ -6,6 +6,22 @@ import android.net.Uri;
 import java.io.Serializable;
 
 public class User implements Serializable {
+
+    private String strUriAvatar;
+    private String id;
+    private Bitmap bitmapAvatar;
+    private Uri uriAvatar;
+    private String name;
+    private String email;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getId() {
         return id;
     }
@@ -21,13 +37,7 @@ public class User implements Serializable {
     public void setStrUriAvatar(String strUriAvatar) {
         this.strUriAvatar = strUriAvatar;
     }
-
-    private String strUriAvatar;
-    private String id;
-    private Bitmap bitmapAvatar;
-    private Uri uriAvatar;
-    private String name;
-    private String email;
+    private String password;
     public Uri getUriAvatar() {
         return uriAvatar;
     }

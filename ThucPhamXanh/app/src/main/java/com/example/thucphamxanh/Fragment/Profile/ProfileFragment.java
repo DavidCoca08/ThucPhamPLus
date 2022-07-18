@@ -115,32 +115,37 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "setUserInfoToView: " + user.toString());
         etFullName.setText(user.getName());
         etEmail.setText(user.getEmail());
-        Glide.with(requireActivity())
-                .load(user.getStrUriAvatar())
-                .error(R.drawable.ic_avatar_default)
-                .into(ivAvatar);
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference pathRef = storage
-                .getReference()
-                .child((user.getUriAvatar().getPath()).substring(1));
-        pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Log.d(TAG, "onSuccess: ");
-                Glide.with(requireActivity())
-                        .load(user.getStrUriAvatar())
-                        .error(R.drawable.ic_avatar_default)
-                        .into(ivAvatar);
-                Log.d(TAG, "loadUserInfo: " + user.toString());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "onFailure: ", e);
+        try {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference pathRef = storage
+                    .getReference()
+                    .child((user.getUriAvatar().getPath()).substring(1));
+            pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Log.d(TAG, "onSuccess: ");
+                    Glide.with(requireActivity())
+                            .load(user.getStrUriAvatar())
+                            .error(R.drawable.ic_avatar_default)
+                            .into(ivAvatar);
+                    Log.d(TAG, "loadUserInfo: " + user.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "onFailure: ", e);
 
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "setUserInfoToView: ", e);
+        } finally {
+            Glide.with(requireActivity())
+                    .load(user.getStrUriAvatar())
+                    .error(R.drawable.ic_avatar_default)
+                    .into(ivAvatar);
+        }
     }
 
 

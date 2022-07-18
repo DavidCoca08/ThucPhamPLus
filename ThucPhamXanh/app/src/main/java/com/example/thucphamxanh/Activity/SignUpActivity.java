@@ -12,12 +12,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = "SignUpActivity";
@@ -69,7 +72,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = auth.getCurrentUser();
+                                FirebaseUser userAuth = auth.getCurrentUser();
+                                User user = new User();
+                                user.setEmail(etEmail.getText().toString());
+                                user.setPassword(etPassword.getText().toString());
+                                user.setId(userAuth.getUid());
+                                writeNewUser(user);
                                 Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
                                 //
                                 startActivity(intent);
@@ -82,6 +90,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         Toast.LENGTH_SHORT).show();
 //                            updateUI(null);
                             }
+                        }
+
+                        private void writeNewUser(User user) {
+                            DatabaseReference databaseReference;
+                            databaseReference = FirebaseDatabase.getInstance().getReference();
+                            databaseReference
+                                    .child("users")
+                                    .child("id")
+                                    .setValue(user.getId());
+                            databaseReference
+                                    .child("users")
+                                    .child("email")
+                                    .setValue(user.getEmail());
+                            databaseReference
+                                    .child("users")
+                                    .child("role")
+                                    .setValue("customer");
                         }
                     });
         } else {

@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_main,
                 R.id.nav_home,
                 R.id.nav_gallery,
                 R.id.nav_slideshow,
@@ -181,29 +182,37 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         tvUserEmail.setText(user.getEmail());
         tvUserName.setText(user.getName());
         tvUserName.setVisibility(View.VISIBLE);
+        Glide.with(MainActivity.this)
+                .load(user.getStrUriAvatar())
+                .error(R.drawable.ic_avatar_default)
+                .into(ivAvatar);
+        try {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference pathRef = storage
+                    .getReference()
+                    .child((user.getUriAvatar().getPath()).substring(1));
+            pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    user.setStrUriAvatar(uri.toString());
+                    Log.d(TAG, "onSuccess: ");
+                    Log.d(TAG, "loadUserInfo: " + user.toString());
+                    Glide.with(MainActivity.this)
+                            .load(user.getStrUriAvatar())
+                            .error(R.drawable.ic_avatar_default)
+                            .into(ivAvatar);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "onFailure: ", e);
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference pathRef = storage
-                .getReference()
-                .child((user.getUriAvatar().getPath()).substring(1));
-        pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                user.setStrUriAvatar(uri.toString());
-                Log.d(TAG, "onSuccess: ");
-                Log.d(TAG, "loadUserInfo: " + user.toString());
-                Glide.with(MainActivity.this)
-                        .load(user.getStrUriAvatar())
-                        .error(R.drawable.ic_avatar_default)
-                        .into(ivAvatar);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "onFailure: ", e);
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "showUserInformation: ",e );
+        }
 
-            }
-        });
     }
 
     private void loadUserInfo() {
