@@ -21,6 +21,9 @@
             android:name=".Activity.SignInActivity"
             android:exported="false" />
         <activity
+            android:name=".IntroActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.SplashActivity"
             android:exported="true">
             <intent-filter>
@@ -29,11 +32,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <activity-->
-<!--            android:name=".MainActivity"-->
-<!--            android:exported="false"-->
-<!--            android:label="@string/title_activity_main2"-->
-<!--            android:theme="@style/Theme.ThucPhamXanh.NoActionBar" />-->
+        <!--        <activity-->
+        <!--            android:name=".MainActivity"-->
+        <!--            android:exported="false"-->
+        <!--            android:label="@string/title_activity_main2"-->
+        <!--            android:theme="@style/Theme.ThucPhamXanh.NoActionBar" />-->
         <activity
             android:name=".Activity.MainActivity"
 
@@ -45,7 +48,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>-->
+        </activity>
     </application>
 
 </manifest>
