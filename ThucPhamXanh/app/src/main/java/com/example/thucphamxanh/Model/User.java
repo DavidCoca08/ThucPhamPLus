@@ -1,17 +1,48 @@
 package com.example.thucphamxanh.Model;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+
+    private String strUriAvatar;
+    private String id;
     private Bitmap bitmapAvatar;
-    private String uriAvatar;
+    private Uri uriAvatar;
     private String name;
     private String email;
-    public String getUriAvatar() {
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStrUriAvatar() {
+        return strUriAvatar;
+    }
+
+    public void setStrUriAvatar(String strUriAvatar) {
+        this.strUriAvatar = strUriAvatar;
+    }
+    private String password;
+    public Uri getUriAvatar() {
         return uriAvatar;
     }
 
-    public void setUriAvatar(String uriAvatar) {
+    public void setUriAvatar(Uri uriAvatar) {
         this.uriAvatar = uriAvatar;
     }
 
@@ -40,10 +71,13 @@ public class User {
     }
 
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "User{" +
-                "bitmapAvatar=" + bitmapAvatar +
-                ", uriAvatar='" + uriAvatar + '\'' +
+                "strUriAvatar='" + strUriAvatar + '\'' +
+                ", id='" + id + '\'' +
+                ", bitmapAvatar=" + bitmapAvatar +
+                ", uriAvatar=" + uriAvatar +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 '}';

@@ -20,8 +20,7 @@ public class ProfileViewModel extends ViewModel {
     }
 
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "ProfileViewModel{" +
                 "user=" + user.toString() +
                 '}';

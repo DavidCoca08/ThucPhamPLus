@@ -59,7 +59,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "onCreate: start");
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         user = profileViewModel.getUser().getValue();
-        Log.d(TAG, "onCreate: " + user.toString());
         Log.d(TAG, "onCreate: end");
     }
 
@@ -70,7 +69,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         initUI();
-        initListener();
+        setUserInfoToView();
         Log.d(TAG, "onCreateView: end");
         return root;
     }
@@ -78,8 +77,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setBitmapAvatarWithViewModel();
-        setUserInfoToView();
-        ivAvatar.setImageBitmap(user.getBitmapAvatar());
+        initListener();
+//        ivAvatar.setImageBitmap(user.getBitmapAvatar());
     }
 
     @Override
@@ -98,6 +97,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnUpdateInfoUser.setOnClickListener(this::onClick);
     }
     public void setBitmapAvatarWithViewModel() {
+        Log.d(TAG, "setBitmapAvatarWithViewModel: start");
         profileViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
@@ -106,27 +106,46 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "onChanged: " + user.toString());
             }
         });
+        Log.d(TAG, "setBitmapAvatarWithViewModel: end");
     }
     private void setUserInfoToView() {
         //solution 1 use FirebaseUser
-        User user = new User();
-        user = profileViewModel.getUser().getValue();
-        Log.d(TAG, "setUserInfoToView: " + user);
+        User user = profileViewModel.getUser().getValue();
         Log.d(TAG, "setUserInfoToView: setAvatar on setUserInfo method" );
+        Log.d(TAG, "setUserInfoToView: " + user.toString());
         etFullName.setText(user.getName());
         etEmail.setText(user.getEmail());
-/*        Glide.with(getActivity())
-                .load(profileViewModel.getUser().getValue().getBitmapAvatar())
-                .error(R.drawable.ic_avatar_default)
-                .into(ivAvatar);*/
-        Glide.with(getActivity())
-                .load(user.getBitmapAvatar())
-                .error(R.drawable.ic_avatar_default)
-                .into(ivAvatar);
-        Log.d(TAG, "setUserInfoToView: " + profileViewModel.getUser().getValue().getBitmapAvatar().toString());
-        //solution 2: communicating with Activity
 
+        try {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference pathRef = storage
+                    .getReference()
+                    .child((user.getUriAvatar().getPath()).substring(1));
+            pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Log.d(TAG, "onSuccess: ");
+                    Glide.with(requireActivity())
+                            .load(user.getStrUriAvatar())
+                            .error(R.drawable.ic_avatar_default)
+                            .into(ivAvatar);
+                    Log.d(TAG, "loadUserInfo: " + user.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "onFailure: ", e);
 
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "setUserInfoToView: ", e);
+        } finally {
+            Glide.with(requireActivity())
+                    .load(user.getStrUriAvatar())
+                    .error(R.drawable.ic_avatar_default)
+                    .into(ivAvatar);
+        }
     }
 
 
@@ -137,9 +156,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_profile_fragment_avatar:
+                Log.d(TAG, "onClick: click imageview");
                 onClickRequestPermission();
                 break;
             case R.id.btn_profile_fragment_update:
+                Log.d(TAG, "onClick: click btn update");
                 updateUserInfo();
                 break;
         }
@@ -168,20 +189,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
     private void updateUserInfo() {
-        User user = new User();
+        Log.d(TAG, "updateUserInfo: start");
         Bitmap bitmap = ((BitmapDrawable) ivAvatar.getDrawable()).getBitmap();
 
-        user.setBitmapAvatar(bitmap);
-        user.setName(etFullName.getText().toString());
-        user.setEmail(etEmail.getText().toString());
         //up ảnh lên storage, lấy Uri storage set vào uriAvatar của user, change user trong ViewModel
         // Get the data from an ImageView as bytes
         StorageReference imgRef = mStorageReference.child("images");
-        StorageReference spaceRef = mStorageReference.child("images/" + user.getEmail() + "_avatar.jpg");
+        StorageReference spaceRef = mStorageReference.child("images/" + user.getId() + "_avatar.jpg");
         String strUri = spaceRef.getName();
         ivAvatar.setDrawingCacheEnabled(true);
         ivAvatar.buildDrawingCache();
-        Bitmap bitmap2 = ((BitmapDrawable) ivAvatar.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -212,18 +229,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Log.d(TAG, "User profile updated.");
+                                    Log.d(TAG, "onComplete: update profile successful");
                                     ((MainActivity)requireActivity()).showUserInformation();
+                                    return;
                                 }
+                                Log.d(TAG, "onComplete: update profile failure");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "onFailure: update profile failure");
                             }
                         });
 
                 //sửa thông tin trong nav bar
             }
         });
-
+        Log.d(TAG, "updateUserInfo: end");
         //use ViewModel communicating with MainAcitivy
-        //profileViewModel.setUser(user);
+        profileViewModel.setUser(user);
 
     }
 
