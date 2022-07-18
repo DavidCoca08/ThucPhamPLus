@@ -97,14 +97,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             databaseReference = FirebaseDatabase.getInstance().getReference();
                             databaseReference
                                     .child("users")
+                                    .child(user.getId())
                                     .child("id")
                                     .setValue(user.getId());
                             databaseReference
                                     .child("users")
+                                    .child(user.getId())
                                     .child("email")
                                     .setValue(user.getEmail());
                             databaseReference
                                     .child("users")
+                                    .child(user.getId())
                                     .child("role")
                                     .setValue("customer");
                         }

@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                                     //thay đổi viewmodel
                                     chooseAvatarBitmap = selectedImageBitmap;
                                 }
-
                             }
                         }
                     });
