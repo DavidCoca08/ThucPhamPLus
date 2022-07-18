@@ -10,10 +10,11 @@
 
     <string name="menu_main">Trang Chủ</string>
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_Product">Sản phẩm</string>
+    <string name="menu_Bill">Hóa đơn</string>
 
     <string name="menu_account">Account</string>
+    <string name="menu_partner">Đối tác</string>
     <string name="menu_change_password">Change password</string>
     <string name="menu_sign_out">Sign out</string>
     <!-- TODO: Remove or change this placeholder text -->

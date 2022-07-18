@@ -3,14 +3,14 @@ package com.example.thucphamxanh.Model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TheLoai {
+public class Category {
     private int maLoai;
     private String tenLoai;
 
-    public TheLoai() {
+    public Category() {
     }
 
-    public TheLoai(int maLoai, String tenLoai) {
+    public Category(int maLoai, String tenLoai) {
         this.maLoai = maLoai;
         this.tenLoai = tenLoai;
     }

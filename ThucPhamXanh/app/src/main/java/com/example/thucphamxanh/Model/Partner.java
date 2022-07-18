@@ -1,10 +1,10 @@
 package com.example.thucphamxanh.Model;
 
-public class DoiTac {
+public class Partner {
     private int maDT;
     private String tenDT,diaChi,sdt,taiKhoan,matKhau;
 
-    public DoiTac() {
+    public Partner() {
     }
 
     public String getTaiKhoan() {

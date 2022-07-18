@@ -17,19 +17,24 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.thucphamxanh.Fragment.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_Product"
+        android:name="com.example.thucphamxanh.Fragment.ProductFragment"
+        android:label="@string/menu_Product"
+        tools:layout="@layout/fragment_product" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.thucphamxanh.Fragment.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_Bill"
+        android:name="com.example.thucphamxanh.Fragment.BillFragment"
+        android:label="@string/menu_Bill"
+        tools:layout="@layout/fragment_bill" />
     <fragment
         android:id="@+id/nav_my_profile"
         android:name="com.example.thucphamxanh.Fragment.Profile.ProfileFragment"
         android:label="@string/menu_account"
+        tools:layout="@layout/fragment_profile"/>
+    <fragment
+        android:id="@+id/nav_Partner"
+        android:name="com.example.thucphamxanh.Fragment.PartnerFragment"
+        android:label="@string/menu_partner"
         tools:layout="@layout/fragment_profile"/>
 </navigation>

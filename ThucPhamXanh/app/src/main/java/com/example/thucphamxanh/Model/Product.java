@@ -1,13 +1,13 @@
 package com.example.thucphamxanh.Model;
 
-public class SanPham {
+public class Product {
     private int maSP,soLuong,maTL,maDT,giaBan;
     private String tenSP,hinhSP;
 
-    public SanPham() {
+    public Product() {
     }
 
-    public SanPham(int maSP, int soLuong, int maTL, int maDT, int giaBan, String tenSP, String hinhSP) {
+    public Product(int maSP, int soLuong, int maTL, int maDT, int giaBan, String tenSP, String hinhSP) {
         this.maSP = maSP;
         this.soLuong = soLuong;
         this.maTL = maTL;

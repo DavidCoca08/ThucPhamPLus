@@ -1,13 +1,13 @@
 package com.example.thucphamxanh.Model;
 
-public class KhachHang {
+public class Client {
     private int maKH;
     private String tenKh,diaChi,sdt,taiKhoan,matKhau;
 
-    public KhachHang() {
+    public Client() {
     }
 
-    public KhachHang(int maKH, String tenKh, String diaChi, String sdt, String taiKhoan, String matKhau) {
+    public Client(int maKH, String tenKh, String diaChi, String sdt, String taiKhoan, String matKhau) {
         this.maKH = maKH;
         this.tenKh = tenKh;
         this.diaChi = diaChi;

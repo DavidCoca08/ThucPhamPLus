@@ -1,13 +1,13 @@
 package com.example.thucphamxanh.Model;
 
-public class HoaDon {
+public class Bill {
     private int maHD,maKH;
     private String ngayXuat,trangThai;
 
-    public HoaDon() {
+    public Bill() {
     }
 
-    public HoaDon(int maHD, int maKH, String ngayXuat, String trangThai) {
+    public Bill(int maHD, int maKH, String ngayXuat, String trangThai) {
         this.maHD = maHD;
         this.maKH = maKH;
         this.ngayXuat = ngayXuat;

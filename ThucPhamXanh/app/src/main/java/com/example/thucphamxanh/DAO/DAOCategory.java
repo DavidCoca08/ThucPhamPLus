@@ -1,41 +1,37 @@
 package com.example.thucphamxanh.DAO;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 
-import com.example.thucphamxanh.Fragment.HomeFragment;
-import com.example.thucphamxanh.Model.TheLoai;
+import com.example.thucphamxanh.Model.Category;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class DAOTheLoai {
+public class DAOCategory {
     FirebaseDatabase database;
     DatabaseReference reference;
-    List<TheLoai> list;
-    public DAOTheLoai(List<TheLoai> list) {
+    List<Category> list;
+    public DAOCategory(List<Category> list) {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference().child("TheLoai");
         this.list = list;
 
     }
     @Deprecated
-    public void addTheLoai(TheLoai tl){
+    public void addTheLoai(Category tl){
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                     for (DataSnapshot snap: snapshot.getChildren()){
-                        TheLoai theLoai = snap.getValue(TheLoai.class);
+                        Category theLoai = snap.getValue(Category.class);
                         list.add(theLoai);
                     }
             }
@@ -58,21 +54,21 @@ public class DAOTheLoai {
         }
 
     }
-    public void deleteTheLoai(TheLoai tl){
+    public void deleteTheLoai(Category tl){
         reference.child(""+tl.getMaLoai()).removeValue();
 //        reference.child("theLoai").child(String.valueOf(tl.getMaLoai())).removeValue();
     }
-    public void updateTheLoai(TheLoai tl,String tenLoai){
+    public void updateTheLoai(Category tl, String tenLoai){
         tl.setTenLoai(tenLoai);
         reference.child(""+tl.getMaLoai()).updateChildren(tl.toMap());
     }
-    public List<TheLoai> getAll(){
+    public List<Category> getAll(){
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                     for (DataSnapshot snapshot1: snapshot.getChildren()) {
-                        TheLoai theLoai = snapshot1.getValue(TheLoai.class);
+                        Category theLoai = snapshot1.getValue(Category.class);
                         list.add(theLoai);
                     }
             }
