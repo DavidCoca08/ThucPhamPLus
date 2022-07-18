@@ -1,4 +1,4 @@
-package com.example.thucphamxanh;
+package com.example.thucphamxanh.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.thucphamxanh.Activity.SignInActivity;
 import com.example.thucphamxanh.Adapter.SliderAdapter;
+import com.example.thucphamxanh.R;
 
 public class IntroActivity extends AppCompatActivity {
 

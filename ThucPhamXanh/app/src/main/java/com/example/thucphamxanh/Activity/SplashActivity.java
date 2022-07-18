@@ -10,17 +10,12 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.example.thucphamxanh.IntroActivity;
-
 import com.example.thucphamxanh.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends AppCompatActivity {
-
-
     SharedPreferences introActivity;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +32,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void nextActivity() {
-
-
         introActivity = getSharedPreferences("introActivity",MODE_PRIVATE);
         boolean isFirstTime = introActivity.getBoolean("firstTime",true);
         if (isFirstTime){
@@ -51,9 +44,10 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         }else {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Intent intent = new Intent(this, com.example.thucphamxanh.Activity.SignInActivity.class);
+            Intent intent = new Intent(this, SignInActivity.class);
             if (user != null) {
-                intent = new Intent(this, com.example.thucphamxanh.Activity.SignInActivity.class);
+                intent = new Intent(this, SignInActivity.class);
+                int a  =1;
             }
             startActivity(intent);
             finish();

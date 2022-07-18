@@ -2,16 +2,25 @@ package com.example.thucphamxanh.Model;
 
 public class DoiTac {
     private int maDT;
-    private String tenDT,diaChi,sdt;
+    private String tenDT,diaChi,sdt,taiKhoan,matKhau;
 
     public DoiTac() {
     }
 
-    public DoiTac(int maDT, String tenDT, String diaChi, String sdt) {
-        this.maDT = maDT;
-        this.tenDT = tenDT;
-        this.diaChi = diaChi;
-        this.sdt = sdt;
+    public String getTaiKhoan() {
+        return taiKhoan;
+    }
+
+    public void setTaiKhoan(String taiKhoan) {
+        this.taiKhoan = taiKhoan;
+    }
+
+    public String getMatKhau() {
+        return matKhau;
+    }
+
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
     }
 
     public int getMaDT() {

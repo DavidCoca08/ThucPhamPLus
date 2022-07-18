@@ -21,7 +21,7 @@
             android:name=".Activity.SignInActivity"
             android:exported="false" />
         <activity
-            android:name=".IntroActivity"
+            android:name=".Activity.IntroActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SplashActivity"

@@ -28,6 +28,7 @@ public class DAOTheLoai {
         this.list = list;
 
     }
+    @Deprecated
     public void addTheLoai(TheLoai tl){
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -54,7 +55,6 @@ public class DAOTheLoai {
             tl.setTenLoai(tl.getTenLoai());
             reference.child(""+id).setValue(tl);
             Log.d("zzzzzzzzzzzz", String.valueOf(list.size()));
-            return ;
         }
 
     }
