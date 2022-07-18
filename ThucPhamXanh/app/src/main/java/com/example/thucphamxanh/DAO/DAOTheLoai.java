@@ -1,10 +1,12 @@
 package com.example.thucphamxanh.DAO;
 
+import android.content.Context;
 import android.util.Log;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 
+import com.example.thucphamxanh.Fragment.HomeFragment;
 import com.example.thucphamxanh.Model.TheLoai;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,74 +16,65 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 public class DAOTheLoai {
     FirebaseDatabase database;
     DatabaseReference reference;
     List<TheLoai> list;
-    public DAOTheLoai() {
+    public DAOTheLoai(List<TheLoai> list) {
         database = FirebaseDatabase.getInstance();
-        reference = database.getReference();
-        list = new ArrayList<>();
+        reference = database.getReference().child("TheLoai");
+        this.list = list;
+
     }
     public void addTheLoai(TheLoai tl){
-        reference.child("TheLoai").addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
                     for (DataSnapshot snap: snapshot.getChildren()){
                         TheLoai theLoai = snap.getValue(TheLoai.class);
                         list.add(theLoai);
-                        Log.d("zzzzz",list.get(0).getTenLoai());
-                        Log.d("zzzzz", String.valueOf(list.get(0).getMaLoai()));
-                        Log.d("zzzzzzzzzzzz", String.valueOf(list.size()));
                     }
-
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
         });
-        Log.d("aaaaaaaaaa", String.valueOf(getAll().size()));
-
         if (list.size()==0){
             tl.setMaLoai(1);
             tl.setTenLoai(tl.getTenLoai());
-            reference.child("TheLoai/1").setValue(tl);
+            reference.child("1").setValue(tl);
         }else if (list.size()!=0){ // nếu list đã có thì lấy cái thằng id của sản phẩm cuối cùng +1 làm mã id của thằng kế tiếp.(tự sinh ID như SQL)
             int i = list.size()-1;
             int id = list.get(i).getMaLoai() + 1;
             tl.setMaLoai(id);
             tl.setTenLoai(tl.getTenLoai());
-            reference.child("TheLoai").child(""+id).setValue(tl);
-            Log.d("zzzzzzzzzzzz", String.valueOf(id));
+            reference.child(""+id).setValue(tl);
+            Log.d("zzzzzzzzzzzz", String.valueOf(list.size()));
+            return ;
         }
+
     }
     public void deleteTheLoai(TheLoai tl){
-        reference.child("TheLoai/"+tl.getMaLoai()).removeValue();
+        reference.child(""+tl.getMaLoai()).removeValue();
 //        reference.child("theLoai").child(String.valueOf(tl.getMaLoai())).removeValue();
     }
     public void updateTheLoai(TheLoai tl,String tenLoai){
         tl.setTenLoai(tenLoai);
-        reference.child("TheLoai/"+tl.getMaLoai()).updateChildren(tl.toMap());
+        reference.child(""+tl.getMaLoai()).updateChildren(tl.toMap());
     }
     public List<TheLoai> getAll(){
-        List<TheLoai> list = new ArrayList<>();
-        reference.child("TheLoai").addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try {
-                    for (DataSnapshot snapshot1: snapshot.getChildren()){
+                list.clear();
+                    for (DataSnapshot snapshot1: snapshot.getChildren()) {
                         TheLoai theLoai = snapshot1.getValue(TheLoai.class);
                         list.add(theLoai);
                     }
-                }catch (Exception e){
-                    Log.d("zzzzzzz","list dữ liệu rỗng k thể đọc");
-                }
-
             }
 
             @Override
@@ -89,6 +82,7 @@ public class DAOTheLoai {
 
             }
         });
+        Log.d("cccc", String.valueOf(list.size()));
         return list;
     }
 }
