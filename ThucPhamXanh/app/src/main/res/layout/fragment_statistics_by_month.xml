@@ -3,11 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
     tools:context=".StatisticFragment.StatisticsByMonthFragment">
-=======
-    tools:context=".Fragment.StatisticsFragment.StatisticsByMonthFragment">
->>>>>>> f23fcca7776da729c08c116040bd612a3ca346ab
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

@@ -2,7 +2,6 @@ package com.example.thucphamxanh.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-<<<<<<< HEAD
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.thucphamxanh.Fragment.StatisticFragment.StatisticsByDayFragment;
@@ -12,18 +11,6 @@ import com.example.thucphamxanh.Fragment.StatisticFragment.MainStatisticsFragmen
 
 public class StatisticsFragment_Adapter extends FragmentStateAdapter {
     public StatisticsFragment_Adapter(@NonNull MainStatisticsFragment fragmentActivity) {
-=======
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-
-import com.example.thucphamxanh.Fragment.StatisticsFragment.StatisticsByDayFragment;
-import com.example.thucphamxanh.Fragment.StatisticsFragment.StatisticsByMonthFragment;
-import com.example.thucphamxanh.Fragment.StatisticsFragment.StatisticsByWeekFragment;
-import com.example.thucphamxanh.Fragment.StatisticsFragment.StatisticsFragment;
-
-public class StatisticsFragment_Adapter extends FragmentStateAdapter {
-    public StatisticsFragment_Adapter(@NonNull StatisticsFragment fragmentActivity) {
->>>>>>> f23fcca7776da729c08c116040bd612a3ca346ab
         super(fragmentActivity);
     }
 

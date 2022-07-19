@@ -4,11 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-<<<<<<< HEAD
     tools:context=".StatisticFragment.StatisticsFragment" >
-=======
-    tools:context=".Fragment.StatisticsFragment.StatisticsFragment" >
->>>>>>> f23fcca7776da729c08c116040bd612a3ca346ab
 
     <LinearLayout
         android:layout_width="match_parent"
