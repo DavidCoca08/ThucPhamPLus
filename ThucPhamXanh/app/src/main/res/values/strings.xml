@@ -12,6 +12,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_Product">Sản phẩm</string>
     <string name="menu_Bill">Hóa đơn</string>
+    <string name="menu_statistic">Thống kê</string>
 
     <string name="menu_account">Account</string>
     <string name="menu_partner">Đối tác</string>
