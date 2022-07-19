@@ -61,7 +61,7 @@ public class CategoryDAO {
     public void updateTheLoai(Category tl){
         reference.child(""+tl.getMaLoai()).updateChildren(tl.toMap());
     }
-    public List<Category> getAll(){
+    public void getAll(){
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -77,7 +77,6 @@ public class CategoryDAO {
 
             }
         });
-        Log.d("cccc", String.valueOf(list.size()));
-        return list;
     }
+
 }

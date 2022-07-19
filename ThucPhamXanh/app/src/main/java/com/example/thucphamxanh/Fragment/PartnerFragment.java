@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class PartnerFragment extends Fragment {
             addPartner();
         });
         return view;
+
     }
     public void addPartner(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -65,6 +67,12 @@ public class PartnerFragment extends Fragment {
         btnAddPartner.setOnClickListener(view -> {
             getText();
             validate();
+            for (int i = 0; i <list.size() ; i++) {
+                if(list.get(i).getCodePartner()==1){
+                    Log.d("aaaaaaa",list.get(i).getNamePartner());
+            }
+
+            }
         });
         btnCancelPartner.setOnClickListener(view -> {
             dialog.dismiss();

@@ -72,4 +72,17 @@ public class Product {
     public void setTenSP(String tenSP) {
         this.tenSP = tenSP;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "maSP=" + maSP +
+                ", soLuong=" + soLuong +
+                ", maTL=" + maTL +
+                ", maDT=" + maDT +
+                ", giaBan=" + giaBan +
+                ", tenSP='" + tenSP + '\'' +
+                ", hinhSP='" + hinhSP + '\'' +
+                '}';
+    }
 }
