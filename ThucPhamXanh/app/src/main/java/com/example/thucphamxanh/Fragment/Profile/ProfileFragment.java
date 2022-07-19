@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -50,6 +51,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private User user;
 
     private EditText etFullName, etEmail;
+    private TextInputLayout mLayoutName, mLayoutEmail, mLayoutAddress, mLayoutPhoneNumber;
     private Button btnUpdateInfoUser;
     private ImageView ivAvatar;
 
@@ -91,6 +93,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         etFullName = binding.getRoot().findViewById(R.id.et_profile_fragment_full_name);
         etEmail = binding.getRoot().findViewById(R.id.et_profile_fragment_email);
         btnUpdateInfoUser = binding.getRoot().findViewById(R.id.btn_profile_fragment_update);
+        mLayoutEmail = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_email);
+        mLayoutName = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_full_name);
+        mLayoutAddress = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_address);
+        mLayoutPhoneNumber = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_phone_number);
     }
     private void initListener() {
         ivAvatar.setOnClickListener(this::onClick);
@@ -115,6 +121,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "setUserInfoToView: " + user.toString());
         etFullName.setText(user.getName());
         etEmail.setText(user.getEmail());
+        mLayoutName.getEditText().setText(user.getName());
+        mLayoutEmail.getEditText().setText(user.getEmail());
 
         try {
             FirebaseStorage storage = FirebaseStorage.getInstance();
