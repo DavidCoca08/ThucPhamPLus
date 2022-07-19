@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/nav_Product"
-        android:name="com.example.thucphamxanh.Fragment.ProductFragment"
+        android:name="com.example.thucphamxanh.Fragment.ProductFragments.ProductFragment"
         android:label="@string/menu_Product"
         tools:layout="@layout/fragment_product" />
 

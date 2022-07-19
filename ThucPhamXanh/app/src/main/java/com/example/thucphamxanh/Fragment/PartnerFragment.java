@@ -1,8 +1,10 @@
 package com.example.thucphamxanh.Fragment;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,16 +16,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.thucphamxanh.Activity.MainActivity;
+import com.example.thucphamxanh.Activity.SignInActivity;
 import com.example.thucphamxanh.Adapter.PartnerAdapter;
 import com.example.thucphamxanh.DAO.PartnerDAO;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 
 public class PartnerFragment extends Fragment {
@@ -35,7 +45,7 @@ public class PartnerFragment extends Fragment {
     private TextInputLayout til_namePartner,til_addressPartner,til_UserPartner,til_PasswordPartner,til_rePasswordPartner;
     private TextInputEditText edNamePartner,edAddressPartner,edUserPartner,edPasswordPartner,edRePassword;
     private Button btnAddPartner,btnCancelPartner;
-    private String namePartner,addressPartner,numberPhonePartner,userPartner,passwordPartner,rePasswordPartner;
+    private String namePartner,addressPartner,userPartner,passwordPartner,rePasswordPartner;
     private FloatingActionButton btn_addPartner;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,12 +77,7 @@ public class PartnerFragment extends Fragment {
         btnAddPartner.setOnClickListener(view -> {
             getText();
             validate();
-            for (int i = 0; i <list.size() ; i++) {
-                if(list.get(i).getCodePartner()==1){
-                    Log.d("aaaaaaa",list.get(i).getNamePartner());
-            }
 
-            }
         });
         btnCancelPartner.setOnClickListener(view -> {
             dialog.dismiss();
@@ -91,7 +96,7 @@ public class PartnerFragment extends Fragment {
         }
     }
     public boolean checkNumberPhone(){
-        if(numberPhonePartner.length()!=10){
+        if(userPartner.length()!=10){
             til_UserPartner.setError("Số điện thoại phải đủ 10 số.");
             return false;
         }else {
@@ -156,4 +161,29 @@ public class PartnerFragment extends Fragment {
         edPasswordPartner.setText("");
         edRePassword.setText("");
     }
+//    public void onFirebase(){
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        auth.signInWithEmailAndPassword(userPartner, passwordPartner)
+//                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            Successful(task);
+//                        } else {
+//                            unSuccessful(task);
+//                        }
+//                    }
+//
+//                    private void unSuccessful(Task<AuthResult> task) {
+//
+//                    }
+//
+//                    private void Successful(Task<AuthResult> task) {
+//                        FirebaseUser user = auth.getCurrentUser();
+////                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+////                        startActivity(intent);
+////                        finishAffinity();
+//                    }
+//                });
+//    }
 }

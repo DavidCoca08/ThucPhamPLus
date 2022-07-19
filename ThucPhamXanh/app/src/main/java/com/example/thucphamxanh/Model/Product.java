@@ -7,16 +7,6 @@ public class Product {
     public Product() {
     }
 
-    public Product(int maSP, int soLuong, int maTL, int maDT, int giaBan, String tenSP, String hinhSP) {
-        this.maSP = maSP;
-        this.soLuong = soLuong;
-        this.maTL = maTL;
-        this.maDT = maDT;
-        this.giaBan = giaBan;
-        this.tenSP = tenSP;
-        this.hinhSP = hinhSP;
-    }
-
     public String getHinhSP() {
         return hinhSP;
     }
@@ -73,16 +63,4 @@ public class Product {
         this.tenSP = tenSP;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "maSP=" + maSP +
-                ", soLuong=" + soLuong +
-                ", maTL=" + maTL +
-                ", maDT=" + maDT +
-                ", giaBan=" + giaBan +
-                ", tenSP='" + tenSP + '\'' +
-                ", hinhSP='" + hinhSP + '\'' +
-                '}';
-    }
 }
