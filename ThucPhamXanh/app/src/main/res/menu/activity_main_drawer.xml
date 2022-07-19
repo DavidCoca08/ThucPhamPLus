@@ -17,12 +17,10 @@
             android:icon="@drawable/ic_baseline_shopping_basket_24"
             android:title="@string/menu_Product" />
         <item
-<<<<<<< Updated upstream
             android:id="@+id/nav_Bill"
             android:icon="@drawable/ic_baseline_receipt_long_24"
             android:title="@string/menu_Bill" />
-=======
-<<<<<<< HEAD
+        <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_slideshow" />
@@ -30,12 +28,10 @@
             android:id="@+id/nav_statistics"
             android:icon="@drawable/ic_baseline_attach_money_24"
             android:title="@string/statistics" />
-=======
+        <!--<item
             android:id="@+id/nav_Bill"
             android:icon="@drawable/ic_baseline_receipt_long_24"
-            android:title="@string/menu_Bill" />
->>>>>>> 230d1ab20b9aecddcf03e5e6e6d3ef589bffd684
->>>>>>> Stashed changes
+            android:title="@string/menu_Bill" />-->
     </group>
     <item android:title="Account">
         <menu>
