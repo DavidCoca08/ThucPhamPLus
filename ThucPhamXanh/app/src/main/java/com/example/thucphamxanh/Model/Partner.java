@@ -1,57 +1,65 @@
 package com.example.thucphamxanh.Model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Partner {
-    private int maDT;
-    private String tenDT,diaChi,sdt,taiKhoan,matKhau;
+    private int codePartner;
+    private String namePartner,addressPartner,userPartner,passwordPartner;
 
     public Partner() {
     }
 
-    public String getTaiKhoan() {
-        return taiKhoan;
+    public int getCodePartner() {
+        return codePartner;
     }
 
-    public void setTaiKhoan(String taiKhoan) {
-        this.taiKhoan = taiKhoan;
+    public void setCodePartner(int codePartner) {
+        this.codePartner = codePartner;
     }
 
-    public String getMatKhau() {
-        return matKhau;
+    public String getNamePartner() {
+        return namePartner;
     }
 
-    public void setMatKhau(String matKhau) {
-        this.matKhau = matKhau;
+    public void setNamePartner(String namePartner) {
+        this.namePartner = namePartner;
     }
 
-    public int getMaDT() {
-        return maDT;
+    public String getAddressPartner() {
+        return addressPartner;
     }
 
-    public void setMaDT(int maDT) {
-        this.maDT = maDT;
+    public void setAddressPartner(String adressPartner) {
+        this.addressPartner = adressPartner;
     }
 
-    public String getTenDT() {
-        return tenDT;
+
+    public String getUserPartner() {
+        return userPartner;
     }
 
-    public void setTenDT(String tenDT) {
-        this.tenDT = tenDT;
+    public void setUserPartner(String userPartner) {
+        this.userPartner = userPartner;
     }
 
-    public String getDiaChi() {
-        return diaChi;
+    public String getPasswordPartner() {
+        return passwordPartner;
     }
 
-    public void setDiaChi(String diaChi) {
-        this.diaChi = diaChi;
+    public void setPasswordPartner(String passwordPartner) {
+        this.passwordPartner = passwordPartner;
     }
 
-    public String getSdt() {
-        return sdt;
-    }
+    public Map<String,Object> toMap(){
+        HashMap<String,Object> result = new HashMap<>();
+        result.put("namePartner",getNamePartner());
+        result.put("addressPartner",getAddressPartner());
+        result.put("userPartner",getUserPartner());
+        result.put("passwordPartner",getPasswordPartner());
+        return result;
 
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
+
+
     }
 }

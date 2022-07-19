@@ -2,6 +2,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:id="@+id/itemPartner"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,22 +16,29 @@
             android:layout_weight="1"
             >
             <TextView
-                android:id="@+id/tv_item_MaDT"
+                android:id="@+id/tv_CodePartner_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 />
             <TextView
-                android:id="@+id/tv_item_DiaChi"
+                android:id="@+id/tv_AddressPartner_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"/>
             <TextView
-                android:id="@+id/tv_item_TaiKhoan"
+                android:id="@+id/tv_UserPartner_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
+                android:layout_weight="1" />
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_UpdatePartner"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:backgroundTint="#4CAF50"/>
 
         </LinearLayout>
         <LinearLayout
@@ -38,22 +47,27 @@
             android:orientation="vertical"
             android:layout_weight="1">
             <TextView
-                android:id="@+id/tv_item_TenDT"
+                android:id="@+id/tv_NamePartner_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <TextView
+                android:id="@+id/tv_PasswordPartner_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="20dp"/>
-            <TextView
-                android:id="@+id/SDT"
+                android:inputType="textPassword"/>
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_DeletePartner"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <TextView
-                android:id="@+id/tv_item_MatKhau"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:text="Delete"
+                android:backgroundTint="#F44336"/>
         </LinearLayout>
+
     </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

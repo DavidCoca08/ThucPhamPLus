@@ -14,11 +14,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 
-public class DAOCategory {
+public class CategoryDAO {
     FirebaseDatabase database;
     DatabaseReference reference;
     List<Category> list;
-    public DAOCategory(List<Category> list) {
+    public CategoryDAO(List<Category> list) {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference().child("TheLoai");
         this.list = list;
@@ -58,8 +58,7 @@ public class DAOCategory {
         reference.child(""+tl.getMaLoai()).removeValue();
 //        reference.child("theLoai").child(String.valueOf(tl.getMaLoai())).removeValue();
     }
-    public void updateTheLoai(Category tl, String tenLoai){
-        tl.setTenLoai(tenLoai);
+    public void updateTheLoai(Category tl){
         reference.child(""+tl.getMaLoai()).updateChildren(tl.toMap());
     }
     public List<Category> getAll(){

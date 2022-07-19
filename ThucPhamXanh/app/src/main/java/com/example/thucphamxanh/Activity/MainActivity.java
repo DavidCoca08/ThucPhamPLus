@@ -105,13 +105,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         //khởi tạo các view
         initUI();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment

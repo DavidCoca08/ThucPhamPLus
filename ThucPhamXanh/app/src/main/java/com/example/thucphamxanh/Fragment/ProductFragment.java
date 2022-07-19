@@ -8,16 +8,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-//import com.example.thucphamxanh.databinding.FragmentGalleryBinding;
-
+import com.example.thucphamxanh.databinding.FragmentProductBinding;
 public class ProductFragment extends Fragment {
 
-//    private FragmentGalleryBinding binding;
+    private FragmentProductBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        binding = FragmentGalleryBinding.inflate(inflater, container, false);
-//        View root = binding.getRoot();
+        binding = FragmentProductBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
         return null;
     }
