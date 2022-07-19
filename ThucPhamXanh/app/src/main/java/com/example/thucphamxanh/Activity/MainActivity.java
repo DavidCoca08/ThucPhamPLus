@@ -129,8 +129,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_main,
                 R.id.nav_home,
-                R.id.nav_gallery,
-                R.id.nav_slideshow,
+                R.id.nav_Product,
+                R.id.nav_Bill,
                 R.id.nav_my_profile,
                 R.id.nav_change_password,
                 R.id.nav_sign_out)
