@@ -17,6 +17,8 @@
     <string name="menu_account">Account</string>
     <string name="menu_partner">Đối tác</string>
     <string name="menu_change_password">Change password</string>
+    <string name="menu_slideshow">slide show</string>
+    <string name="statistics">Thống kê khoản thu</string>
     <string name="menu_sign_out">Sign out</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

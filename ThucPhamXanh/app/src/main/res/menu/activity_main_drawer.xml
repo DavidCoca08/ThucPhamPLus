@@ -21,9 +21,23 @@
             android:icon="@drawable/ic_baseline_receipt_long_24"
             android:title="@string/menu_Bill" />
         <item
+<<<<<<< HEAD
             android:id="@+id/nav_statistic"
             android:icon="@drawable/ic_baseline_attach_money_24"
             android:title="@string/menu_statistic" />
+=======
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_slideshow" />
+        <item
+            android:id="@+id/nav_statistics"
+            android:icon="@drawable/ic_baseline_attach_money_24"
+            android:title="@string/statistics" />
+        <!--<item
+            android:id="@+id/nav_Bill"
+            android:icon="@drawable/ic_baseline_receipt_long_24"
+            android:title="@string/menu_Bill" />-->
+>>>>>>> f23fcca7776da729c08c116040bd612a3ca346ab
     </group>
     <item android:title="Account">
         <menu>
