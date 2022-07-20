@@ -77,7 +77,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 //                Log.d(TAG,  TAG + " onClick: sign in" );
 
                 if (logins()== false){
-                    logins();
+                    login();
                 }
                 logins();
 
