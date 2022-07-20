@@ -1,66 +1,79 @@
 package com.example.thucphamxanh.Model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Product {
-    private int maSP,soLuong,maTL,maDT,giaBan;
-    private String tenSP,hinhSP;
+    private int codeProduct,amountProduct,codeCategory,priceProduct;
+    private String nameProduct,imgProduct,userPartner;
 
     public Product() {
     }
 
-    public String getHinhSP() {
-        return hinhSP;
+    public int getCodeProduct() {
+        return codeProduct;
     }
 
-    public void setHinhSP(String hinhSP) {
-        this.hinhSP = hinhSP;
+    public void setCodeProduct(int codeProduct) {
+        this.codeProduct = codeProduct;
     }
 
-    public int getMaSP() {
-        return maSP;
+    public int getAmountProduct() {
+        return amountProduct;
     }
 
-    public void setMaSP(int maSP) {
-        this.maSP = maSP;
+    public void setAmountProduct(int amountProduct) {
+        this.amountProduct = amountProduct;
     }
 
-    public int getSoLuong() {
-        return soLuong;
+    public int getCodeCategory() {
+        return codeCategory;
     }
 
-    public void setSoLuong(int soLuong) {
-        this.soLuong = soLuong;
+    public void setCodeCategory(int codeCategory) {
+        this.codeCategory = codeCategory;
     }
 
-    public int getMaTL() {
-        return maTL;
+
+    public String getUserPartner() {
+        return userPartner;
     }
 
-    public void setMaTL(int maTL) {
-        this.maTL = maTL;
+    public void setUserPartner(String userPartner) {
+        this.userPartner = userPartner;
     }
 
-    public int getMaDT() {
-        return maDT;
+    public int getPriceProduct() {
+        return priceProduct;
     }
 
-    public void setMaDT(int maDT) {
-        this.maDT = maDT;
+    public void setPriceProduct(int priceProduct) {
+        this.priceProduct = priceProduct;
     }
 
-    public int getGiaBan() {
-        return giaBan;
+    public String getNameProduct() {
+        return nameProduct;
     }
 
-    public void setGiaBan(int giaBan) {
-        this.giaBan = giaBan;
+    public void setNameProduct(String nameeProduct) {
+        this.nameProduct = nameeProduct;
     }
 
-    public String getTenSP() {
-        return tenSP;
+    public String getImgProduct() {
+        return imgProduct;
     }
 
-    public void setTenSP(String tenSP) {
-        this.tenSP = tenSP;
+    public void setImgProduct(String imgProduct) {
+        this.imgProduct = imgProduct;
     }
-
+    public Map<String,Object> toMap(){
+        HashMap<String,Object> result = new HashMap<>();
+        result.put("codeCategory",getCodeCategory());
+        result.put("userPartner",getUserPartner());
+        result.put("nameProduct",getNameProduct());
+        result.put("priceProduct",getPriceProduct());
+        result.put("amountProduct",getAmountProduct());
+        result.put("imgProduct",getImgProduct());
+        return result;
+    }
 }

@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
          * */
         //setUserViewModelObserver();
         //show thông tin user lên nav header khi đăng nhập
-        showUserInformation();
+//        showUserInformation();
         profileViewModel.setUser(user);
         //set thông tin user vào viewmodel để giao tiếp
         // Passing each menu ID as a set of Ids because each

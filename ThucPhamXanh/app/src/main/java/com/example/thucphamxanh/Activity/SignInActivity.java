@@ -1,6 +1,7 @@
 package com.example.thucphamxanh.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +12,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import com.example.thucphamxanh.Adapter.PartnerAdapter;
+import com.example.thucphamxanh.Fragment.PartnerFragment;
+import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,6 +24,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = "SignInActivity";
@@ -26,11 +36,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private TextInputLayout formEmail, formPassword;
     private Button btnSignIn;
     private ProgressBar progressBar;
+    private List<Partner> list = new ArrayList<>();
+    private PartnerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         initUI();
+        getDataSpf();
+
     }
 
     private void setOnclickListener() {
@@ -58,7 +73,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_SignInActivity_signIn:
 //                Log.d(TAG,  TAG + " onClick: sign in" );
-                login();
+//                login();
+                logins();
+
+
                 break;
             default:
                 Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
@@ -108,6 +126,42 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 });
         Log.d(TAG, "login: end");
     }
+    public void logins(){
+        String email = formEmail.getEditText().getText().toString().trim();
+        String password = formPassword.getEditText().getText().toString().trim();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUserPartner().equals(email) && list.get(i).getPasswordPartner().equals(password)){
+                remember();
+                Log.d("aaaaaa",list.get(i).getUserPartner());
+                Log.d("aaaaaa",list.get(i).getPasswordPartner());
+                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+            }
+        }
+        if (email.equals("admin") && password.equals("admin") ){
+            remember();
+            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+    }
+    public void remember(){
+        String email = formEmail.getEditText().getText().toString().trim();
+        String password = formPassword.getEditText().getText().toString().trim();
+        SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", email);
+        editor.putString("password", password);
+        editor.apply();
+    }
+    public void getDataSpf(){
+        SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        formEmail.getEditText().setText(sharedPreferences.getString("username",""));
+        formPassword.getEditText().setText(sharedPreferences.getString("password",""));
+    }
 
     private boolean validate(String email, String password) {
         try {
@@ -130,4 +184,5 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         return true;
 
     }
+
 }

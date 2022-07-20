@@ -57,7 +57,5 @@ public class ProductFragment extends Fragment {
             }
         }).attach();
     }
-    public void getDataPartner(){
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    }
+
 }

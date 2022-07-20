@@ -1,7 +1,6 @@
 package com.example.thucphamxanh.Fragment;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,31 +8,24 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.example.thucphamxanh.Activity.MainActivity;
-import com.example.thucphamxanh.Activity.SignInActivity;
 import com.example.thucphamxanh.Adapter.PartnerAdapter;
-import com.example.thucphamxanh.DAO.PartnerDAO;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 
 public class PartnerFragment extends Fragment {
@@ -41,24 +33,22 @@ public class PartnerFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private List<Partner> list;
     private PartnerAdapter adapter;
-    private PartnerDAO dao;
     private TextInputLayout til_namePartner,til_addressPartner,til_UserPartner,til_PasswordPartner,til_rePasswordPartner;
-    private TextInputEditText edNamePartner,edAddressPartner,edUserPartner,edPasswordPartner,edRePassword;
     private Button btnAddPartner,btnCancelPartner;
     private String namePartner,addressPartner,userPartner,passwordPartner,rePasswordPartner;
     private FloatingActionButton btn_addPartner;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference reference = database.getReference("Partner");
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_partner, container, false);
         rvPartner = view.findViewById(R.id.rvDoiTac_fragment);
-        list = new ArrayList<>();
+        list =  getAllPartner();
         linearLayoutManager=new LinearLayoutManager(getContext());
         rvPartner.setLayoutManager(linearLayoutManager);
         adapter = new PartnerAdapter(list);
-        dao = new PartnerDAO(list,adapter);
         rvPartner.setAdapter(adapter);
-        dao.getAllPartner();
         btn_addPartner = view.findViewById(R.id.btn_AddPartner_fragment);
         btn_addPartner.setOnClickListener(view1 -> {
             addPartner();
@@ -73,7 +63,7 @@ public class PartnerFragment extends Fragment {
         builder.setView(view1);
         AlertDialog dialog = builder.create();
         dialog.show();
-        mapped(view1);
+        unitUi(view1);
         btnAddPartner.setOnClickListener(view -> {
             getText();
             validate();
@@ -103,6 +93,7 @@ public class PartnerFragment extends Fragment {
             til_UserPartner.setError("");
             return true;
         }
+
     }
     public boolean checkPass(){
         if (!passwordPartner.equals(rePasswordPartner)){
@@ -119,17 +110,13 @@ public class PartnerFragment extends Fragment {
     public void validate(){
         if(isEmptys(namePartner,til_namePartner) && isEmptys(addressPartner,til_addressPartner)
         && isEmptys(userPartner,til_UserPartner) && isEmptys(passwordPartner,til_PasswordPartner) && checkNumberPhone() && checkPass() ){
-            addPartners();
-            setText();
+            setDataPartner();
+            removeAll();
         }
     }
 
-    public void mapped(View view){
-        edNamePartner = view.findViewById(R.id.ed_NamePartner_dialog);
-        edAddressPartner = view.findViewById(R.id.ed_AddressPartner_dialog);
-        edUserPartner = view.findViewById(R.id.ed_UserPartner_dialog);
-        edPasswordPartner = view.findViewById(R.id.ed_PasswordPartner_dialog);
-        edRePassword = view.findViewById(R.id.ed_RePasswordPartner_dialog);
+    public void unitUi(View view){
+
         btnAddPartner = view.findViewById(R.id.btn_addPartner_dialog);
         btnCancelPartner = view.findViewById(R.id.btn_cancelPartner_dialog);
         til_namePartner =view.findViewById(R.id.til_namePartner_dialog);
@@ -139,51 +126,72 @@ public class PartnerFragment extends Fragment {
         til_rePasswordPartner =view.findViewById(R.id.til_rePasswordPartner_dialog);
     }
     public void getText(){
-        namePartner = edNamePartner.getText().toString();
-        addressPartner = edAddressPartner.getText().toString();
-        userPartner  = edUserPartner.getText().toString();
-        passwordPartner = edPasswordPartner.getText().toString();
-        rePasswordPartner = edRePassword.getText().toString();
+        namePartner = til_UserPartner.getEditText().getText().toString();
+        addressPartner = til_addressPartner.getEditText().getText().toString();
+        userPartner  = til_UserPartner.getEditText().getText().toString();
+        passwordPartner = til_PasswordPartner.getEditText().getText().toString();
+        rePasswordPartner = til_rePasswordPartner.getEditText().getText().toString();
     }
-    public void addPartners(){
+    public void setDataPartner(){
         Partner partner = new Partner();
         partner.setNamePartner(namePartner);
         partner.setAddressPartner(addressPartner);
         partner.setUserPartner(userPartner);
         partner.setPasswordPartner(passwordPartner);
-        dao.addPartner(partner);
+        addPartnerFirebase(partner);
     }
-    public void setText(){
-        edNamePartner.setText("");
-        edAddressPartner.setText("");
-        edUserPartner.setText("");
-        edPasswordPartner.setText("");
-        edPasswordPartner.setText("");
-        edRePassword.setText("");
+    public void removeAll(){
+        til_UserPartner.getEditText().setText("");
+        til_addressPartner.getEditText().setText("");
+        til_UserPartner.getEditText().setText("");
+        til_PasswordPartner.getEditText().setText("");
+        til_PasswordPartner.getEditText().setText("");
+        til_rePasswordPartner.getEditText().setText("");
     }
-//    public void onFirebase(){
-//        FirebaseAuth auth = FirebaseAuth.getInstance();
-//        auth.signInWithEmailAndPassword(userPartner, passwordPartner)
-//                .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            Successful(task);
-//                        } else {
-//                            unSuccessful(task);
-//                        }
-//                    }
-//
-//                    private void unSuccessful(Task<AuthResult> task) {
-//
-//                    }
-//
-//                    private void Successful(Task<AuthResult> task) {
-//                        FirebaseUser user = auth.getCurrentUser();
-////                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-////                        startActivity(intent);
-////                        finishAffinity();
-//                    }
-//                });
-//    }
+    public List<Partner> getAllPartner(){
+        List<Partner> list1 = new ArrayList<>();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list1.clear();
+                for (DataSnapshot snap : snapshot.getChildren()){
+                    Partner partner = snap.getValue(Partner.class);
+                    list1.add(partner);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return list1;
+    }
+    public void addPartnerFirebase(Partner partner){
+        if (list.size()==0){
+            partner.setCodePartner(1);
+            partner.setNamePartner(partner.getNamePartner());
+            partner.setAddressPartner(partner.getAddressPartner());
+            partner.setUserPartner(partner.getUserPartner());
+            partner.setPasswordPartner(partner.getPasswordPartner());
+            reference.child("1").setValue(partner);
+        }else if (list.size()!=0){ // nếu list đã có thì lấy cái thằng id của sản phẩm cuối cùng +1 làm mã id của thằng kế tiếp.(tự sinh ID như SQL)
+            int i = list.size()-1;
+            int id = list.get(i).getCodePartner() + 1;
+            partner.setCodePartner(id);
+            partner.setNamePartner(partner.getNamePartner());
+            partner.setAddressPartner(partner.getAddressPartner());
+            partner.setUserPartner(partner.getUserPartner());
+            partner.setPasswordPartner(partner.getPasswordPartner());
+            reference.child(""+id).setValue(partner);
+        }
+    }
+    public void updatePartner(Partner partner){
+        reference.child(""+partner.getCodePartner()).updateChildren(partner.toMap());
+    }
+    public void deletePartner(Partner partner){
+        reference.child(""+partner.getCodePartner()).removeValue();
+    }
+
 }
