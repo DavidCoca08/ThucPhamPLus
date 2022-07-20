@@ -1,5 +1,7 @@
 package com.example.thucphamxanh.Fragment.ProductFragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.thucphamxanh.Adapter.ProductAdapter_tabLayout;
 import com.example.thucphamxanh.Model.Partner;
+import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.FragmentProductBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -27,9 +30,14 @@ public class ProductFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductBinding.inflate(inflater, container, false);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
+        String user = sharedPreferences.getString("username","");
+        if (!user.equals("admin")){
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_food,null);
+            return view;
+        }
         tabLayout();
-
-
         return binding.getRoot();
     }
 
@@ -52,6 +60,8 @@ public class ProductFragment extends Fragment {
                     case 1: tab.setText("Hoa quả");
                         break;
                     case 2:tab.setText("Thịt");
+                        break;
+                    case 3:tab.setText("Đồ ăn ");
                         break;
                 }
             }
