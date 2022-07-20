@@ -24,8 +24,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +39,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private TextInputLayout formEmail, formPassword;
     private Button btnSignIn;
     private ProgressBar progressBar;
-    private List<Partner> list = new ArrayList<>();
-    private PartnerAdapter adapter;
+    private List<Partner> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_sign_in);
         initUI();
         getDataSpf();
-
+        list = getAllPartner();
     }
 
     private void setOnclickListener() {
@@ -73,8 +75,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_SignInActivity_signIn:
 //                Log.d(TAG,  TAG + " onClick: sign in" );
-//                login();
+
+                if (logins()== false){
+                    logins();
+                }
                 logins();
+
 
 
                 break;
@@ -126,7 +132,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 });
         Log.d(TAG, "login: end");
     }
-    public void logins(){
+    public boolean logins(){
         String email = formEmail.getEditText().getText().toString().trim();
         String password = formPassword.getEditText().getText().toString().trim();
         for (int i = 0; i < list.size(); i++) {
@@ -137,7 +143,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                return;
+                return true;
             }
         }
         if (email.equals("admin") && password.equals("admin") ){
@@ -145,8 +151,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(SignInActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
+            return true;
         }
-
+    return false;
     }
     public void remember(){
         String email = formEmail.getEditText().getText().toString().trim();
@@ -183,6 +190,27 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
         return true;
 
+    }
+    public List<Partner> getAllPartner(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
+        List<Partner> list1 = new ArrayList<>();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list1.clear();
+                for (DataSnapshot snap : snapshot.getChildren()){
+                    Partner partner = snap.getValue(Partner.class);
+                    list1.add(partner);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return list1;
     }
 
 }

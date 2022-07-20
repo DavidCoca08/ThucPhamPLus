@@ -37,8 +37,6 @@ public class PartnerFragment extends Fragment {
     private Button btnAddPartner,btnCancelPartner;
     private String namePartner,addressPartner,userPartner,passwordPartner,rePasswordPartner;
     private FloatingActionButton btn_addPartner;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference reference = database.getReference("Partner");
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,7 +83,7 @@ public class PartnerFragment extends Fragment {
             return true;
         }
     }
-    public boolean checkNumberPhone(){
+    public boolean checkLengthNumberPhone(){
         if(userPartner.length()!=10){
             til_UserPartner.setError("Số điện thoại phải đủ 10 số.");
             return false;
@@ -93,7 +91,15 @@ public class PartnerFragment extends Fragment {
             til_UserPartner.setError("");
             return true;
         }
-
+    }
+    public boolean checkNumberPhone(){
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUserPartner().equals(userPartner)){
+                til_UserPartner.setError("Số điện thoại đã được sử dụng");
+                return false;
+            }else til_UserPartner.setError("");
+        }
+        return true;
     }
     public boolean checkPass(){
         if (!passwordPartner.equals(rePasswordPartner)){
@@ -109,7 +115,8 @@ public class PartnerFragment extends Fragment {
 
     public void validate(){
         if(isEmptys(namePartner,til_namePartner) && isEmptys(addressPartner,til_addressPartner)
-        && isEmptys(userPartner,til_UserPartner) && isEmptys(passwordPartner,til_PasswordPartner) && checkNumberPhone() && checkPass() ){
+        && isEmptys(userPartner,til_UserPartner) && isEmptys(passwordPartner,til_PasswordPartner)
+                && checkLengthNumberPhone() && checkPass() && checkNumberPhone() ){
             setDataPartner();
             removeAll();
         }
@@ -149,6 +156,8 @@ public class PartnerFragment extends Fragment {
         til_rePasswordPartner.getEditText().setText("");
     }
     public List<Partner> getAllPartner(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
         List<Partner> list1 = new ArrayList<>();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -169,6 +178,8 @@ public class PartnerFragment extends Fragment {
         return list1;
     }
     public void addPartnerFirebase(Partner partner){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
         if (list.size()==0){
             partner.setCodePartner(1);
             partner.setNamePartner(partner.getNamePartner());
@@ -188,9 +199,13 @@ public class PartnerFragment extends Fragment {
         }
     }
     public void updatePartner(Partner partner){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
         reference.child(""+partner.getCodePartner()).updateChildren(partner.toMap());
     }
     public void deletePartner(Partner partner){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
         reference.child(""+partner.getCodePartner()).removeValue();
     }
 

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,34 +57,31 @@ public class VegetableFragment extends Fragment {
     private TextInputLayout til_nameProduct,til_priceProduct,til_amountProduct;
     private ImageView img_Product,img_addImageCamera,img_addImageDevice;
     private String nameProduct,imgProduct,userPartner;
-    private int codeProduct,codeCategory,priceProduct,amountProduct;
+    private int codeCategory,priceProduct,amountProduct;
     private Button btn_addVegetable,btn_cancleVegetable;
-    private List<Partner> listPartner;
-    private PartnerAdapter adapterPartner;
     private static final int REQUEST_ID_IMAGE_CAPTURE =1;
-    private FirebaseDatabase database;
-    private DatabaseReference reference;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
          view = inflater.inflate(R.layout.fragment_vegetable, container, false);
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference("Product");
-        listProduct = getAllProduct();
-        listVegetable = getVegetableProduct();
-        fab_addVegetable = view.findViewById(R.id.btn_addVegetable_fragment);
-        rvVegetable = view.findViewById(R.id.rvVegetable);
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        rvVegetable.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listVegetable);
-        rvVegetable.setAdapter(adapter);
-        listPartner = getAllPartner();
-        adapterPartner = new PartnerAdapter(listPartner);
+         unitUI();
          fab_addVegetable.setOnClickListener(view1 -> {
              dialogProduct();
          });
         return view;
+    }
+    public void unitUI(){
+        listProduct = getAllProduct();
+        listVegetable = getVegetableProduct();
+        fab_addVegetable = view.findViewById(R.id.fab_addVegetable_fragment);
+        rvVegetable = view.findViewById(R.id.rvVegetable);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        rvVegetable.setLayoutManager(linearLayoutManager);
+        adapter = new ProductAdapter(listVegetable);
+        adapter.notifyDataSetChanged();
+        rvVegetable.setAdapter(adapter);
     }
 
 
@@ -98,7 +95,7 @@ public class VegetableFragment extends Fragment {
         builder.setView(view);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-        initUi(view);
+        initUiDialog(view);
         img_addImageCamera.setOnClickListener(view1 -> {
             captureImage();
         });
@@ -107,10 +104,10 @@ public class VegetableFragment extends Fragment {
                 setDataProduct();
         });
         btn_cancleVegetable.setOnClickListener(view1 -> {
-            alertDialog.dismiss();
+            img_Product.setImageURI(Uri.parse(""));
         });
     }
-    public void initUi(View view){
+    public void initUiDialog(View view){
         img_Product = view.findViewById(R.id.imgProduct_dialog);
         img_addImageCamera = view.findViewById(R.id.img_addImageCamera_dialog);
         img_addImageDevice = view.findViewById(R.id.img_addImageDevice_dialog);
@@ -132,7 +129,6 @@ public class VegetableFragment extends Fragment {
             imgProduct = Base64.getEncoder().encodeToString(imgByte);
         }
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
-
         userPartner = sharedPreferences.getString("username","");
         codeCategory = Integer.parseInt(String.valueOf(1));
         priceProduct = Integer.parseInt(til_priceProduct.getEditText().getText().toString());
@@ -172,7 +168,9 @@ public class VegetableFragment extends Fragment {
             }
         }
     }
-    public List<Product> getVegetableProduct(){
+    public  List<Product> getVegetableProduct(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Product");
         List<Product> list1 = new ArrayList<>();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -183,7 +181,6 @@ public class VegetableFragment extends Fragment {
                     if (product.getCodeCategory()==1){
                         list1.add(product);
                     }
-
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -195,7 +192,9 @@ public class VegetableFragment extends Fragment {
         });
         return list1;
     }
-    public List<Product> getAllProduct(){
+    public  List<Product> getAllProduct(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Product");
         List<Product> list1 = new ArrayList<>();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -217,6 +216,8 @@ public class VegetableFragment extends Fragment {
     }
 
     public void addProduct(Product product){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Product");
         if (listProduct.size()==0){
             product.setCodeProduct(1);
             product.setCodeCategory(product.getCodeCategory());
@@ -241,32 +242,34 @@ public class VegetableFragment extends Fragment {
         }
     }
     public void updateProduct(Product product){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Product");
         reference.child(""+product.getCodeProduct()).updateChildren(product.toMap());
     }
     public void deleteProduct(Product product){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Product");
         reference.child(""+product.getCodeProduct()).removeValue();
     }
-    public List<Partner> getAllPartner(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Partner");
-        List<Partner> list1 = new ArrayList<>();
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list1.clear();
-                for (DataSnapshot snap : snapshot.getChildren()){
-                    Partner partner = snap.getValue(Partner.class);
-                    list1.add(partner);
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        return list1;
+    public boolean isEmptys(String str,TextInputLayout til){
+        if (str.isEmpty()){
+            til.setError("Không được để trống");
+            return false;
+        }else til.setError("");
+        return true;
     }
+    public void validate(){
+        if (isEmptys(nameProduct,til_nameProduct) && isEmptys(String.valueOf(priceProduct),til_priceProduct)
+                && isEmptys(String.valueOf(amountProduct),til_amountProduct) && !imgProduct.isEmpty()){
+            setDataProduct();
+            removeAll();
+        }
+    }
+    public void removeAll(){
+        til_amountProduct.getEditText().setText("");
+        til_nameProduct.getEditText().setText("");
+        til_priceProduct.getEditText().setText("");
+    }
+
 
 }
