@@ -3,6 +3,7 @@ package com.example.thucphamxanh.Fragment.ProductFragments;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -97,14 +100,17 @@ public class VegetableFragment extends Fragment {
         alertDialog.show();
         initUiDialog(view);
         img_addImageCamera.setOnClickListener(view1 -> {
-            captureImage();
+            requestPermissionCamera();
+        });
+        img_addImageDevice.setOnClickListener(view1 -> {
+            requestPermissionDevice();
         });
         btn_addVegetable.setOnClickListener(view1 -> {
                 getTexts();
-                setDataProduct();
+                validate();
         });
         btn_cancleVegetable.setOnClickListener(view1 -> {
-            img_Product.setImageURI(Uri.parse(""));
+            alertDialog.dismiss();
         });
     }
     public void initUiDialog(View view){
@@ -162,9 +168,9 @@ public class VegetableFragment extends Fragment {
                 Bitmap bp = (Bitmap) data.getExtras().get("data");
                 this.img_Product.setImageBitmap(bp);
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getContext(), "Action canceled", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Bạn chưa thêm ảnh", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getContext(), "Action Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Lỗi", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -269,7 +275,47 @@ public class VegetableFragment extends Fragment {
         til_amountProduct.getEditText().setText("");
         til_nameProduct.getEditText().setText("");
         til_priceProduct.getEditText().setText("");
+        img_Product.setImageResource(R.drawable.ic_menu_camera1);
     }
+    public void requestPermissionCamera(){
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+//                Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+                captureImage();
+            }
 
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+//                Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                requestPermissionCamera();
+            }
+        };
+        TedPermission.create()
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("Nếu bạn không cấp quyền,bạn sẽ không thể tải ảnh lên\n\nVui lòng vào [Cài đặt] > [Quyền] và cấp quyền để sử dụng")
+                .setPermissions(Manifest.permission.CAMERA)
+                .check();
+    }
+    public void requestPermissionDevice(){
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+//                Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+//                Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                requestPermissionDevice();
+            }
+        };
+        TedPermission.create()
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("Nếu bạn không cấp quyền,bạn sẽ không thể tải ảnh lên\n\nVui lòng vào [Cài đặt] > [Quyền] và cấp quyền để sử dụng" )
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .check();
+    }
 
 }

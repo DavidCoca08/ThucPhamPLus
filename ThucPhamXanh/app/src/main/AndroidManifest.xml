@@ -4,6 +4,8 @@
     package="com.example.thucphamxanh">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -38,11 +40,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- <activity -->
-        <!-- android:name=".MainActivity" -->
-        <!-- android:exported="false" -->
-        <!-- android:label="@string/title_activity_main2" -->
-        <!-- android:theme="@style/Theme.ThucPhamXanh.NoActionBar" /> -->
+        </activity>
         <activity
             android:name=".Activity.MainActivity"
             android:exported="true"
