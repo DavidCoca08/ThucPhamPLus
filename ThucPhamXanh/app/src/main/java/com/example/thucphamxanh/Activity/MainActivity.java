@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     private Bitmap chooseAvatarBitmap;
     private ProfileViewModel profileViewModel;
 
+//    private int cartQuantity = 0;
 
 
 
@@ -222,7 +223,22 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_activity, menu);
+//        getMenuInflater().inflate(R.menu.main_activity, menu);
+        // Hùng làm phần này
+        final MenuItem menuItem = menu.findItem(R.id.btn_Actionbar_cart);
+        View actionView = menuItem.getActionView();
+
+        TextView cartBadgeTextView = actionView.findViewById(R.id.tv_CartActionItem_cart_badge);
+
+//        cartBadgeTextView.setText(String.valueOf(cartQuantity));
+//        cartBadgeTextView.setVisibility(cartQuantity == 0 ? View.GONE : View.VISIBLE);
+
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CartActivity.class));
+            }
+        });
         return true;
     }
 
