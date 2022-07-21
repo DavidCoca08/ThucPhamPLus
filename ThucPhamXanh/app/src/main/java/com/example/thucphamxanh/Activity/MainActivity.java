@@ -1,10 +1,12 @@
 package com.example.thucphamxanh.Activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -44,8 +46,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
@@ -299,4 +304,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         });
         Log.d(TAG, "syncView: ");
     }
+
+
 }

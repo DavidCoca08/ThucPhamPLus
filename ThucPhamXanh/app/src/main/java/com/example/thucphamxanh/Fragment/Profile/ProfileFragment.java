@@ -190,9 +190,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 == PackageManager.PERMISSION_GRANTED) {
             mainActivity.openGallery();
         } else {
-            String[] permission = {
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            };
+            String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
             getActivity().requestPermissions(permission, MY_REQUEST_CODE);
         }
     }
