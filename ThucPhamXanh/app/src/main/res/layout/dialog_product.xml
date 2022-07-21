@@ -19,7 +19,8 @@
         <ImageView
             android:id="@+id/imgProduct_dialog"
             android:layout_width="150dp"
-            android:layout_height="150dp"/>
+            android:layout_height="150dp"
+            android:src="@drawable/ic_baseline_image_24"/>
         <ImageView
             android:id="@+id/img_addImageDevice_dialog"
             android:layout_width="40dp"

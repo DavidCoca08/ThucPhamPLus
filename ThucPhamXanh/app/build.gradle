@@ -62,4 +62,8 @@ dependencies {
     //circle ImageView
     //thư viện hỗ trợ cắt ảnh thành hình tròn
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //thư viện xin quyền truy cập
+    implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
+ 
+
 }
