@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA"/>
 
+
     <application
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -18,7 +20,12 @@
         android:theme="@style/Theme.ThucPhamXanh"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.CartActivity"
+            android:name=".Activity.CartActivity"/>
+        <activity
+            android:name=".Activity.SignUpByPhoneActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SignInByPhoneActivity"

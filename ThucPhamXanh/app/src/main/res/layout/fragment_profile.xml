@@ -34,13 +34,13 @@
                 android:layout_marginTop="10dp"
                 android:hint="Họ tên"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <EditText
+        <!--<EditText
             android:id="@+id/et_profile_fragment_full_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:padding="10dp"
-            android:hint="Full name"/>
+            android:hint="Full name"/>-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_profile_fragment_email"
@@ -59,14 +59,14 @@
                 android:layout_marginTop="10dp"
                 android:hint="Email"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <EditText
+        <!--<EditText
             android:id="@+id/et_profile_fragment_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:inputType="none"
-            android:hint="email"/>
+            android:hint="email"/>-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_profile_fragment_address"

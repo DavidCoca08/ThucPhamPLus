@@ -8,121 +8,131 @@
 
 
     <ScrollView
-        android:layout_marginTop="55dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginVertical="20dp"
                 android:orientation="horizontal">
+
                 <androidx.cardview.widget.CardView
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="#F3F1F1"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="15dp"
                     android:id="@+id/img_vegetable_home"
                     android:layout_width="80dp"
-                    android:layout_height="80dp">
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="15dp"
+                    android:layout_marginVertical="10dp"
+                    app:cardBackgroundColor="#F3F1F1"
+                    app:cardCornerRadius="10dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="5dp"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/vegetable_home"
-                            />
+                            android:background="@drawable/vegetable_home" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Rau, củ"
-                            android:textAlignment="center"
-                            />
+                            android:textAlignment="center" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="#F3F1F1"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="10dp"
                     android:id="@+id/img_fruit_home"
                     android:layout_width="80dp"
-                    android:layout_height="80dp">
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    app:cardBackgroundColor="#F3F1F1"
+                    app:cardCornerRadius="10dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="5dp"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/fruit_home"
-                            />
+                            android:background="@drawable/fruit_home" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Hoa quả"
-                            android:textAlignment="center"
-                            />
+                            android:textAlignment="center" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="#F3F1F1"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="10dp"
                     android:id="@+id/img_meat_home"
                     android:layout_width="80dp"
-                    android:layout_height="80dp">
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    app:cardBackgroundColor="#F3F1F1"
+                    app:cardCornerRadius="10dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="5dp"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="55dp"
-                            android:background="@drawable/meat_home"
-                            />
+                            android:background="@drawable/meat_home" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Thịt"
-                            android:textAlignment="center"
-                            />
+                            android:textAlignment="center" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="#F3F1F1"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="10dp"
                     android:id="@+id/img_food_home"
                     android:layout_width="80dp"
-                    android:layout_height="80dp">
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    app:cardBackgroundColor="#F3F1F1"
+                    app:cardCornerRadius="10dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="5dp"
                         android:orientation="vertical">
+
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="55dp"
                             android:layout_marginHorizontal="5dp"
-                            android:background="@drawable/food_home"
-                            />
+                            android:background="@drawable/food_home" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Đồ ăn"
-                            android:textAlignment="center"
-                            />
+                            android:textAlignment="center" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 

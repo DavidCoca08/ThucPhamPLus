@@ -12,7 +12,7 @@
         android:id="@+id/layout_sign_in_by_phone_activity_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:startIconDrawable="@drawable/ic_baseline_email_24"
+        app:startIconDrawable="@drawable/ic_baseline_phone_24"
         app:endIconMode="clear_text">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
