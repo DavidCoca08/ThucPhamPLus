@@ -16,9 +16,9 @@
 
         <ImageView
             android:id="@+id/img_ItemCart_imgProduct"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"/>
 
         <LinearLayout
             android:layout_width="215dp"
@@ -33,16 +33,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="25dp"
-                android:textStyle="italic"
-                android:text="TextView" />
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/tv_ItemCart_priceProduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="#ff0000"
-                android:text="TextView" />
+                android:textColor="#ff0000" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -52,26 +50,26 @@
 
 
                 <ImageView
-                    android:id="@+id/btn_ItemCart_plus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/plus" />
-
-                <TextView
-                    android:id="@+id/tv_ItemCart_numberProduct"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="TextView" />
-
-                <ImageView
                     android:id="@+id/btn_ItemCart_minus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/minus" />
+
+                <TextView
+                    android:id="@+id/tv_ItemCart_numberProduct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                     />
+
+                <ImageView
+                    android:id="@+id/btn_ItemCart_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/plus" />
 
             </LinearLayout>
 
@@ -79,7 +77,6 @@
                 android:id="@+id/tv_ItemCart_totalPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:gravity="center"/>
 
         </LinearLayout>

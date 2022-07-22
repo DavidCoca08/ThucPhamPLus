@@ -34,7 +34,8 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHolder> {
     private List<Product> list;
-    private List<Product> listProduct;
+    private List<Cart> listCart;
+    public static int id = 0;
     public ProductAdapter(List<Product> list) {
         this.list=list;
     }
@@ -50,6 +51,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
             Product product = list.get(position);
+            listCart=getAllCart();
             byte[] imgByte = Base64.getDecoder().decode(product.getImgProduct());
             Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
             holder.imgProduct.setImageBitmap(bitmap);
@@ -72,7 +74,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             });
             holder.btn_addCart.setOnClickListener(view -> {
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                listProduct=getAllProduct();
+
                 Cart cart = new Cart();
                 cart.setUserClient(firebaseUser.getUid());
                 cart.setIdProduct(product.getCodeProduct());
@@ -95,7 +97,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{
-        private ImageButton btnAddCart;
+
         private TextView tvNameProduct,tvPriceProduct;
         private ImageView imgProduct;
         private CardView cardProuct;
@@ -103,7 +105,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         private ImageButton btn_addCart;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
-            btnAddCart = itemView.findViewById(R.id.btn_addCart_item);
             tvNameProduct = itemView.findViewById(R.id.tvNameProduct_item);
             tvPriceProduct = itemView.findViewById(R.id.tvPriceProduct_item);
             imgProduct = itemView.findViewById(R.id.imgProduct_item);
@@ -139,7 +140,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     public void addProductCart(Cart cart){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Cart");
-        if (listProduct.size()==0){
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Cart cart1 = snap.getValue(Cart.class);
+                    if (cart1.getUserClient().equals(cart.getUserClient()) && cart1.getIdProduct() == cart.getIdProduct()) {
+                        id = Integer.parseInt(snap.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        int id1 = id+1;
+        if (listCart.size()==0){
             cart.setIdProduct(cart.getIdProduct());
             cart.setUserClient(cart.getUserClient());
             cart.setNameProduct(cart.getNameProduct());
@@ -150,8 +168,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             reference.child("1").setValue(cart);
 
         }else {
-            int i = listProduct.size()-1;
-            int id = listProduct.get(i).getCodeProduct()+1;
             cart.setIdProduct(cart.getIdProduct());
             cart.setUserClient(cart.getUserClient());
             cart.setNameProduct(cart.getNameProduct());
@@ -159,8 +175,30 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             cart.setImgProduct(cart.getImgProduct());
             cart.setNumberProduct(cart.getNumberProduct());
             cart.setTotalPrice(cart.getTotalPrice());
-            reference.child(""+id).setValue(cart);
+            reference.child(""+id1).setValue(cart);
         }
+    }
+    public  List<Cart> getAllCart(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Cart");
+        List<Cart> list1 = new ArrayList<>();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list1.clear();
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    Cart cart = snap.getValue(Cart.class);
+                    list1.add(cart);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return list1;
     }
 
 }

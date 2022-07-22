@@ -147,28 +147,7 @@ public class FoodFragment extends Fragment {
         });
         return list1;
     }
-//    public List<Partner> getAllPartner(){
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference reference = database.getReference("Partner");
-//        List<Partner> list1 = new ArrayList<>();
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                list1.clear();
-//                for (DataSnapshot snap : snapshot.getChildren()){
-//                    Partner partner = snap.getValue(Partner.class);
-//                    list1.add(partner);
-//                }
-//                adapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//        return list1;
-//    }
+
     private void dialogProduct() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Thêm sản phẩm");

@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -259,6 +258,7 @@ public class ProductFragment extends Fragment {
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Product product = snap.getValue(Product.class);
                     list1.add(product);
+
                 }
 
             }
@@ -270,6 +270,7 @@ public class ProductFragment extends Fragment {
         });
         return list1;
     }
+
 
     public void addProduct(Product product){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
