@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.thucphamxanh.Adapter.CartAdapter;
+import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +31,7 @@ public class CartActivity extends AppCompatActivity {
     private CartAdapter adapter;
     private TextView tvTotalPrice;
     private Button btn_senBill;
+    private List<Bill> listBill;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +39,7 @@ public class CartActivity extends AppCompatActivity {
         unitUi();
         getCartProduct();
         btn_senBill.setOnClickListener(view -> {
-
+        addBill();
         });
     }
     public void unitUi(){
@@ -49,7 +51,7 @@ public class CartActivity extends AppCompatActivity {
         rvCart.setAdapter(adapter);
         tvTotalPrice = findViewById(R.id.tv_CartActivity_totalPrice);
         btn_senBill = findViewById(R.id.btn_CartActivity_btnPay);
-
+        listBill = getAllBill();
     }
     public  List<Cart> getCartProduct(){
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -66,7 +68,7 @@ public class CartActivity extends AppCompatActivity {
                         list1.add(cart);
                     }
                     int sum = 0;
-                    for (int i = 0; i < list.size(); i++) {
+                    for (int i = 0; i < list1.size(); i++) {
                         sum += list1.get(i).getTotalPrice();
                     }
                     tvTotalPrice.setText(String.valueOf(sum));
@@ -75,6 +77,41 @@ public class CartActivity extends AppCompatActivity {
 
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return list1;
+    }
+    public void addBill(){
+        Bill bill = new Bill();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Bill");
+        if (listBill.size()==0){
+            bill.setIdClient(firebaseUser.getUid());
+            bill.setDayOut("1/1/2020");
+            bill.setStatus("đang chuẩn bị");
+            reference.child(""+1).setValue(bill);
+            reference.child(""+1).child("Cart").setValue(list);
+        }
+
+    }
+    public  List<Bill> getAllBill(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Bill");
+        List<Bill> list1 = new ArrayList<>();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list1.clear();
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    Bill bill = snap.getValue(Bill.class);
+                    list1.add(bill);
+                }
+
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

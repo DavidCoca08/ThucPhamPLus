@@ -1,48 +1,41 @@
 package com.example.thucphamxanh.Model;
 
 public class Bill {
-    private int maHD,maKH;
-    private String ngayXuat,trangThai;
+    private int idBill;
+    private String dayOut,status,idClient;
 
     public Bill() {
     }
 
-    public Bill(int maHD, int maKH, String ngayXuat, String trangThai) {
-        this.maHD = maHD;
-        this.maKH = maKH;
-        this.ngayXuat = ngayXuat;
-        this.trangThai = trangThai;
+    public int getIdBill() {
+        return idBill;
     }
 
-    public int getMaHD() {
-        return maHD;
+    public void setIdBill(int idBill) {
+        this.idBill = idBill;
     }
 
-    public void setMaHD(int maHD) {
-        this.maHD = maHD;
+    public String getDayOut() {
+        return dayOut;
     }
 
-    public int getMaKH() {
-        return maKH;
+    public void setDayOut(String dayOut) {
+        this.dayOut = dayOut;
     }
 
-    public void setMaKH(int maKH) {
-        this.maKH = maKH;
+    public String getStatus() {
+        return status;
     }
 
-    public String getNgayXuat() {
-        return ngayXuat;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setNgayXuat(String ngayXuat) {
-        this.ngayXuat = ngayXuat;
+    public String getIdClient() {
+        return idClient;
     }
 
-    public String getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    public void setIdClient(String idClient) {
+        this.idClient = idClient;
     }
 }
