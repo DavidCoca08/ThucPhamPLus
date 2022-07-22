@@ -37,8 +37,15 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tên sản phẩm" />
+            android:hint="Tên sản phẩm"
+            />
     </com.google.android.material.textfield.TextInputLayout>
+    <Spinner
+        android:id="@+id/sp_nameCategory"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="7dp"
+        />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_PriceProduct_dialog"
         android:layout_width="match_parent"
