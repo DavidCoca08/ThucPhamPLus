@@ -52,7 +52,6 @@ public class CategoryDAO {
             reference.child(""+id).setValue(tl);
             Log.d("zzzzzzzzzzzz", String.valueOf(list.size()));
         }
-
     }
     public void deleteTheLoai(Category tl){
         reference.child(""+tl.getMaLoai()).removeValue();
