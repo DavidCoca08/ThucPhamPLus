@@ -29,6 +29,8 @@ public class SplashActivity extends AppCompatActivity {
                 nextActivity();
             }
         }, 2000);
+
+        getSupportActionBar().hide(); // Ẩn actionbar
     }
 
     private void nextActivity() {

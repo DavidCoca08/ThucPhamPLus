@@ -42,6 +42,8 @@ public class IntroActivity extends AppCompatActivity {
         btn_started_intro.setOnClickListener(view -> {
             startActivity(new Intent(getApplicationContext(), SignInActivity.class));
         });
+
+        getSupportActionBar().hide(); // Ẩn actionbar
     }
 
     public void skip(View view){

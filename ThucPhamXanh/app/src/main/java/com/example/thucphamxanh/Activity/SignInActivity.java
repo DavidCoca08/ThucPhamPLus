@@ -48,6 +48,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         initUI();
         getDataSpf();
         list = getAllPartner();
+
+        getSupportActionBar().hide(); // Ẩn actionbar
     }
 
     private void setOnclickListener() {
