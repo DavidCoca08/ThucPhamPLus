@@ -3,7 +3,6 @@ package com.example.thucphamxanh.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,10 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.example.thucphamxanh.R;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -34,14 +29,20 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
 import com.example.thucphamxanh.Model.User;
+import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -52,18 +53,31 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     public static final String TAG = "MainActivity";
     public static final int MY_REQUEST_CODE = 10;
 
-
+    //Object config layout
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
     private AppBarConfiguration mAppBarConfiguration;
+
+    //binding của main
     private ActivityMainBinding binding;
+
+    //các view show thông tin user trên nav header
     private ImageView ivAvatar;
     private TextView tvUserName;
     private TextView tvUserEmail;
 
+    //các reference để gọi API tới firebase
+    private DatabaseReference mDatabase;
     private FirebaseUser userAuth;
-    private User user = new User();
+    //object chứa thông tin user sau khi đăng nhập
+    //dùng để truyền vào các fragment.....
+    private User user;
+
+    //không dùng nữa
     private Bitmap chooseAvatarBitmap;
+
+
+    //ViewModel để giao tiếp dữ liệu với ProfileFragment
     private ProfileViewModel profileViewModel;
 
 //    private int cartQuantity = 0;
@@ -101,12 +115,12 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //khởi tạo user được xác thực bằng FirebaseAuthentication
-        userAuth = FirebaseAuth.getInstance().getCurrentUser();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-
+        //khởi tạo các tham chiếu API ???
+        initReferent();
         //khởi tạo các view
         initUI();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
@@ -141,6 +155,13 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     }
 
+    private void initReferent() {
+        user = new User();
+        userAuth = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Deprecated
     private void setUserViewModelObserver() {
         final Observer<User> userObserver = new Observer<User>() {
             @Override
@@ -212,11 +233,32 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     private void loadUserInfo() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        mDatabase.child("users")
+                .child(firebaseUser.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
+                            DataSnapshot dataSnapshot = task.getResult();
+                            Object object = dataSnapshot.getValue();
+                            Log.d(TAG, "onComplete: object" + object.toString());
+                        } else {
+                            Log.e(TAG, "onComplete: ", task.getException());
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "onFailure: ", e);
+            }
+        });
         user.setUriAvatar(firebaseUser.getPhotoUrl());
         user.setName(firebaseUser.getDisplayName());
         user.setEmail(firebaseUser.getEmail());
         user.setId(firebaseUser.getUid());
+        Log.d(TAG, "loadUserInfo: " + user.toString());
     }
 
     @Override
