@@ -2,6 +2,7 @@ package com.example.thucphamxanh.Activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
         //khởi tạo các view
         initUI();
+        checkUser();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
         initViewModel();
         /*
@@ -134,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                 R.id.nav_Partner,
                 R.id.nav_my_profile,
                 R.id.nav_change_password,
-                R.id.nav_sign_out)
+                R.id.nav_sign_out,
+                R.id.nav_Food)
                 .setOpenableLayout(mDrawerLayout)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -144,6 +147,19 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         //set event khi click vào logout navigation
         mNavigationView.getMenu().findItem(R.id.nav_sign_out).setOnMenuItemClickListener(this::onMenuItemClick);
 
+    }
+    public void checkUser(){
+        SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        String user = sharedPreferences.getString("username","");
+        if (user.equals("admin")){
+            mNavigationView.getMenu().findItem(R.id.nav_Food).setVisible(false);
+        }else if (user.length()==10){
+            mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
+            mNavigationView.getMenu().findItem(R.id.nav_Partner).setVisible(false);
+        }else {
+//            binding.appBarMain.toolbar.setVisibility(View.GONE);
+            binding.navView.setVisibility(View.GONE);
+        }
     }
 
     private void setUserViewModelObserver() {

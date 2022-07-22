@@ -5,7 +5,7 @@ import java.util.List;
 public class Cart {
     private int idProduct;
     private String imgProduct;
-    private String nameProduct;
+    private String nameProduct,userClient;
     private int priceProduct;
     private int numberProduct;
     private int totalPrice;
@@ -13,13 +13,12 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(int idProduct, String imgProduct, String nameProduct, int priceProduct, int numberProduct, int totalPrice) {
-        this.idProduct = idProduct;
-        this.imgProduct = imgProduct;
-        this.nameProduct = nameProduct;
-        this.priceProduct = priceProduct;
-        this.numberProduct = numberProduct;
-        this.totalPrice = totalPrice;
+    public String getUserClient() {
+        return userClient;
+    }
+
+    public void setUserClient(String userClient) {
+        this.userClient = userClient;
     }
 
     public int getIdProduct() {

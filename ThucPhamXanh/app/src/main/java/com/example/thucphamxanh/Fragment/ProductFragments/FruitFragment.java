@@ -45,7 +45,6 @@ public class FruitFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvFruit.setLayoutManager(linearLayoutManager);
         adapter = new ProductAdapter(listFruit);
-        adapter.notifyDataSetChanged();
         rvFruit.setAdapter(adapter);
     }
 

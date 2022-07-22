@@ -74,14 +74,8 @@ public class ProductFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductBinding.inflate(inflater, container, false);
-        unitUI();
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
-        String user = sharedPreferences.getString("username","");
-        if (!user.equals("admin")){
-            View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_food,null);
-            return view;
-        }
         tabLayout();
+        unitUI();
         fab_addProduct.setOnClickListener(view1 -> {
             dialogProduct();
         });
@@ -156,8 +150,6 @@ public class ProductFragment extends Fragment {
         sp_nameCategory = view.findViewById(R.id.sp_nameCategory);
         adapterSpiner = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_dropdown_item,arr);
         sp_nameCategory.setAdapter(adapterSpiner);
-
-
     }
 
     public void getTexts(){
@@ -268,7 +260,7 @@ public class ProductFragment extends Fragment {
                     Product product = snap.getValue(Product.class);
                     list1.add(product);
                 }
-                adapter_tabLayout.notifyDataSetChanged();
+
             }
 
             @Override

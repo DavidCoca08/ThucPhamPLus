@@ -48,7 +48,6 @@ public class VegetableFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVegetable.setLayoutManager(linearLayoutManager);
         adapter = new ProductAdapter(listVegetable);
-        adapter.notifyDataSetChanged();
         rvVegetable.setAdapter(adapter);
     }
 

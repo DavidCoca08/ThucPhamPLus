@@ -27,10 +27,8 @@ public class ViewPagerHomeAdapter extends FragmentStatePagerAdapter {
                 return new VoucherFragment();
             case 2:
                 return new OrderFragment();
-            case 3:
-                return new PersonalFragment();
             default:
-                return new HomePageFragment();
+                return new PersonalFragment();
         }
 
     }

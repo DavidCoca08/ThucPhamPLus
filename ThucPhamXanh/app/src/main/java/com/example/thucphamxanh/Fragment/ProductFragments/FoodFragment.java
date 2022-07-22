@@ -1,34 +1,59 @@
 package com.example.thucphamxanh.Fragment.ProductFragments;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.thucphamxanh.Adapter.ProductAdapter;
+import com.example.thucphamxanh.Adapter.ProductAdapter_tabLayout;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.R;
+import com.example.thucphamxanh.databinding.FragmentProductBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 
 public class FoodFragment extends Fragment {
-
     private List<Product> listFood;
     private RecyclerView rvFood;
     private LinearLayoutManager linearLayoutManager;
@@ -36,6 +61,18 @@ public class FoodFragment extends Fragment {
     private View view;
     private SharedPreferences sharedPreferences;
     private String user;
+
+    private Partner partner = new Partner();
+    private FloatingActionButton fab_addProduct;
+    private List<Product> listProduct;
+    private List<Product> listVegetable;
+    private TextInputLayout til_nameProduct,til_priceProduct,til_amountProduct;
+    private ImageView img_Product,img_addImageCamera,img_addImageDevice;
+    private String nameProduct,imgProduct,userPartner;
+    private int codeCategory,priceProduct,amountProduct;
+    private Button btn_addVegetable,btn_cancleVegetable;
+    private static final int REQUEST_ID_IMAGE_CAPTURE =10;
+    private static final int PICK_IMAGE =100;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,20 +85,42 @@ public class FoodFragment extends Fragment {
         }else {
             view.findViewById(R.id.fab_addFood_fragment).setVisibility(View.VISIBLE);
         }
-
+        fab_addProduct = view.findViewById(R.id.fab_addFood_fragment);
+        fab_addProduct.setOnClickListener(view1 -> {
+            dialogProduct();
+        });
 
         return view;
     }public void unitUI(){
-
+        listProduct = getAllProduct();
         listFood = getProductPartner();
         rvFood = view.findViewById(R.id.rvFood);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvFood.setLayoutManager(linearLayoutManager);
         adapter = new ProductAdapter(listFood);
-        adapter.notifyDataSetChanged();
         rvFood.setAdapter(adapter);
-    }
 
+    }
+    public  List<Product> getAllProduct(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Product");
+        List<Product> list1 = new ArrayList<>();
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list1.clear();
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    Product product = snap.getValue(Product.class);
+                    list1.add(product);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return list1;
+    }
     public  List<Product> getProductPartner(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Product");
@@ -88,26 +147,207 @@ public class FoodFragment extends Fragment {
         });
         return list1;
     }
-    public List<Partner> getAllPartner(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Partner");
-        List<Partner> list1 = new ArrayList<>();
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list1.clear();
-                for (DataSnapshot snap : snapshot.getChildren()){
-                    Partner partner = snap.getValue(Partner.class);
-                    list1.add(partner);
-                }
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+//    public List<Partner> getAllPartner(){
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference reference = database.getReference("Partner");
+//        List<Partner> list1 = new ArrayList<>();
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                list1.clear();
+//                for (DataSnapshot snap : snapshot.getChildren()){
+//                    Partner partner = snap.getValue(Partner.class);
+//                    list1.add(partner);
+//                }
+//                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//        return list1;
+//    }
+    private void dialogProduct() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Thêm sản phẩm");
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_product,null);
+        builder.setView(view);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        initUiDialog(view);
+        view.findViewById(R.id.sp_nameCategory).setVisibility(View.GONE);
+        img_addImageCamera.setOnClickListener(view1 -> {
+            requestPermissionCamera();
         });
-        return list1;
+        img_addImageDevice.setOnClickListener(view1 -> {
+            requestPermissionDevice();
+        });
+        btn_addVegetable.setOnClickListener(view1 -> {
+            getTexts();
+            validate();
+        });
+        btn_cancleVegetable.setOnClickListener(view1 -> {
+            alertDialog.dismiss();
+        });
+    }
+    public void initUiDialog(View view){
+        img_Product = view.findViewById(R.id.imgProduct_dialog);
+        img_addImageCamera = view.findViewById(R.id.img_addImageCamera_dialog);
+        img_addImageDevice = view.findViewById(R.id.img_addImageDevice_dialog);
+        til_nameProduct =  view.findViewById(R.id.til_NameProduct_dialog);
+        til_priceProduct =  view.findViewById(R.id.til_PriceProduct_dialog);
+        til_amountProduct =  view.findViewById(R.id.til_AmountProduct_dialog);
+        btn_addVegetable =  view.findViewById(R.id.btn_addVegetable_dialog);
+        btn_cancleVegetable =  view.findViewById(R.id.btn_cancleVegetable_dialog);
+    }
+    public void requestPermissionCamera(){
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+//                Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+                captureImage();
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+//                Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                requestPermissionCamera();
+            }
+        };
+        TedPermission.create()
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("Nếu bạn không cấp quyền,bạn sẽ không thể tải ảnh lên\n\nVui lòng vào [Cài đặt] > [Quyền] và cấp quyền để sử dụng")
+                .setPermissions(Manifest.permission.CAMERA)
+                .check();
+    }
+    public void requestPermissionDevice(){
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+//                Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+                openGallery();
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+//                Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                requestPermissionDevice();
+            }
+        };
+        TedPermission.create()
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("Nếu bạn không cấp quyền,bạn sẽ không thể tải ảnh lên\n\nVui lòng vào [Cài đặt] > [Quyền] và cấp quyền để sử dụng" )
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .check();
+    }
+    private void captureImage() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        this.startActivityForResult(intent, REQUEST_ID_IMAGE_CAPTURE);
+    }
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ID_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Bitmap bp = (Bitmap) data.getExtras().get("data");
+                this.img_Product.setImageBitmap(bp);
+
+                Uri imageUri = data.getData();
+                img_Product.setImageURI(imageUri);
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getContext(), "Bạn chưa thêm ảnh", Toast.LENGTH_LONG).show();
+            } else if (data!=null){
+                Toast.makeText(getContext(), "Lỗi", Toast.LENGTH_LONG).show();
+
+            }
+        }
+        if (requestCode == PICK_IMAGE) {
+            if (resultCode == RESULT_OK ) {
+                Uri imageUri = data.getData();
+                this.img_Product.setImageURI(imageUri);
+            }
+        }
+
+    }
+    public void getTexts(){
+        nameProduct = til_nameProduct.getEditText().getText().toString();
+        Bitmap bitmap = ((BitmapDrawable)img_Product.getDrawable()).getBitmap();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+        byte[] imgByte = outputStream.toByteArray();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            imgProduct = Base64.getEncoder().encodeToString(imgByte);
+        }
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
+        userPartner = sharedPreferences.getString("username","");
+        codeCategory = 4;
+        priceProduct = Integer.parseInt(til_priceProduct.getEditText().getText().toString());
+        amountProduct = Integer.parseInt(til_amountProduct.getEditText().getText().toString());
+
+    }
+    public boolean isEmptys(String str,TextInputLayout til){
+        if (str.isEmpty()){
+            til.setError("Không được để trống");
+            return false;
+        }else til.setError("");
+        return true;
+    }
+    public void validate(){
+        if (isEmptys(nameProduct,til_nameProduct) && isEmptys(String.valueOf(priceProduct),til_priceProduct)
+                && isEmptys(String.valueOf(amountProduct),til_amountProduct) && !imgProduct.isEmpty()){
+            setDataProduct();
+            removeAll();
+        }
+    }
+    public void removeAll(){
+        til_amountProduct.getEditText().setText("");
+        til_nameProduct.getEditText().setText("");
+        til_priceProduct.getEditText().setText("");
+        img_Product.setImageResource(R.drawable.ic_menu_camera1);
+    }
+    public void setDataProduct(){
+        Product product = new Product();
+        product.setUserPartner(userPartner);
+        product.setCodeCategory(codeCategory);
+        product.setNameProduct(nameProduct);
+        product.setPriceProduct(priceProduct);
+        product.setAmountProduct(amountProduct);
+        product.setImgProduct(imgProduct);
+        addProduct(product);
+
+    }
+    public void addProduct(Product product){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Product");
+        if (listProduct.size()==0){
+            product.setCodeProduct(1);
+            product.setCodeCategory(product.getCodeCategory());
+            product.setUserPartner(product.getUserPartner());
+            product.setImgProduct(product.getImgProduct());
+            product.setNameProduct(product.getNameProduct());
+            product.setPriceProduct(product.getPriceProduct());
+            product.setAmountProduct(product.getAmountProduct());
+            reference.child("1").setValue(product);
+
+        }else {
+            int i = listProduct.size()-1;
+            int id = listProduct.get(i).getCodeProduct()+1;
+            product.setCodeProduct(id);
+            product.setCodeCategory(product.getCodeCategory());
+            product.setUserPartner(product.getUserPartner());
+            product.setImgProduct(product.getImgProduct());
+            product.setNameProduct(product.getNameProduct());
+            product.setPriceProduct(product.getPriceProduct());
+            product.setAmountProduct(product.getAmountProduct());
+            reference.child(""+id).setValue(product);
+        }
     }
 }
