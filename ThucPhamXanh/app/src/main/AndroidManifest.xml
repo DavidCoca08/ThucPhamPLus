@@ -20,7 +20,12 @@
         android:theme="@style/Theme.ThucPhamXanh"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.CartActivity"
+            android:name=".Activity.CartActivity"/>
+        <activity
+            android:name=".Activity.SignUpByPhoneActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SignInByPhoneActivity"

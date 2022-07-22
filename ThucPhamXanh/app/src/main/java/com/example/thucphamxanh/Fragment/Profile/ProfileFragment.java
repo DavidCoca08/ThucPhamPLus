@@ -36,11 +36,15 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "ProfileFragment";
@@ -90,8 +94,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
     private void initUI() {
         ivAvatar = binding.getRoot().findViewById(R.id.iv_profile_fragment_avatar);
-        etFullName = binding.getRoot().findViewById(R.id.et_profile_fragment_full_name);
-        etEmail = binding.getRoot().findViewById(R.id.et_profile_fragment_email);
+//        etFullName = binding.getRoot().findViewById(R.id.et_profile_fragment_full_name);
+//        etEmail = binding.getRoot().findViewById(R.id.et_profile_fragment_email);
         btnUpdateInfoUser = binding.getRoot().findViewById(R.id.btn_profile_fragment_update);
         mLayoutEmail = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_email);
         mLayoutName = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_full_name);
@@ -119,10 +123,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         User user = profileViewModel.getUser().getValue();
         Log.d(TAG, "setUserInfoToView: setAvatar on setUserInfo method" );
         Log.d(TAG, "setUserInfoToView: " + user.toString());
-        etFullName.setText(user.getName());
-        etEmail.setText(user.getEmail());
+//        etFullName.setText(user.getName());
+//        etEmail.setText(user.getEmail());
         mLayoutName.getEditText().setText(user.getName());
         mLayoutEmail.getEditText().setText(user.getEmail());
+        mLayoutAddress.getEditText().setText(user.getAddress());
+        mLayoutPhoneNumber.getEditText().setText(user.getPhoneNumber());
 
         try {
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -143,7 +149,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.e(TAG, "onFailure: ", e);
-
+                    //TODO thông báo cho người dùng các kiểu
                 }
             });
         } catch (Exception e) {
@@ -196,13 +202,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
     private void updateUserInfo() {
         Log.d(TAG, "updateUserInfo: start");
+
+        user.setName(mLayoutName.getEditText().getText().toString());
+        user.setAddress(mLayoutAddress.getEditText().getText().toString());
+        user.setPhoneNumber(mLayoutPhoneNumber.getEditText().getText().toString());
         Bitmap bitmap = ((BitmapDrawable) ivAvatar.getDrawable()).getBitmap();
 
         //up ảnh lên storage, lấy Uri storage set vào uriAvatar của user, change user trong ViewModel
         // Get the data from an ImageView as bytes
-        StorageReference imgRef = mStorageReference.child("images");
         StorageReference spaceRef = mStorageReference.child("images/" + user.getId() + "_avatar.jpg");
-        String strUri = spaceRef.getName();
         ivAvatar.setDrawingCacheEnabled(true);
         ivAvatar.buildDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -224,7 +232,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "onSuccess: ");
                 //user.setUriAvatar(spaceRef.getDownloadUrl().getResult());
                 FirebaseUser userAuth = FirebaseAuth.getInstance().getCurrentUser();
-
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                         .setDisplayName(user.getName())
                         .setPhotoUri(Uri.parse(spaceRef.getPath()))
@@ -236,10 +243,33 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "onComplete: update profile successful");
-                                    ((MainActivity)requireActivity()).showUserInformation();
+                                    //update thông tin user treng RealTime database
+                                    updateUserOnDatabase();
+                                    //show lại thông tin user trong nav bar
+//                                    ((MainActivity)requireActivity()).showUserInformation();
+                                    //dòng này không nhớ để làm gì
+                                    //có thể setUser cho mainActivity lắng nghe
+                                    //và tương tác với các Fragment khác
+                                    profileViewModel.setUser(user);
                                     return;
                                 }
                                 Log.d(TAG, "onComplete: update profile failure");
+                            }
+
+                            private void updateUserOnDatabase() {
+                                //TODO tách DAO riêng dễ quản lý
+                                DatabaseReference mDatabase;
+                                mDatabase = FirebaseDatabase.getInstance().getReference();
+                                String key = mDatabase.child("users").push().getKey();
+                                Map<String, Object> userValue = user.toMap();
+                                Map<String, Object> userUpdateValue = new HashMap<>();
+                                userUpdateValue.put("/users/" + user.getId(), userValue);
+                                mDatabase.updateChildren(userUpdateValue).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        ((MainActivity)requireActivity()).showUserInformation();
+                                    }
+                                });
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -254,7 +284,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         });
         Log.d(TAG, "updateUserInfo: end");
         //use ViewModel communicating with MainAcitivy
-        profileViewModel.setUser(user);
 
     }
 

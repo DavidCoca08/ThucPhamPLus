@@ -3,9 +3,10 @@ package com.example.thucphamxanh.Model;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class User implements Serializable {
+public class User {
 
     private String strUriAvatar;
     private String id;
@@ -13,6 +14,25 @@ public class User implements Serializable {
     private Uri uriAvatar;
     private String name;
     private String email;
+    private String address;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    private String phoneNumber;
 
     public String getPassword() {
         return password;
@@ -70,9 +90,18 @@ public class User implements Serializable {
         this.bitmapAvatar = bitmapAvatar;
     }
 
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("uid", id);
+        res.put("name", name);
+        res.put("photoUri", strUriAvatar);
+        res.put("email", email);
+        res.put("address", address);
+        res.put("phone_number", phoneNumber);
+        return res;
+    }
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "User{" +
                 "strUriAvatar='" + strUriAvatar + '\'' +
                 ", id='" + id + '\'' +
@@ -80,6 +109,9 @@ public class User implements Serializable {
                 ", uriAvatar=" + uriAvatar +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }
