@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -38,6 +40,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewHolder> {
         this.list=list;
     }
     public static int id =0;
+    NumberFormat numberFormatormat = new DecimalFormat("#,##0");
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,9 +56,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewHolder> {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
             holder.img_ItemCart_imgProduct.setImageBitmap(bitmap);
             holder.tv_ItemCart_nameProduct.setText(String.valueOf(cart.getNameProduct()));
-            holder.tv_ItemCart_priceProduct.setText(String.valueOf(cart.getPriceProduct()));
+            holder.tv_ItemCart_priceProduct.setText("Giá: "+numberFormatormat.format(cart.getPriceProduct())+" đ");
             holder.tvAmountProduct.setText(String.valueOf(cart.getNumberProduct()));
-            holder.tvTotalProduct.setText(String.valueOf(cart.getNumberProduct()*cart.getPriceProduct()));
+            holder.tvTotalProduct.setText("Tổng: "+numberFormatormat.format(cart.getNumberProduct()*cart.getPriceProduct())+" đ");
             holder.imgPlus.setOnClickListener(view -> {
                 int amount = Integer.parseInt(holder.tvAmountProduct.getText().toString())+1;
                 holder.tvAmountProduct.setText(String.valueOf(amount));

@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class CartActivity extends AppCompatActivity {
     private TextView tvTotalPrice;
     private Button btn_senBill;
     private List<Bill> listBill;
+    private NumberFormat numberFormatormat = new DecimalFormat("#,##0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +74,7 @@ public class CartActivity extends AppCompatActivity {
                     for (int i = 0; i < list1.size(); i++) {
                         sum += list1.get(i).getTotalPrice();
                     }
-                    tvTotalPrice.setText(String.valueOf(sum));
+                    tvTotalPrice.setText(numberFormatormat.format(sum) +" đ");
                 }
                 adapter.notifyDataSetChanged();
 
