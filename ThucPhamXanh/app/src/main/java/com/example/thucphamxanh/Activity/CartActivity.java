@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,7 +33,7 @@ public class CartActivity extends AppCompatActivity {
     private List<Cart> list;
     private LinearLayoutManager linearLayoutManager;
     private CartAdapter adapter;
-    private TextView tvTotalPrice;
+    private TextView tvTotalPrice, tvEmptyProduct;
     private Button btn_senBill;
     private List<Bill> listBill;
     private NumberFormat numberFormatormat = new DecimalFormat("#,##0");
@@ -54,7 +56,7 @@ public class CartActivity extends AppCompatActivity {
         rvCart.setAdapter(adapter);
         tvTotalPrice = findViewById(R.id.tv_CartActivity_totalPrice);
         btn_senBill = findViewById(R.id.btn_CartActivity_btnPay);
-
+        tvEmptyProduct = findViewById(R.id.tv_CartActivity_emptyProduct);
         listBill = getAllBill();
     }
     public  List<Cart> getCartProduct(){
@@ -83,6 +85,14 @@ public class CartActivity extends AppCompatActivity {
                 }else  btn_senBill.setEnabled(true);
                 adapter.notifyDataSetChanged();
 
+                if(list1.size()<=0){
+                    tvEmptyProduct.setVisibility(View.VISIBLE);
+                    rvCart.setVisibility(View.INVISIBLE);
+                }else {
+                    tvEmptyProduct.setVisibility(View.INVISIBLE);
+                    rvCart.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override
@@ -90,6 +100,8 @@ public class CartActivity extends AppCompatActivity {
 
             }
         });
+
+
         return list1;
     }
     public void addBill(){
