@@ -40,20 +40,21 @@ public class CartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
         unitUi();
-        getCartProduct();
         btn_senBill.setOnClickListener(view -> {
         addBill();
+        deleteCart();
         });
     }
     public void unitUi(){
         rvCart = findViewById(R.id.recyclerView_CartActivity_listCart);
-        list=getCartProduct();
+        list = getCartProduct();
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         rvCart.setLayoutManager(linearLayoutManager);
         adapter = new CartAdapter(list);
         rvCart.setAdapter(adapter);
         tvTotalPrice = findViewById(R.id.tv_CartActivity_totalPrice);
         btn_senBill = findViewById(R.id.btn_CartActivity_btnPay);
+
         listBill = getAllBill();
     }
     public  List<Cart> getCartProduct(){
@@ -70,12 +71,16 @@ public class CartActivity extends AppCompatActivity {
                     if (cart.getUserClient().equals(firebaseUser.getUid())){
                         list1.add(cart);
                     }
-                    int sum = 0;
-                    for (int i = 0; i < list1.size(); i++) {
-                        sum += list1.get(i).getTotalPrice();
-                    }
-                    tvTotalPrice.setText(numberFormatormat.format(sum) +" đ");
+
                 }
+                int sum = 0;
+                for (int i = 0; i < list1.size(); i++) {
+                    sum += list1.get(i).getTotalPrice();
+                }
+                tvTotalPrice.setText(numberFormatormat.format(sum) +" đ");
+                if (list1.size()==0){
+                    btn_senBill.setEnabled(false);
+                }else  btn_senBill.setEnabled(true);
                 adapter.notifyDataSetChanged();
 
             }
@@ -99,6 +104,17 @@ public class CartActivity extends AppCompatActivity {
             reference.child(""+1).setValue(bill);
             reference.child(""+1).child("Cart").setValue(list);
         }
+
+    }
+    public void deleteCart(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Cart");
+        for (int i = 0; i < list.size(); i++) {
+            reference.child(""+list.get(i).getIdCart()).removeValue();
+        }
+        if (list.size()==0){
+            btn_senBill.setEnabled(false);
+        }else  btn_senBill.setEnabled(true);
 
     }
     public  List<Bill> getAllBill(){

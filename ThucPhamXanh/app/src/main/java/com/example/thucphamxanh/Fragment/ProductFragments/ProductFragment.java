@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.thucphamxanh.Adapter.ProductAdapter;
 import com.example.thucphamxanh.Adapter.ProductAdapter_tabLayout;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.Product;
@@ -68,6 +69,7 @@ public class ProductFragment extends Fragment {
     private Spinner sp_nameCategory;
     private String[] arr = {"Rau củ","Hoa quả","Thịt"};
     private ArrayAdapter<String> adapterSpiner;
+    private ProductAdapter adapter;
     private static final int REQUEST_ID_IMAGE_CAPTURE =10;
     private static final int PICK_IMAGE =100;
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -109,8 +111,10 @@ public class ProductFragment extends Fragment {
     }
     public void unitUI(){
         listProduct = getAllProduct();
+        Log.d("EEeeeeee", String.valueOf(listProduct.size()));
         listVegetable = getVegetableProduct();
         fab_addProduct = binding.fabAddProductFragment;
+        adapter = new ProductAdapter(listProduct);
     }
 
     private void dialogProduct() {

@@ -1,16 +1,34 @@
 package com.example.thucphamxanh.Model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Cart {
-    private int idProduct;
-    private String imgProduct;
+    private int idProduct,idCart;
+    private String imgProduct,idPartner;
     private String nameProduct,userClient;
     private int priceProduct;
     private int numberProduct;
     private int totalPrice;
 
     public Cart() {
+    }
+
+    public int getIdCart() {
+        return idCart;
+    }
+
+    public void setIdCart(int idCart) {
+        this.idCart = idCart;
+    }
+
+    public String getIdPartner() {
+        return idPartner;
+    }
+
+    public void setIdPartner(String idPartner) {
+        this.idPartner = idPartner;
     }
 
     public String getUserClient() {
@@ -67,5 +85,17 @@ public class Cart {
 
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("nameProduct",getNameProduct());
+        result.put("numberProduct",getNumberProduct());
+        result.put("totalPrice",getTotalPrice());
+        result.put("idPartner",getIdPartner());
+        result.put("idProduct",getIdProduct());
+        result.put("imgProduct",getImgProduct());
+        result.put("priceProduct",getPriceProduct());
+        return result;
     }
 }

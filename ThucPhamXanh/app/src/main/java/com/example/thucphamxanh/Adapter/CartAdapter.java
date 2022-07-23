@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.thucphamxanh.Activity.CartActivity;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.R;
@@ -36,75 +37,72 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewHolder> {
     private List<Cart> list;
+
     public CartAdapter(List<Cart> list) {
-        this.list=list;
+        this.list = list;
+
     }
-    public static int id =0;
+
     NumberFormat numberFormatormat = new DecimalFormat("#,##0");
+
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart, parent, false);
         return new viewHolder(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-            Cart cart = list.get(position);
-            byte[] imgByte = Base64.getDecoder().decode(cart.getImgProduct());
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
-            holder.img_ItemCart_imgProduct.setImageBitmap(bitmap);
-            holder.tv_ItemCart_nameProduct.setText(String.valueOf(cart.getNameProduct()));
-            holder.tv_ItemCart_priceProduct.setText("Giá: "+numberFormatormat.format(cart.getPriceProduct())+" đ");
-            holder.tvAmountProduct.setText(String.valueOf(cart.getNumberProduct()));
-            holder.tvTotalProduct.setText("Tổng: "+numberFormatormat.format(cart.getNumberProduct()*cart.getPriceProduct())+" đ");
-            holder.imgPlus.setOnClickListener(view -> {
-                int amount = Integer.parseInt(holder.tvAmountProduct.getText().toString())+1;
+        Cart cart = list.get(position);
+        byte[] imgByte = Base64.getDecoder().decode(cart.getImgProduct());
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+        holder.img_ItemCart_imgProduct.setImageBitmap(bitmap);
+        holder.tv_ItemCart_nameProduct.setText(String.valueOf(cart.getNameProduct()));
+        holder.tv_ItemCart_priceProduct.setText("Giá: " + numberFormatormat.format(cart.getPriceProduct()) + " đ");
+        holder.tvAmountProduct.setText(String.valueOf(cart.getNumberProduct()));
+        holder.tvTotalProduct.setText("Tổng: " + numberFormatormat.format(cart.getNumberProduct() * cart.getPriceProduct()) + " đ");
+        holder.imgPlus.setOnClickListener(view -> {
+            int amount = Integer.parseInt(holder.tvAmountProduct.getText().toString()) + 1;
+            holder.tvAmountProduct.setText(String.valueOf(amount));
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference("Cart");
+            reference.child("" + cart.getIdCart()).child("numberProduct").setValue(amount);
+            reference.child("" + cart.getIdCart()).child("totalPrice").setValue(amount*cart.getPriceProduct());
+        });
+        holder.imgMinus.setOnClickListener(view -> {
+            int amount = Integer.parseInt(holder.tvAmountProduct.getText().toString()) - 1;
+            if (amount == 0) {
+                deleteProduct(String.valueOf(cart.getIdCart()));
+            } else {
                 holder.tvAmountProduct.setText(String.valueOf(amount));
-            });
-            holder.imgMinus.setOnClickListener(view -> {
-                int amount = Integer.parseInt(holder.tvAmountProduct.getText().toString()) - 1;
-                if (amount == 0){
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference reference = database.getReference("Cart");
-                reference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Cart cart1 = snap.getValue(Cart.class);
-                            if (cart1.getUserClient().equals(cart.getUserClient()) && cart1.getIdProduct() == cart.getIdProduct()) {
-                                id = Integer.parseInt(snap.getKey());
-                            }
-                        }
-                    }
+                reference.child("" + cart.getIdCart()).child("numberProduct").setValue(amount);
+                reference.child("" + cart.getIdCart()).child("totalPrice").setValue(amount*cart.getPriceProduct());
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-                deleteProduct(String.valueOf(id));
-            }else holder.tvAmountProduct.setText(String.valueOf(amount));
-            });
-            holder.imgDelete.setOnClickListener(view -> {
-                deleteProduct(String.valueOf(cart.getIdProduct()));
-            });
+            }
+        });
+        holder.imgDelete.setOnClickListener(view -> {
+            deleteProduct(String.valueOf(cart.getIdCart()));
+        });
 
 
     }
 
     @Override
     public int getItemCount() {
-        if (list!=null){
+        if (list != null) {
             return list.size();
         }
         return 0;
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder{
-        private TextView tv_ItemCart_nameProduct,tv_ItemCart_priceProduct,tvAmountProduct,tvTotalProduct;
-        private ImageView img_ItemCart_imgProduct,imgPlus,imgMinus,imgDelete;
+    public class viewHolder extends RecyclerView.ViewHolder {
+        private TextView tv_ItemCart_nameProduct, tv_ItemCart_priceProduct, tvAmountProduct, tvTotalProduct;
+        private ImageView img_ItemCart_imgProduct, imgPlus, imgMinus, imgDelete;
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             tvAmountProduct = itemView.findViewById(R.id.tv_ItemCart_numberProduct);
@@ -117,11 +115,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewHolder> {
             imgDelete = itemView.findViewById(R.id.btn_ItemCart_deleteProduct);
         }
     }
-    public void deleteProduct(String id){
+
+    public void deleteProduct(String id) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Cart");
-        reference.child(""+id).removeValue();
+        reference.child("" + id).removeValue();
     }
-
 
 }

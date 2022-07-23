@@ -1,9 +1,9 @@
 package com.example.thucphamxanh.Adapter;
 
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +51,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
             Product product = list.get(position);
-            listCart=getAllCart();
+            listCart = getAllCart();
+            Log.d("rrrrrrrrr", String.valueOf(listCart.size()));
             byte[] imgByte = Base64.getDecoder().decode(product.getImgProduct());
             Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
             holder.imgProduct.setImageBitmap(bitmap);
@@ -74,7 +75,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             });
             holder.btn_addCart.setOnClickListener(view -> {
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
                 Cart cart = new Cart();
                 cart.setUserClient(firebaseUser.getUid());
                 cart.setIdProduct(product.getCodeProduct());
@@ -82,6 +82,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 cart.setNameProduct(product.getNameProduct());
                 cart.setPriceProduct(product.getPriceProduct());
                 cart.setNumberProduct(1);
+                cart.setIdPartner(product.getUserPartner());
                 cart.setTotalPrice(cart.getPriceProduct()*cart.getNumberProduct());
                 addProductCart(cart);
             });
@@ -140,42 +141,33 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     public void addProductCart(Cart cart){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Cart");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Cart cart1 = snap.getValue(Cart.class);
-                    if (cart1.getUserClient().equals(cart.getUserClient()) && cart1.getIdProduct() == cart.getIdProduct()) {
-                        id = Integer.parseInt(snap.getKey());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        int id1 = id+1;
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot snap : snapshot.getChildren()) {
+//                    Cart cart1 = snap.getValue(Cart.class);
+//                    if (cart1.getUserClient()==(cart.getUserClient()) && cart1.getIdProduct() == cart.getIdProduct()) {
+//                        id = Integer.parseInt(snap.getKey());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//        int id1 = id+1;
+        Log.d("wwwwwww", String.valueOf(id));
         if (listCart.size()==0){
-            cart.setIdProduct(cart.getIdProduct());
-            cart.setUserClient(cart.getUserClient());
-            cart.setNameProduct(cart.getNameProduct());
-            cart.setPriceProduct(cart.getPriceProduct());
-            cart.setImgProduct(cart.getImgProduct());
-            cart.setNumberProduct(cart.getNumberProduct());
-            cart.setTotalPrice(cart.getTotalPrice());
+            cart.setIdCart(1);
             reference.child("1").setValue(cart);
 
         }else {
-            cart.setIdProduct(cart.getIdProduct());
-            cart.setUserClient(cart.getUserClient());
-            cart.setNameProduct(cart.getNameProduct());
-            cart.setPriceProduct(cart.getPriceProduct());
-            cart.setImgProduct(cart.getImgProduct());
-            cart.setNumberProduct(cart.getNumberProduct());
-            cart.setTotalPrice(cart.getTotalPrice());
-            reference.child(""+id1).setValue(cart);
+            int i = listCart.size()-1;
+            int id = listCart.get(i).getIdCart()+1;
+            cart.setIdCart(id);
+            reference.child(""+id).setValue(cart);
         }
     }
     public  List<Cart> getAllCart(){

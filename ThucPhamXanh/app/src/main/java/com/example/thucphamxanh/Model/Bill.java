@@ -2,9 +2,17 @@ package com.example.thucphamxanh.Model;
 
 public class Bill {
     private int idBill;
-    private String dayOut,status,idClient;
+    private String dayOut,status,idClient,timeOut;
 
     public Bill() {
+    }
+
+    public String getTimeOut() {
+        return timeOut;
+    }
+
+    public void setTimeOut(String timeOut) {
+        this.timeOut = timeOut;
     }
 
     public int getIdBill() {

@@ -85,7 +85,8 @@
             android:id="@+id/btn_ItemCart_deleteProduct"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            app:srcCompat="@drawable/remove" />
+            app:srcCompat="@drawable/remove"
+            android:visibility="visible"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

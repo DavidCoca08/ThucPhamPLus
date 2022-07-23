@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_main,
                 R.id.nav_home,
                 R.id.nav_Product,
                 R.id.nav_Bill,
