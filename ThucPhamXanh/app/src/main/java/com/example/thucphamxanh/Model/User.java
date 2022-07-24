@@ -92,12 +92,12 @@ public class User {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> res = new HashMap<>();
-        res.put("uid", id);
+        res.put("id", id);
         res.put("name", name);
-        res.put("photoUri", strUriAvatar);
+        res.put("strUriAvatar", strUriAvatar);
         res.put("email", email);
         res.put("address", address);
-        res.put("phone_number", phoneNumber);
+        res.put("phoneNumber", phoneNumber);
         return res;
     }
     @Override

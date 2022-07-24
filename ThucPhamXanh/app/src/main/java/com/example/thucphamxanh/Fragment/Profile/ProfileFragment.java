@@ -24,6 +24,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Activity.MainActivity;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
@@ -75,14 +76,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         initUI();
-        setUserInfoToView();
+//        setUserInfoToView();
         Log.d(TAG, "onCreateView: end");
         return root;
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setBitmapAvatarWithViewModel();
+        showUserInformation();
         initListener();
 //        ivAvatar.setImageBitmap(user.getBitmapAvatar());
     }
@@ -106,12 +107,31 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         ivAvatar.setOnClickListener(this::onClick);
         btnUpdateInfoUser.setOnClickListener(this::onClick);
     }
-    public void setBitmapAvatarWithViewModel() {
+    public void showUserInformation() {
         Log.d(TAG, "setBitmapAvatarWithViewModel: start");
         profileViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                Glide.with(getActivity()).load(user.getBitmapAvatar()).error(R.drawable.ic_avatar_default).into(ivAvatar);
+                mLayoutName.getEditText().setText(user.getName());
+                mLayoutEmail.getEditText().setText(user.getEmail());
+                mLayoutAddress.getEditText().setText(user.getAddress());
+                mLayoutPhoneNumber.getEditText().setText(user.getPhoneNumber());
+                if (user.getBitmapAvatar() != null) {
+                    Glide.with(requireActivity())
+                            .load(user.getBitmapAvatar())
+                            .error(R.drawable.ic_avatar_default)
+                            .into(ivAvatar);
+                    user.setBitmapAvatar(null);
+                    Log.d(TAG, "onChanged() returned: " + "ảnh được chọn từ thư mục ảnh");
+                } else {
+                    Glide.with(requireActivity())
+                            .load(user.getStrUriAvatar())
+                            .error(R.drawable.ic_avatar_default)
+                            .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+                            .into(ivAvatar);
+                    Log.d(TAG, "onChanged() returned: " + "ảnh được lấy từ storage về");
+                }
+//                Glide.with(getActivity()).load(user.getBitmapAvatar()).error(R.drawable.ic_avatar_default).into(ivAvatar);
                 Log.d(TAG, "onChanged: ");
                 Log.d(TAG, "onChanged: " + user.toString());
             }
@@ -129,8 +149,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         mLayoutEmail.getEditText().setText(user.getEmail());
         mLayoutAddress.getEditText().setText(user.getAddress());
         mLayoutPhoneNumber.getEditText().setText(user.getPhoneNumber());
-
-        try {
+        Glide.with(requireActivity())
+                .load(user.getStrUriAvatar())
+                .error(R.drawable.ic_avatar_default)
+                .into(ivAvatar);
+        /*try {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference pathRef = storage
                     .getReference()
@@ -159,7 +182,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .load(user.getStrUriAvatar())
                     .error(R.drawable.ic_avatar_default)
                     .into(ivAvatar);
-        }
+        }*/
     }
 
 
@@ -250,6 +273,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                                     //dòng này không nhớ để làm gì
                                     //có thể setUser cho mainActivity lắng nghe
                                     //và tương tác với các Fragment khác
+
                                     profileViewModel.setUser(user);
                                     return;
                                 }

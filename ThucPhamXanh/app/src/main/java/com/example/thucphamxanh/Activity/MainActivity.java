@@ -1,12 +1,10 @@
 package com.example.thucphamxanh.Activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -32,6 +30,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
@@ -48,11 +47,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.io.IOException;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
@@ -137,8 +133,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
          * */
         //setUserViewModelObserver();
         //show thông tin user lên nav header khi đăng nhập
-//        showUserInformation();
-        profileViewModel.setUser(user);
+        showUserInformation();
         //set thông tin user vào viewmodel để giao tiếp
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -215,11 +210,12 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     }
     public void showUserInformation() {
         loadUserInfo();
-        tvUserEmail.setText(user.getEmail());
+        /*tvUserEmail.setText(user.getEmail());
         tvUserName.setText(user.getName());
-        tvUserName.setVisibility(View.VISIBLE);
-        Glide.with(MainActivity.this)
+        tvUserName.setVisibility(View.VISIBLE);*/
+        /*Glide.with(MainActivity.this)
                 .load(user.getStrUriAvatar())
+                .placeholder(R.drawable.ic_avatar_default)
                 .error(R.drawable.ic_avatar_default)
                 .into(ivAvatar);
         try {
@@ -248,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         } catch (Exception e) {
             Log.e(TAG, "showUserInformation: ",e );
         }
-
+*/
     }
 
     private void loadUserInfo() {
@@ -262,22 +258,31 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
                             DataSnapshot dataSnapshot = task.getResult();
-                            Object object = dataSnapshot.getValue();
-                            Log.d(TAG, "onComplete: object" + object.toString());
+                            user = dataSnapshot.getValue(User.class);
+                            tvUserEmail.setText(user.getEmail());
+                            tvUserName.setText(user.getName());
+                            tvUserName.setVisibility(View.VISIBLE);
+                            Glide.with(MainActivity.this)
+                                    .load(user.getStrUriAvatar())
+                                    .error(R.drawable.ic_avatar_default)
+                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+                                    .into(ivAvatar);
+                            profileViewModel.setUser(user);
+                            Log.i(TAG, "onComplete: info user load from storage: " + user);
                         } else {
                             Log.e(TAG, "onComplete: ", task.getException());
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "onFailure: ", e);
-            }
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: ", e);
+                }
         });
-        user.setUriAvatar(firebaseUser.getPhotoUrl());
+        /*user.setUriAvatar(firebaseUser.getPhotoUrl());
         user.setName(firebaseUser.getDisplayName());
         user.setEmail(firebaseUser.getEmail());
-        user.setId(firebaseUser.getUid());
+        user.setId(firebaseUser.getUid());*/
         Log.d(TAG, "loadUserInfo: " + user.toString());
     }
 
