@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.example.thucphamxanh.Adapter.CartAdapter;
 import com.example.thucphamxanh.Model.Bill;
@@ -25,7 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
@@ -83,8 +85,6 @@ public class CartActivity extends AppCompatActivity {
                 if (list1.size()==0){
                     btn_senBill.setEnabled(false);
                 }else  btn_senBill.setEnabled(true);
-                adapter.notifyDataSetChanged();
-
                 if(list1.size()<=0){
                     tvEmptyProduct.setVisibility(View.VISIBLE);
                     rvCart.setVisibility(View.INVISIBLE);
@@ -92,6 +92,8 @@ public class CartActivity extends AppCompatActivity {
                     tvEmptyProduct.setVisibility(View.INVISIBLE);
                     rvCart.setVisibility(View.VISIBLE);
                 }
+                
+                adapter.notifyDataSetChanged();
 
             }
 
@@ -100,8 +102,6 @@ public class CartActivity extends AppCompatActivity {
 
             }
         });
-
-
         return list1;
     }
     public void addBill(){
@@ -109,12 +109,28 @@ public class CartActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Bill");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String date = dateFormat.format(Calendar.getInstance().getTime());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("k:mm");
+        String time = timeFormat.format(Calendar.getInstance().getTime());
         if (listBill.size()==0){
+            bill.setIdBill(1);
             bill.setIdClient(firebaseUser.getUid());
-            bill.setDayOut("1/1/2020");
+            bill.setDayOut(date);
+            bill.setTimeOut(time);
             bill.setStatus("đang chuẩn bị");
             reference.child(""+1).setValue(bill);
             reference.child(""+1).child("Cart").setValue(list);
+        }else {
+            int i = listBill.size()-1;
+            int id = listBill.get(i).getIdBill()+1;
+            bill.setIdBill(id);
+            bill.setIdClient(firebaseUser.getUid());
+            bill.setDayOut(date);
+            bill.setTimeOut(time);
+            bill.setStatus("đang chuẩn bị");
+            reference.child(""+id).setValue(bill);
+            reference.child(""+id).child("Cart").setValue(list);
         }
 
     }

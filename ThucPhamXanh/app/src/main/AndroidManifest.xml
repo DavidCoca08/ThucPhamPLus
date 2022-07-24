@@ -4,23 +4,24 @@
     package="com.example.thucphamxanh">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ThucPhamXanh"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.CartActivity"/>
+            android:name=".DemoActivity2"
+            android:exported="false" />
+        <activity android:name=".Activity.CartActivity" />
         <activity
             android:name=".Activity.SignUpByPhoneActivity"
             android:exported="false" />
@@ -52,9 +53,7 @@
             android:name=".Activity.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.ThucPhamXanh.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.ThucPhamXanh.NoActionBar"></activity>
     </application>
 
 </manifest>
