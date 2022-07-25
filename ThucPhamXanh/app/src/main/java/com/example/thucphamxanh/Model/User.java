@@ -58,10 +58,11 @@ public class User {
         this.strUriAvatar = strUriAvatar;
     }
     private String password;
+    @Deprecated
     public Uri getUriAvatar() {
         return uriAvatar;
     }
-
+    @Deprecated
     public void setUriAvatar(Uri uriAvatar) {
         this.uriAvatar = uriAvatar;
     }
