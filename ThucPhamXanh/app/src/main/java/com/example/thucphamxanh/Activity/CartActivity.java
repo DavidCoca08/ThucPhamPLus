@@ -38,7 +38,7 @@ public class CartActivity extends AppCompatActivity {
     private TextView tvTotalPrice, tvEmptyProduct;
     private Button btn_senBill;
     private List<Bill> listBill;
-    private NumberFormat numberFormatormat = new DecimalFormat("#,##0");
+    private NumberFormat numberFormat = new DecimalFormat("#,##0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +81,7 @@ public class CartActivity extends AppCompatActivity {
                 for (int i = 0; i < list1.size(); i++) {
                     sum += list1.get(i).getTotalPrice();
                 }
-                tvTotalPrice.setText(numberFormatormat.format(sum) +" đ");
+                tvTotalPrice.setText(numberFormat.format(sum) +" đ");
                 if (list1.size()==0){
                     btn_senBill.setEnabled(false);
                 }else  btn_senBill.setEnabled(true);

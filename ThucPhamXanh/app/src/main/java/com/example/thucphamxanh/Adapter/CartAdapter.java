@@ -43,7 +43,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewHolder> {
 
     }
 
-    NumberFormat numberFormatormat = new DecimalFormat("#,##0");
+    NumberFormat numberFormat = new DecimalFormat("#,##0");
 
     @NonNull
     @Override
@@ -60,9 +60,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.viewHolder> {
         Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
         holder.img_ItemCart_imgProduct.setImageBitmap(bitmap);
         holder.tv_ItemCart_nameProduct.setText(String.valueOf(cart.getNameProduct()));
-        holder.tv_ItemCart_priceProduct.setText("Giá: " + numberFormatormat.format(cart.getPriceProduct()) + " đ");
+        holder.tv_ItemCart_priceProduct.setText("Giá: " + numberFormat.format(cart.getPriceProduct()) + " đ");
         holder.tvAmountProduct.setText(String.valueOf(cart.getNumberProduct()));
-        holder.tvTotalProduct.setText("Tổng: " + numberFormatormat.format(cart.getNumberProduct() * cart.getPriceProduct()) + " đ");
+        holder.tvTotalProduct.setText("Tổng: " + numberFormat.format(cart.getNumberProduct() * cart.getPriceProduct()) + " đ");
         holder.imgPlus.setOnClickListener(view -> {
             int amount = Integer.parseInt(holder.tvAmountProduct.getText().toString()) + 1;
             holder.tvAmountProduct.setText(String.valueOf(amount));

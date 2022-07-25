@@ -32,6 +32,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
+import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
@@ -43,12 +44,16 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
@@ -297,8 +302,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
         TextView cartBadgeTextView = actionView.findViewById(R.id.tv_CartActionItem_cart_badge);
 
-//        cartBadgeTextView.setText(String.valueOf(cartQuantity));
-//        cartBadgeTextView.setVisibility(cartQuantity == 0 ? View.GONE : View.VISIBLE);
+//        cartBadgeTextView.setText(String.valueOf(getCountCart().size()));
+//        cartBadgeTextView.setVisibility(getCountCart().size() == 0 ? View.GONE : View.VISIBLE);
 
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,6 +371,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         });
         Log.d(TAG, "syncView: ");
     }
+
+
 
 
 }
