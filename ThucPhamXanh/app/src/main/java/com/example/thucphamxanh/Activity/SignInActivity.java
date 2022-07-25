@@ -12,10 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
-import com.example.thucphamxanh.Adapter.PartnerAdapter;
-import com.example.thucphamxanh.Fragment.PartnerFragment;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -79,7 +76,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 //                Log.d(TAG,  TAG + " onClick: sign in" );
 
                 if (logins()== false){
-                    login();
+                    userLogin();
                 }
                 logins();
 
@@ -92,6 +89,50 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    private void userLogin() {
+        formEmail.setErrorEnabled(false);
+        formPassword.setErrorEnabled(false);
+        String phoneNumber = formEmail.getEditText().getText().toString().trim();
+        String passwordUser = formPassword.getEditText().getText().toString().trim();
+        if (!validate(phoneNumber, passwordUser)) return;
+        progressBar.setVisibility(View.VISIBLE);
+        final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
+        rootReference.child("User").child(phoneNumber)
+            .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                progressBar.setVisibility(View.GONE);
+                if (snapshot.exists()) {
+                    String password = snapshot.child("password").getValue(String.class);
+                    if (password.equals(passwordUser)) {
+                        //TODO ĐĂNG NHẬP VÀO APP
+                        Log.d(TAG, "onDataChange: đăng nhập thành công");
+                        remember();
+                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finishAffinity();
+                        return;
+                    }
+                    //TODO THÔNG BÁO MẬT KHẨU KHÔNG ĐÚNG
+                    formPassword.setErrorEnabled(true);
+                    formPassword.setError("Mật khẩu không đúng");
+                    return;
+                }
+                //TODO THÔNG BÁO TÀI KHOẢN CHƯA TỒN TẠI
+                formEmail.setErrorEnabled(true);
+                formEmail.setError("Tài khoản không tồn tại");
+                Log.d(TAG, "onDataChange: not exists");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //TODO THÔNG BÁO LỖI KHI ĐĂNG NHẬP
+                progressBar.setVisibility(View.GONE);
+                Log.e(TAG, "onCancelled: ", error.toException());
+            }
+        });
+    }
+    @Deprecated
     private void login() {
         String email = formEmail.getEditText().getText().toString().trim();
         String password = formPassword.getEditText().getText().toString().trim();

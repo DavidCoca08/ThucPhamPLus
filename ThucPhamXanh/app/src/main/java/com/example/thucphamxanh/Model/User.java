@@ -12,9 +12,11 @@ public class User {
     private String id;
     private Bitmap bitmapAvatar;
     private Uri uriAvatar;
+    private String phoneNumber;
     private String name;
     private String email;
     private String address;
+    private String password;
 
     public String getAddress() {
         return address;
@@ -32,7 +34,6 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    private String phoneNumber;
 
     public String getPassword() {
         return password;
@@ -57,7 +58,6 @@ public class User {
     public void setStrUriAvatar(String strUriAvatar) {
         this.strUriAvatar = strUriAvatar;
     }
-    private String password;
     @Deprecated
     public Uri getUriAvatar() {
         return uriAvatar;
@@ -99,6 +99,7 @@ public class User {
         res.put("email", email);
         res.put("address", address);
         res.put("phoneNumber", phoneNumber);
+        res.put("password", password);
         return res;
     }
     @Override
