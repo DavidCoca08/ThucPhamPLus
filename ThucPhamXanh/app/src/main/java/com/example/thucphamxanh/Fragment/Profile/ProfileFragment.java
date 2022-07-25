@@ -108,7 +108,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnUpdateInfoUser.setOnClickListener(this::onClick);
     }
     public void showUserInformation() {
-        Log.d(TAG, "setBitmapAvatarWithViewModel: start");
+        Log.d(TAG, "showUserInformation: start");
         profileViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
@@ -134,10 +134,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 //                Glide.with(getActivity()).load(user.getBitmapAvatar()).error(R.drawable.ic_avatar_default).into(ivAvatar);
                 Log.d(TAG, "onChanged: ");
                 Log.d(TAG, "onChanged: " + user.toString());
+                Log.d(TAG, "showUserInformation: end");
             }
         });
-        Log.d(TAG, "setBitmapAvatarWithViewModel: end");
     }
+    @Deprecated
     private void setUserInfoToView() {
         //solution 1 use FirebaseUser
         User user = profileViewModel.getUser().getValue();
@@ -186,8 +187,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+    }
 
     @Override
     public void onClick(View v) {

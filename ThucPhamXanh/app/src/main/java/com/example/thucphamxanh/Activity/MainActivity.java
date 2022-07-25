@@ -248,37 +248,42 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     }
 
     private void loadUserInfo() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase.child("users")
-                .child(firebaseUser.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
-                            DataSnapshot dataSnapshot = task.getResult();
-                            user = dataSnapshot.getValue(User.class);
-//                            tvUserEmail.setText(user.getEmail());
-//                            tvUserName.setText(user.getName());
-                            tvUserName.setVisibility(View.VISIBLE);
-//                            Glide.with(MainActivity.this)
-////                                    .load(user.getStrUriAvatar())
-//                                    .error(R.drawable.ic_avatar_default)
-//                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
-//                                    .into(ivAvatar);
-                            profileViewModel.setUser(user);
-                            Log.i(TAG, "onComplete: info user load from storage: " + user);
-                        } else {
-                            Log.e(TAG, "onComplete: ", task.getException());
+        try {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            mDatabase.child("users")
+                    .child(firebaseUser.getUid())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
+                                DataSnapshot dataSnapshot = task.getResult();
+                                user = dataSnapshot.getValue(User.class);
+                                tvUserEmail.setText(user.getEmail());
+                                tvUserName.setText(user.getName());
+                                tvUserName.setVisibility(View.VISIBLE);
+                                Glide.with(MainActivity.this)
+                                        .load(user.getStrUriAvatar())
+                                        .error(R.drawable.ic_avatar_default)
+                                        .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+                                        .into(ivAvatar);
+                                profileViewModel.setUser(user);
+                                Log.i(TAG, "onComplete: info user load from storage: " + user);
+                            } else {
+                                Log.e(TAG, "onComplete: ", task.getException());
+                            }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: ", e);
-                }
-        });
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "onFailure: ", e);
+                        }
+                    });
+        } catch (Exception e) {
+            Log.e(TAG, "loadUserInfo: ", e);
+        }
+
         /*user.setUriAvatar(firebaseUser.getPhotoUrl());
         user.setName(firebaseUser.getDisplayName());
         user.setEmail(firebaseUser.getEmail());

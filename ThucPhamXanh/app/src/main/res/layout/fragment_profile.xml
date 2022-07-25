@@ -46,6 +46,7 @@
             android:id="@+id/text_input_layout_profile_fragment_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             app:startIconDrawable="@drawable/ic_baseline_email_24"
             app:endIconMode="clear_text">
             <com.google.android.material.textfield.TextInputEditText
