@@ -259,14 +259,14 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                             Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
                             DataSnapshot dataSnapshot = task.getResult();
                             user = dataSnapshot.getValue(User.class);
-                            tvUserEmail.setText(user.getEmail());
-                            tvUserName.setText(user.getName());
+//                            tvUserEmail.setText(user.getEmail());
+//                            tvUserName.setText(user.getName());
                             tvUserName.setVisibility(View.VISIBLE);
-                            Glide.with(MainActivity.this)
-                                    .load(user.getStrUriAvatar())
-                                    .error(R.drawable.ic_avatar_default)
-                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
-                                    .into(ivAvatar);
+//                            Glide.with(MainActivity.this)
+////                                    .load(user.getStrUriAvatar())
+//                                    .error(R.drawable.ic_avatar_default)
+//                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+//                                    .into(ivAvatar);
                             profileViewModel.setUser(user);
                             Log.i(TAG, "onComplete: info user load from storage: " + user);
                         } else {
