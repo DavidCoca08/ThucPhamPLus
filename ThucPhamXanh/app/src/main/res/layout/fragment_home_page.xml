@@ -24,6 +24,7 @@
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
+
                     android:id="@+id/img_vegetable_home"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
@@ -52,6 +53,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+
                     android:id="@+id/img_fruit_home"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
@@ -108,6 +110,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+
                     android:id="@+id/img_food_home"
                     android:layout_width="80dp"
                     android:layout_height="80dp"

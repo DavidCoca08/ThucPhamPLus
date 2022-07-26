@@ -1,5 +1,6 @@
 package com.example.thucphamxanh.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.thucphamxanh.Adapter.FavoriteItemAdapter;
+import com.example.thucphamxanh.Fragment.ProductFragments.VegetableFragment;
 import com.example.thucphamxanh.Model.FavoviteModel;
 import com.example.thucphamxanh.R;
 
@@ -30,6 +32,7 @@ public class HomePageFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+
 
         favorite_recyclerView_home = view.findViewById(R.id.favorite_recyclerView_home);
         favorite_recyclerView_home.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -70,4 +73,6 @@ public class HomePageFragment extends Fragment {
 
         return view;
     }
+
+
 }
