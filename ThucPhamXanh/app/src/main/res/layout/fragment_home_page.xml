@@ -10,7 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="55dp">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +25,7 @@
 
                 <androidx.cardview.widget.CardView
 
-                    android:id="@+id/img_vegetable_home"
+                    android:id="@+id/card_vegetable_home"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginHorizontal="15dp"
@@ -54,7 +54,7 @@
 
                 <androidx.cardview.widget.CardView
 
-                    android:id="@+id/img_fruit_home"
+                    android:id="@+id/card_fruit_home"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginHorizontal="10dp"
@@ -82,7 +82,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/img_meat_home"
+                    android:id="@+id/card_meat_home"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginHorizontal="10dp"
@@ -111,7 +111,7 @@
 
                 <androidx.cardview.widget.CardView
 
-                    android:id="@+id/img_food_home"
+                    android:id="@+id/card_food_home"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginHorizontal="10dp"
