@@ -32,6 +32,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
+import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
@@ -253,37 +254,37 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     }
 
     private void loadUserInfo() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase.child("users")
-                .child(firebaseUser.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
-                            DataSnapshot dataSnapshot = task.getResult();
-                            user = dataSnapshot.getValue(User.class);
-                            tvUserEmail.setText(user.getEmail());
-                            tvUserName.setText(user.getName());
-                            tvUserName.setVisibility(View.VISIBLE);
-                            Glide.with(MainActivity.this)
-                                    .load(user.getStrUriAvatar())
-                                    .error(R.drawable.ic_avatar_default)
-                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
-                                    .into(ivAvatar);
-                            profileViewModel.setUser(user);
-                            Log.i(TAG, "onComplete: info user load from storage: " + user);
-                        } else {
-                            Log.e(TAG, "onComplete: ", task.getException());
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: ", e);
-                }
-        });
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        mDatabase.child("users")
+//                .child(firebaseUser.getUid())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
+//                            DataSnapshot dataSnapshot = task.getResult();
+//                            user = dataSnapshot.getValue(User.class);
+//                            tvUserEmail.setText(user.getEmail());
+//                            tvUserName.setText(user.getName());
+//                            tvUserName.setVisibility(View.VISIBLE);
+//                            Glide.with(MainActivity.this)
+//                                    .load(user.getStrUriAvatar())
+//                                    .error(R.drawable.ic_avatar_default)
+//                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+//                                    .into(ivAvatar);
+//                            profileViewModel.setUser(user);
+//                            Log.i(TAG, "onComplete: info user load from storage: " + user);
+//                        } else {
+//                            Log.e(TAG, "onComplete: ", task.getException());
+//                        }
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e(TAG, "onFailure: ", e);
+//                }
+//        });
         /*user.setUriAvatar(firebaseUser.getPhotoUrl());
         user.setName(firebaseUser.getDisplayName());
         user.setEmail(firebaseUser.getEmail());
@@ -301,9 +302,30 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         View actionView = menuItem.getActionView();
 
         TextView cartBadgeTextView = actionView.findViewById(R.id.tv_CartActionItem_cart_badge);
+        cartBadgeTextView.setVisibility(View.GONE);
 
-//        cartBadgeTextView.setText(String.valueOf(getCountCart().size()));
-//        cartBadgeTextView.setVisibility(getCountCart().size() == 0 ? View.GONE : View.VISIBLE);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Cart");
+        List<Cart> list1 = new ArrayList<>();
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list1.clear();
+                for(DataSnapshot snap : snapshot.getChildren()){
+                        Cart cart = snap.getValue(Cart.class);
+                        list1.add(cart);
+                        cartBadgeTextView.setText(String.valueOf(list1.size()));
+                }
+                cartBadgeTextView.setVisibility(list1.size() > 0 ? View.VISIBLE : View.GONE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
