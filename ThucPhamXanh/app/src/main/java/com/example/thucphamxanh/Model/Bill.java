@@ -1,10 +1,18 @@
 package com.example.thucphamxanh.Model;
 
 public class Bill {
-    private int idBill;
+    private int idBill,total;
     private String dayOut,status,idClient,timeOut;
 
     public Bill() {
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public String getTimeOut() {

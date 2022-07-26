@@ -114,7 +114,7 @@ public class ProductFragment extends Fragment {
         Log.d("EEeeeeee", String.valueOf(listProduct.size()));
         listVegetable = getVegetableProduct();
         fab_addProduct = binding.fabAddProductFragment;
-        adapter = new ProductAdapter(listProduct);
+        adapter = new ProductAdapter(listProduct,getContext());
     }
 
     private void dialogProduct() {

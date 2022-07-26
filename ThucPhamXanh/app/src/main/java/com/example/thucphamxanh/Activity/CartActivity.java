@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -66,7 +68,8 @@ public class CartActivity extends AppCompatActivity {
         listBill = getAllBill();
     }
     public  List<Cart> getCartProduct(){
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        String user = preferences.getString("username","");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Cart");
         List<Cart> list1 = new ArrayList<>();
@@ -76,7 +79,7 @@ public class CartActivity extends AppCompatActivity {
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Cart cart = snap.getValue(Cart.class);
-                    if (cart.getUserClient().equals(firebaseUser.getUid())){
+                    if (cart.getUserClient().equals(user)){
                         list1.add(cart);
                     }
 
@@ -110,7 +113,8 @@ public class CartActivity extends AppCompatActivity {
     }
     public void addBill(){
         Bill bill = new Bill();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        String user = preferences.getString("username","");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Bill");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -119,7 +123,7 @@ public class CartActivity extends AppCompatActivity {
         String time = timeFormat.format(Calendar.getInstance().getTime());
         if (listBill.size()==0){
             bill.setIdBill(1);
-            bill.setIdClient(firebaseUser.getUid());
+            bill.setIdClient(user);
             bill.setDayOut(date);
             bill.setTimeOut(time);
             bill.setStatus("đang chuẩn bị");
@@ -129,7 +133,7 @@ public class CartActivity extends AppCompatActivity {
             int i = listBill.size()-1;
             int id = listBill.get(i).getIdBill()+1;
             bill.setIdBill(id);
-            bill.setIdClient(firebaseUser.getUid());
+            bill.setIdClient(user);
             bill.setDayOut(date);
             bill.setTimeOut(time);
             bill.setStatus("đang chuẩn bị");

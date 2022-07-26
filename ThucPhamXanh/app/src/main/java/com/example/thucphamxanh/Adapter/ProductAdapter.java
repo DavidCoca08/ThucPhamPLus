@@ -1,5 +1,7 @@
 package com.example.thucphamxanh.Adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -35,9 +37,11 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHolder> {
     private List<Product> list;
     private List<Cart> listCart;
-    public static int id = 0;
-    public ProductAdapter(List<Product> list) {
-        this.list=list;
+    private Context context;
+
+    public ProductAdapter(List<Product> list, Context context) {
+        this.list = list;
+        this.context = context;
     }
 
     @NonNull
@@ -52,7 +56,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
             Product product = list.get(position);
             listCart = getAllCart();
-            Log.d("rrrrrrrrr", String.valueOf(listCart.size()));
             byte[] imgByte = Base64.getDecoder().decode(product.getImgProduct());
             Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
             holder.imgProduct.setImageBitmap(bitmap);
@@ -74,9 +77,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
             });
             holder.btn_addCart.setOnClickListener(view -> {
-                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                SharedPreferences preferences = context.getSharedPreferences("My_User",Context.MODE_PRIVATE);
+                String user = preferences.getString("username","");
                 Cart cart = new Cart();
-                cart.setUserClient(firebaseUser.getUid());
+                cart.setUserClient(user);
                 cart.setIdProduct(product.getCodeProduct());
                 cart.setImgProduct(product.getImgProduct());
                 cart.setNameProduct(product.getNameProduct());
@@ -141,24 +145,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     public void addProductCart(Cart cart){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Cart");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot snap : snapshot.getChildren()) {
-//                    Cart cart1 = snap.getValue(Cart.class);
-//                    if (cart1.getUserClient()==(cart.getUserClient()) && cart1.getIdProduct() == cart.getIdProduct()) {
-//                        id = Integer.parseInt(snap.getKey());
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//        int id1 = id+1;
-        Log.d("wwwwwww", String.valueOf(id));
         if (listCart.size()==0){
             cart.setIdCart(1);
             reference.child("1").setValue(cart);

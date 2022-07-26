@@ -1,0 +1,132 @@
+
+            package com.example.thucphamxanh.Adapter;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.thucphamxanh.Model.Bill;
+import com.example.thucphamxanh.Model.Cart;
+import com.example.thucphamxanh.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+    public class AdapterBill extends RecyclerView.Adapter<AdapterBill.viewHolder> {
+        private List<Bill> list;
+        private Context context;
+        List<Cart> listCart ;
+        AdapterItemBill adapterItemBill;
+        LinearLayoutManager linearLayoutManager;
+        public AdapterBill(List<Bill> list, Context context) {
+            this.list = list;
+            this.context = context;
+        }
+
+        @NonNull
+        @Override
+        public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bill,parent,false);
+            return new viewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull viewHolder holder, int position) {
+            Bill bill = list.get(position);
+            listCart = getAllCart(position);
+            adapterItemBill = new AdapterItemBill(listCart);
+            linearLayoutManager = new LinearLayoutManager(context);
+            holder.rvItemOrder.setLayoutManager(linearLayoutManager);
+            holder.rvItemOrder.setAdapter(adapterItemBill);
+            holder.tvidBill.setText(String.valueOf(bill.getIdBill()));
+            holder.tvNameClient.setText(bill.getIdClient());
+            holder.tvTotal.setText(String.valueOf(bill.getTotal()));
+            holder.linearLayout_item_product.setOnClickListener(view -> {
+                if (holder.rvItemOrder.getVisibility() == View.GONE){
+                    holder.rvItemOrder.setVisibility(View.VISIBLE);
+                    holder.img_drop_up.setImageResource(R.drawable.ic_arrow_drop_down);
+                }else {
+                    holder.rvItemOrder.setVisibility(View.GONE);
+                    holder.img_drop_up.setImageResource(R.drawable.ic_arrow_drop_up);
+                }
+            });
+            holder.card_bill.setOnClickListener(view -> {
+                if (holder.btn_updateStatusBill.getVisibility() == View.GONE){
+                    holder.btn_updateStatusBill.setVisibility(View.VISIBLE);
+                }else {
+                    holder.btn_updateStatusBill.setVisibility(View.GONE);
+                }
+            });
+        }
+
+
+
+        @Override
+        public int getItemCount() {
+            if (list!=null){
+                return list.size();
+            }
+            return 0;
+        }
+
+        public class viewHolder extends RecyclerView.ViewHolder{
+            private TextView tvidBill,tvNameClient,tvTotal;
+            private LinearLayout linearLayout_item_product;
+            private ImageView img_drop_up;
+            private Button btn_updateStatusBill;
+            private RecyclerView rvItemOrder;
+            private CardView card_bill;
+
+            public viewHolder(@NonNull View itemView) {
+                super(itemView);
+                tvidBill = itemView.findViewById(R.id.tv_idBill_item);
+                tvNameClient = itemView.findViewById(R.id.tv_name_client_item);
+                tvTotal = itemView.findViewById(R.id.tv_totalOrder_item);
+                linearLayout_item_product = itemView.findViewById(R.id.linear_layout_item_product);
+                img_drop_up = itemView.findViewById(R.id.img_drop_up);
+                btn_updateStatusBill = itemView.findViewById(R.id.btn_updateStatusBill_item);
+                rvItemOrder = itemView.findViewById(R.id.rv_order);
+                card_bill = itemView.findViewById(R.id.card_bill);
+            }
+        }
+        private List<Cart> getAllCart(int i) {
+            List<Cart> list1 = new ArrayList<>();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference("Bill");
+            reference.child(""+list.get(i).getIdBill()).child("Cart").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    list1.clear();
+                    for (DataSnapshot snap : snapshot.getChildren()){
+                        Cart cart = snap.getValue(Cart.class);
+                        list1.add(cart);
+                    }
+                    Log.d("AdapterBill",String.valueOf(list1.size()));
+                    adapterItemBill.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+            return list1;
+        }
+    }
+

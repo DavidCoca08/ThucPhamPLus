@@ -44,7 +44,7 @@ public class MeatFragment extends Fragment {
         rvMeat = view.findViewById(R.id.rvMeat);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvMeat.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listMeat);
+        adapter = new ProductAdapter(listMeat,getContext());
         rvMeat.setAdapter(adapter);
     }
 

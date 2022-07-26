@@ -47,7 +47,7 @@ public class VegetableFragment extends Fragment {
         rvVegetable = view.findViewById(R.id.rvVegetable);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVegetable.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listVegetable);
+        adapter = new ProductAdapter(listVegetable,getContext());
         rvVegetable.setAdapter(adapter);
     }
 
