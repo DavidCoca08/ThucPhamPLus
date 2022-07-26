@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
 import com.example.thucphamxanh.Model.Cart;
+import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
          * */
         //setUserViewModelObserver();
         //show thông tin user lên nav header khi đăng nhập
-        showUserInformation();
+//        showUserInformation();
         //set thông tin user vào viewmodel để giao tiếp
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -164,7 +165,9 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     public void checkUser(){
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
         String user = sharedPreferences.getString("username","");
+        mNavigationView.setVisibility(View.GONE);
         if (user.equals("admin")){
+            mNavigationView.setVisibility(View.VISIBLE);
             mNavigationView.getMenu().findItem(R.id.nav_Food).setVisible(false);
         }else if (user.length()==10){
             mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
@@ -173,6 +176,27 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 //            binding.appBarMain.toolbar.setVisibility(View.GONE);
             binding.navView.setVisibility(View.GONE);
         }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()){
+                    Partner partner = snap.getValue(Partner.class);
+                    if (user.equals(partner.getUserPartner())){
+                        mNavigationView.setVisibility(View.VISIBLE);
+                        mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
+                        mNavigationView.getMenu().findItem(R.id.nav_Partner).setVisible(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void initReferent() {
@@ -213,83 +237,83 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         tvUserName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_MainActivity_username);
         tvUserEmail = mNavigationView.getHeaderView(0).findViewById(R.id.tv_MainActivity_userEmail);
     }
-    public void showUserInformation() {
-        loadUserInfo();
-        /*tvUserEmail.setText(user.getEmail());
-        tvUserName.setText(user.getName());
-        tvUserName.setVisibility(View.VISIBLE);*/
-        /*Glide.with(MainActivity.this)
-                .load(user.getStrUriAvatar())
-                .placeholder(R.drawable.ic_avatar_default)
-                .error(R.drawable.ic_avatar_default)
-                .into(ivAvatar);
-        try {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference pathRef = storage
-                    .getReference()
-                    .child((user.getUriAvatar().getPath()).substring(1));
-            pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    user.setStrUriAvatar(uri.toString());
-                    Log.d(TAG, "onSuccess: ");
-                    Log.d(TAG, "loadUserInfo: " + user.toString());
-                    Glide.with(MainActivity.this)
-                            .load(user.getStrUriAvatar())
-                            .error(R.drawable.ic_avatar_default)
-                            .into(ivAvatar);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, "onFailure: ", e);
+//    public void showUserInformation() {
+//        loadUserInfo();
+//        /*tvUserEmail.setText(user.getEmail());
+//        tvUserName.setText(user.getName());
+//        tvUserName.setVisibility(View.VISIBLE);*/
+//        /*Glide.with(MainActivity.this)
+//                .load(user.getStrUriAvatar())
+//                .placeholder(R.drawable.ic_avatar_default)
+//                .error(R.drawable.ic_avatar_default)
+//                .into(ivAvatar);
+//        try {
+//            FirebaseStorage storage = FirebaseStorage.getInstance();
+//            StorageReference pathRef = storage
+//                    .getReference()
+//                    .child((user.getUriAvatar().getPath()).substring(1));
+//            pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                @Override
+//                public void onSuccess(Uri uri) {
+//                    user.setStrUriAvatar(uri.toString());
+//                    Log.d(TAG, "onSuccess: ");
+//                    Log.d(TAG, "loadUserInfo: " + user.toString());
+//                    Glide.with(MainActivity.this)
+//                            .load(user.getStrUriAvatar())
+//                            .error(R.drawable.ic_avatar_default)
+//                            .into(ivAvatar);
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Log.e(TAG, "onFailure: ", e);
+//
+//                }
+//            });
+//        } catch (Exception e) {
+//            Log.e(TAG, "showUserInformation: ",e );
+//        }
+//*/
+//    }
 
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "showUserInformation: ",e );
-        }
-*/
-    }
-
-    private void loadUserInfo() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase.child("users")
-                .child(firebaseUser.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
-                            DataSnapshot dataSnapshot = task.getResult();
-                            user = dataSnapshot.getValue(User.class);
-                            tvUserEmail.setText(user.getEmail());
-                            tvUserName.setText(user.getName());
-                            tvUserName.setVisibility(View.VISIBLE);
-                            Glide.with(MainActivity.this)
-                                    .load(user.getStrUriAvatar())
-                                    .error(R.drawable.ic_avatar_default)
-                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
-                                    .into(ivAvatar);
-                            profileViewModel.setUser(user);
-                            Log.i(TAG, "onComplete: info user load from storage: " + user);
-                        } else {
-                            Log.e(TAG, "onComplete: ", task.getException());
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: ", e);
-                }
-        });
-        /*user.setUriAvatar(firebaseUser.getPhotoUrl());
-        user.setName(firebaseUser.getDisplayName());
-        user.setEmail(firebaseUser.getEmail());
-        user.setId(firebaseUser.getUid());*/
-        Log.d(TAG, "loadUserInfo: " + user.toString());
-    }
+//    private void loadUserInfo() {
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        mDatabase.child("users")
+//                .child(firebaseUser.getUid())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
+//                            DataSnapshot dataSnapshot = task.getResult();
+//                            user = dataSnapshot.getValue(User.class);
+//                            tvUserEmail.setText(user.getEmail());
+//                            tvUserName.setText(user.getName());
+//                            tvUserName.setVisibility(View.VISIBLE);
+//                            Glide.with(MainActivity.this)
+//                                    .load(user.getStrUriAvatar())
+//                                    .error(R.drawable.ic_avatar_default)
+//                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+//                                    .into(ivAvatar);
+//                            profileViewModel.setUser(user);
+//                            Log.i(TAG, "onComplete: info user load from storage: " + user);
+//                        } else {
+//                            Log.e(TAG, "onComplete: ", task.getException());
+//                        }
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e(TAG, "onFailure: ", e);
+//                }
+//        });
+//        /*user.setUriAvatar(firebaseUser.getPhotoUrl());
+//        user.setName(firebaseUser.getDisplayName());
+//        user.setEmail(firebaseUser.getEmail());
+//        user.setId(firebaseUser.getUid());*/
+//        Log.d(TAG, "loadUserInfo: " + user.toString());
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

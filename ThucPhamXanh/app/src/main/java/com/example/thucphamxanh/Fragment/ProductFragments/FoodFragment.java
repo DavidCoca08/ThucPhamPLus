@@ -97,7 +97,7 @@ public class FoodFragment extends Fragment {
         rvFood = view.findViewById(R.id.rvFood);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvFood.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listFood);
+        adapter = new ProductAdapter(listFood,getContext());
         rvFood.setAdapter(adapter);
 
     }

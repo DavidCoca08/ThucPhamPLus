@@ -291,7 +291,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                                 mDatabase.updateChildren(userUpdateValue).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        ((MainActivity)requireActivity()).showUserInformation();
+//                                        ((MainActivity)requireActivity()).showUserInformation();
                                     }
                                 });
                             }
