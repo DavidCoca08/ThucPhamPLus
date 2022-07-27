@@ -54,8 +54,8 @@ import java.util.List;
             linearLayoutManager = new LinearLayoutManager(context);
             holder.rvItemOrder.setLayoutManager(linearLayoutManager);
             holder.rvItemOrder.setAdapter(adapterItemBill);
-            holder.tvidBill.setText(String.valueOf(bill.getIdBill()));
-            holder.tvNameClient.setText(bill.getIdClient());
+            holder.tvidBill.setText("Mã HD :"+ bill.getIdBill());
+            holder.tvNameClient.setText("Tên khách hàng :"+bill.getIdClient());
             holder.tvTotal.setText(String.valueOf(bill.getTotal()));
             holder.linearLayout_item_product.setOnClickListener(view -> {
                 if (holder.rvItemOrder.getVisibility() == View.GONE){
@@ -72,6 +72,11 @@ import java.util.List;
                 }else {
                     holder.btn_updateStatusBill.setVisibility(View.GONE);
                 }
+            });
+            holder.btn_updateStatusBill.setOnClickListener(view -> {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference reference = database.getReference("Bill");
+                reference.child(bill.getIdBill()+"/status").setValue("Yes");
             });
         }
 

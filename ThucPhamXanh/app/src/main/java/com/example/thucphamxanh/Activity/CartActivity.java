@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.view.View;
 import com.example.thucphamxanh.Adapter.CartAdapter;
 import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.Model.Cart;
+import com.example.thucphamxanh.Model.ProductTop;
 import com.example.thucphamxanh.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,9 +39,10 @@ import java.util.List;
 public class CartActivity extends AppCompatActivity {
     private RecyclerView rvCart;
     private List<Cart> list;
+    private List<ProductTop> listTop = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private CartAdapter adapter;
-    private TextView tvTotalPrice, tvEmptyProduct;
+    private TextView tvTotalPrice, tvEmptyProduct,tv1;
     private Button btn_senBill;
     private List<Bill> listBill;
     private NumberFormat numberFormat = new DecimalFormat("#,##0");
@@ -53,6 +56,11 @@ public class CartActivity extends AppCompatActivity {
         btn_senBill.setOnClickListener(view -> {
         addBill();
         deleteCart();
+            for (int i = 0; i < list.size(); i++) {
+                Log.d("aaaaaaaaa", String.valueOf(list.size()));
+                Log.d("bbbbbbbbb", String.valueOf(listTop.size()));
+                addProductTop(list.get(i).getIdProduct(),list.get(i).getNumberProduct());
+            }
         });
     }
     public void unitUi(){
@@ -63,9 +71,11 @@ public class CartActivity extends AppCompatActivity {
         adapter = new CartAdapter(list);
         rvCart.setAdapter(adapter);
         tvTotalPrice = findViewById(R.id.tv_CartActivity_totalPrice);
+        tv1 = findViewById(R.id.tv1_CartActivity_totalPrice);
         btn_senBill = findViewById(R.id.btn_CartActivity_btnPay);
         tvEmptyProduct = findViewById(R.id.tv_CartActivity_emptyProduct);
         listBill = getAllBill();
+        getProductTop();
     }
     public  List<Cart> getCartProduct(){
         SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
@@ -81,6 +91,7 @@ public class CartActivity extends AppCompatActivity {
                     Cart cart = snap.getValue(Cart.class);
                     if (cart.getUserClient().equals(user)){
                         list1.add(cart);
+
                     }
 
                 }
@@ -88,7 +99,8 @@ public class CartActivity extends AppCompatActivity {
                 for (int i = 0; i < list1.size(); i++) {
                     sum += list1.get(i).getTotalPrice();
                 }
-                tvTotalPrice.setText(numberFormat.format(sum) +" đ");
+                tvTotalPrice.setText(numberFormat.format(sum));
+                tv1.setText(""+sum);
                 if (list1.size()==0){
                     btn_senBill.setEnabled(false);
                 }else  btn_senBill.setEnabled(true);
@@ -126,7 +138,9 @@ public class CartActivity extends AppCompatActivity {
             bill.setIdClient(user);
             bill.setDayOut(date);
             bill.setTimeOut(time);
-            bill.setStatus("đang chuẩn bị");
+            bill.setIdPartner(list.get(0).getIdPartner());
+            bill.setTotal(Integer.parseInt(tv1.getText().toString()));
+            bill.setStatus("No");
             reference.child(""+1).setValue(bill);
             reference.child(""+1).child("Cart").setValue(list);
         }else {
@@ -136,7 +150,9 @@ public class CartActivity extends AppCompatActivity {
             bill.setIdClient(user);
             bill.setDayOut(date);
             bill.setTimeOut(time);
-            bill.setStatus("đang chuẩn bị");
+            bill.setIdPartner(list.get(0).getIdPartner());
+            bill.setTotal(Integer.parseInt(tv1.getText().toString()));
+            bill.setStatus("No");
             reference.child(""+id).setValue(bill);
             reference.child(""+id).child("Cart").setValue(list);
         }
@@ -174,4 +190,43 @@ public class CartActivity extends AppCompatActivity {
         });
         return list1;
     }
+    public void addProductTop(int id, int amount){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("ProductTop");
+        ProductTop top = new ProductTop();
+        top.setIdProduct(id);
+        top.setAmountProduct(amount);
+        if (listTop.size()==0){
+            reference.child(""+id).setValue(top);
+        }else {
+            for (int i = 0; i < listTop.size(); i++) {
+                if (id == listTop.get(i).getIdProduct()) {
+                    int amounts = listTop.get(i).getAmountProduct() + amount;
+                    reference.child("" + id).child("amountProduct").setValue(amounts);
+                } else {
+                    reference.child("" + id).setValue(top);
+                }
+            }
+        }
+    }
+    public void getProductTop(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("ProductTop");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listTop.clear();
+                for (DataSnapshot snapshot1 : snapshot.getChildren()){
+                    ProductTop top = snapshot1.getValue(ProductTop.class);
+                    listTop.add(top);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }

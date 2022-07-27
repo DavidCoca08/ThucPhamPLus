@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.HistoryOrderFragment">
 
-
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_billHistory"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Lịch sử mua hàng" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

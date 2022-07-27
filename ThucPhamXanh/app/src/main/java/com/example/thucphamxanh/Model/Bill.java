@@ -2,13 +2,21 @@ package com.example.thucphamxanh.Model;
 
 public class Bill {
     private int idBill,total;
-    private String dayOut,status,idClient,timeOut;
+    private String dayOut,status,idClient,timeOut,idPartner;
 
     public Bill() {
     }
 
     public int getTotal() {
         return total;
+    }
+
+    public String getIdPartner() {
+        return idPartner;
+    }
+
+    public void setIdPartner(String idPartner) {
+        this.idPartner = idPartner;
     }
 
     public void setTotal(int total) {
