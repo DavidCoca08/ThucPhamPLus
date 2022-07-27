@@ -17,9 +17,11 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.example.thucphamxanh.Model.Bill;
+import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.databinding.FragmentStatisticalBinding;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +29,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,6 +44,7 @@ public class StatisticalFragment extends Fragment {
     TextView totalRevenue;
     final Calendar myCalendar= Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private NumberFormat numberFormat = new DecimalFormat("#,##0");
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,35 +76,10 @@ public class StatisticalFragment extends Fragment {
             }
         });
 
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String fromdate = fromDate.getEditText().getText().toString();
-                String todate = toDate.getEditText().getText().toString();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference ref = database.getReference("Bill");
-                List<Bill> list1 = new ArrayList<>();
-//                Query query = ref.orderByChild("idCart").startAt(fromdate).endAt(todate);
-                ref.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        list1.clear();
-                        for(DataSnapshot snap : snapshot.getChildren()){
-                            Bill bill = snap.getValue(Bill.class);
-                            list1.add(bill);
-                            totalRevenue.setText(":"+list1.size());
-                        }
-                    }
+        btnSearch.setOnClickListener(view -> {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-//                Log.d("zo", "hello : "+query);
-//                totalRevenue.setText(":"+query);
-            }
         });
+
 
         return binding.getRoot();
     }

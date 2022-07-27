@@ -303,7 +303,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
         TextView cartBadgeTextView = actionView.findViewById(R.id.tv_CartActionItem_cart_badge);
         cartBadgeTextView.setVisibility(View.GONE);
-
+        SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        String user = preferences.getString("username","");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Cart");
         List<Cart> list1 = new ArrayList<>();
@@ -312,10 +313,13 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
-                        Cart cart = snap.getValue(Cart.class);
+                    Cart cart = snap.getValue(Cart.class);
+                    if (cart.getUserClient().equals(user)) {
                         list1.add(cart);
-                        cartBadgeTextView.setText(String.valueOf(list1.size()));
+
+                    }
                 }
+                cartBadgeTextView.setText(String.valueOf(list1.size()));
                 cartBadgeTextView.setVisibility(list1.size() > 0 ? View.VISIBLE : View.GONE);
             }
 
