@@ -1,4 +1,4 @@
-package com.example.thucphamxanh.Fragment;
+package com.example.thucphamxanh.Fragment.Bill;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.example.thucphamxanh.Adapter.AdapterBill;
 import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.R;
-import com.example.thucphamxanh.databinding.FragmentBillBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,24 +26,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CurrentOrderFragment extends Fragment {
+public class HistoryOrderFragment extends Fragment {
 
     private RecyclerView rvBill;
     private LinearLayoutManager linearLayoutManager;
     private AdapterBill adapterBill;
     private List<Bill> listBill = new ArrayList<>();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view= inflater.inflate(R.layout.fragment_current_order, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_order, container, false);
         initUi(view);
         return view;
     }
     public void initUi(View view ){
         getBill();
-        rvBill = view.findViewById(R.id.rv_billCurrent);
+        rvBill = view.findViewById(R.id.rv_billHistory);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvBill.setLayoutManager(linearLayoutManager);
         adapterBill = new AdapterBill(listBill,getContext());
@@ -61,7 +59,9 @@ public class CurrentOrderFragment extends Fragment {
                 listBill.clear();
                 for (DataSnapshot snap : snapshot.getChildren()){
                     Bill bill = snap.getValue(Bill.class);
-                    if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("No")){
+                    if (user.equals("admin") && bill.getStatus().equals("Yes")){
+                        listBill.add(bill);
+                    }else if(user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")){
                         listBill.add(bill);
                     }
 

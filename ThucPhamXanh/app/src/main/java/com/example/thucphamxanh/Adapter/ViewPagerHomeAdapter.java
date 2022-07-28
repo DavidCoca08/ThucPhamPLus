@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.thucphamxanh.Fragment.HomePageFragment;
-import com.example.thucphamxanh.Fragment.OrderFragment;
+import com.example.thucphamxanh.Fragment.Bill.OrderFragment;
 import com.example.thucphamxanh.Fragment.PersonalFragment;
 import com.example.thucphamxanh.Fragment.VoucherFragment;
 

@@ -57,8 +57,6 @@ public class CartActivity extends AppCompatActivity {
         addBill();
         deleteCart();
             for (int i = 0; i < list.size(); i++) {
-                Log.d("aaaaaaaaa", String.valueOf(list.size()));
-                Log.d("bbbbbbbbb", String.valueOf(listTop.size()));
                 addProductTop(list.get(i).getIdProduct(),list.get(i).getNumberProduct());
             }
         });
@@ -140,7 +138,9 @@ public class CartActivity extends AppCompatActivity {
             bill.setTimeOut(time);
             bill.setIdPartner(list.get(0).getIdPartner());
             bill.setTotal(Integer.parseInt(tv1.getText().toString()));
-            bill.setStatus("No");
+            if (user.equals("admin")){
+                bill.setStatus("Yes");
+            }else bill.setStatus("No");
             reference.child(""+1).setValue(bill);
             reference.child(""+1).child("Cart").setValue(list);
         }else {
@@ -152,7 +152,9 @@ public class CartActivity extends AppCompatActivity {
             bill.setTimeOut(time);
             bill.setIdPartner(list.get(0).getIdPartner());
             bill.setTotal(Integer.parseInt(tv1.getText().toString()));
-            bill.setStatus("No");
+            if (user.equals("admin")){
+                bill.setStatus("Yes");
+            }else bill.setStatus("No");
             reference.child(""+id).setValue(bill);
             reference.child(""+id).child("Cart").setValue(list);
         }

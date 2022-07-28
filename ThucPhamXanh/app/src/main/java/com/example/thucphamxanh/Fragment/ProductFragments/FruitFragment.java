@@ -26,7 +26,7 @@ import java.util.List;
 
 public class FruitFragment extends Fragment {
 
-    private List<Product> listFruit;
+    private List<Product> listFruit = new ArrayList<>();
     private RecyclerView rvFruit;
     private LinearLayoutManager linearLayoutManager;
     private ProductAdapter adapter;
@@ -40,7 +40,7 @@ public class FruitFragment extends Fragment {
         return view;
     }
     public void unitUI(){
-        listFruit = getVegetableProduct();
+        getVegetableProducts();
         rvFruit = view.findViewById(R.id.rvFruit);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvFruit.setLayoutManager(linearLayoutManager);
@@ -48,18 +48,17 @@ public class FruitFragment extends Fragment {
         rvFruit.setAdapter(adapter);
     }
 
-    public  List<Product> getVegetableProduct(){
+    public void getVegetableProducts(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Product");
-        List<Product> list1 = new ArrayList<>();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list1.clear();
+                listFruit.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Product product = snap.getValue(Product.class);
                     if (product.getCodeCategory()==2){
-                        list1.add(product);
+                        listFruit.add(product);
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -70,6 +69,5 @@ public class FruitFragment extends Fragment {
 
             }
         });
-        return list1;
     }
 }

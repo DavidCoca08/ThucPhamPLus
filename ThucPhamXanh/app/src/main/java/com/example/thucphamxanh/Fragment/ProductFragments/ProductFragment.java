@@ -57,10 +57,8 @@ public class ProductFragment extends Fragment {
     private TabLayout tabLayoutProduct;
     private ViewPager2 viewPagerProduct;
     private ProductAdapter_tabLayout adapter_tabLayout;
-    private Partner partner = new Partner();
     private FloatingActionButton fab_addProduct;
-    private List<Product> listProduct;
-    private List<Product> listVegetable;
+    private List<Product> listProduct = new ArrayList<>();
     private TextInputLayout til_nameProduct,til_priceProduct,til_amountProduct;
     private ImageView img_Product,img_addImageCamera,img_addImageDevice;
     private String nameProduct,imgProduct,userPartner;
@@ -76,7 +74,7 @@ public class ProductFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductBinding.inflate(inflater, container, false);
         tabLayout();
-        unitUI();
+        initUI();
         fab_addProduct.setOnClickListener(view1 -> {
             dialogProduct();
         });
@@ -109,12 +107,12 @@ public class ProductFragment extends Fragment {
             }
         }).attach();
     }
-    public void unitUI(){
-        listProduct = getAllProduct();
+    public void initUI(){
+        getAllProducts();
         Log.d("EEeeeeee", String.valueOf(listProduct.size()));
-        listVegetable = getVegetableProduct();
         fab_addProduct = binding.fabAddProductFragment;
         adapter = new ProductAdapter(listProduct,getContext());
+
     }
 
     private void dialogProduct() {
@@ -125,8 +123,6 @@ public class ProductFragment extends Fragment {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
         initUiDialog(view);
-
-
         img_addImageCamera.setOnClickListener(view1 -> {
             requestPermissionCamera();
         });
@@ -227,21 +223,19 @@ public class ProductFragment extends Fragment {
         }
 
     }
-    public  List<Product> getVegetableProduct(){
+
+    public  void getAllProducts(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Product");
-        List<Product> list1 = new ArrayList<>();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list1.clear();
+                listProduct.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Product product = snap.getValue(Product.class);
-                    if (product.getCodeCategory()==1){
-                        list1.add(product);
-                    }
+                    listProduct.add(product);
                 }
-                adapter_tabLayout.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -249,30 +243,6 @@ public class ProductFragment extends Fragment {
 
             }
         });
-        return list1;
-    }
-    public  List<Product> getAllProduct(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Product");
-        List<Product> list1 = new ArrayList<>();
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list1.clear();
-                for(DataSnapshot snap : snapshot.getChildren()){
-                    Product product = snap.getValue(Product.class);
-                    list1.add(product);
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        return list1;
     }
 
 

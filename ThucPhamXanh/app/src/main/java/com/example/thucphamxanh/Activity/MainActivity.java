@@ -1,10 +1,19 @@
 package com.example.thucphamxanh.Activity;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -21,6 +30,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,6 +42,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
+import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
@@ -50,6 +61,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     //ViewModel để giao tiếp dữ liệu với ProfileFragment
     private ProfileViewModel profileViewModel;
-
+    private List<Bill> listBill = new ArrayList<>();
 //    private int cartQuantity = 0;
 
 
@@ -131,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         //khởi tạo các view
         initUI();
         checkUser();
+        getBill();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
         initViewModel();
         /*
@@ -396,7 +410,74 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         });
         Log.d(TAG, "syncView: ");
     }
+    public void getBill(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Bill");
+        SharedPreferences preferences = getSharedPreferences("My_User", Context.MODE_PRIVATE);
+        String user = preferences.getString("username","");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listBill.clear();
+                for (DataSnapshot snap : snapshot.getChildren()){
+                    Bill bill = snap.getValue(Bill.class);
+                    if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("No")) {
+                        listBill.add(bill);
+                    }
+                }
+                if (listBill.size()!=0){
+                    notification();
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public  void notification(){
+        String CHANNEL_ID="1234";
+
+        Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+ getPackageName() + "/" + R.raw.sound);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //For API 26+ you need to put some additional code like below:
+        NotificationChannel mChannel;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(CHANNEL_ID, "Thông báo", NotificationManager.IMPORTANCE_HIGH);
+            mChannel.setLightColor(Color.GRAY);
+            mChannel.enableLights(true);
+            mChannel.setDescription("Chuông thông báo");
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .build();
+            mChannel.setSound(soundUri, audioAttributes);
+            mChannel.setVibrationPattern( new long []{ 100 , 200 , 300 , 400 , 500 , 400 , 300 , 200 , 400 }) ;
+
+            if (mNotificationManager != null) {
+                mNotificationManager.createNotificationChannel( mChannel );
+            }
+        }
+
+        //General code:
+        NotificationCompat.Builder status = new NotificationCompat.Builder(this,CHANNEL_ID);
+        status.setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                //.setOnlyAlertOnce(true)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText("Bạn có đơn hàng mới")
+                .setDefaults(Notification.DEFAULT_LIGHTS )
+                .setSound(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+ "://" +getPackageName()+"/"+R.raw.sound))
+                .build();
+
+
+        mNotificationManager.notify((int)System.currentTimeMillis(), status.build());
+
+    }
 
 
 

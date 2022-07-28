@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.thucphamxanh.Fragment.CurrentOrderFragment;
-import com.example.thucphamxanh.Fragment.HistoryOrderFragment;
+import com.example.thucphamxanh.Fragment.Bill.CurrentOrderFragment;
+import com.example.thucphamxanh.Fragment.Bill.HistoryOrderFragment;
 
 public class OderViewPagerAdapter extends FragmentStateAdapter {
     public OderViewPagerAdapter(@NonNull Fragment fragment) {

@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/nav_Bill"
-        android:name="com.example.thucphamxanh.Fragment.BillFragment"
+        android:name="com.example.thucphamxanh.Fragment.Bill.BillFragment"
         android:label="@string/menu_Bill"
         tools:layout="@layout/fragment_bill" />
 
