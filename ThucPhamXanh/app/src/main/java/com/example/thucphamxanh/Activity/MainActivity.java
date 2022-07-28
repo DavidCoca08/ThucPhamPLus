@@ -144,6 +144,11 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         //khởi tạo các view
         initUI();
         checkUser();
+        SharedPreferences preferences1 = getSharedPreferences("Number",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences1.edit();
+        String number = "0";
+        editor.putString("number",""+number);
+        editor.apply();
         getBill();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
         initViewModel();
@@ -425,8 +430,18 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                         listBill.add(bill);
                     }
                 }
-                if (listBill.size()!=0){
+                SharedPreferences preferences1 = getSharedPreferences("Number",MODE_PRIVATE);
+
+                int number = Integer.parseInt(preferences1.getString("number",""));
+                if (listBill.size()>number){
                     notification();
+                    SharedPreferences.Editor editor = preferences1.edit();
+                    editor.putString("number", String.valueOf(listBill.size()));
+                    editor.apply();
+                }else {
+                    SharedPreferences.Editor editor = preferences1.edit();
+                    editor.putString("number", String.valueOf(listBill.size()));
+                    editor.apply();
                 }
             }
 
