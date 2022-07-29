@@ -29,7 +29,7 @@ public class ChildFavoriteAdapter extends RecyclerView.Adapter<ChildFavoriteAdap
 
     @Override
     public void onBindViewHolder(@NonNull ChildFavoriteHolder holder, int position) {
-        holder.show_favorite_item_tv.setText(listChild.get(position));
+//        holder.namePartner_food.setText(listChild.get(position));
     }
 
     @Override
@@ -39,10 +39,12 @@ public class ChildFavoriteAdapter extends RecyclerView.Adapter<ChildFavoriteAdap
 
     public class ChildFavoriteHolder extends RecyclerView.ViewHolder{
 
-        private TextView show_favorite_item_tv;
+//        private TextView namePartner_food, addressPartner_food;
         public ChildFavoriteHolder(@NonNull View itemView) {
             super(itemView);
-            show_favorite_item_tv = itemView.findViewById(R.id.show_favorite_item_tv);
+//            namePartner_food = itemView.findViewById(R.id.namePartner_food);
+//            addressPartner_food = itemView.findViewById(R.id.addressPartner_food);
+
         }
     }
 }

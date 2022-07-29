@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardView"
+    android:id="@+id/cardView_partner_food"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:backgroundTint="@color/grey"
@@ -9,15 +9,15 @@
     app:cardElevation="1dp"
     android:layout_margin="8dp">
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/show_favorite_item_tv"-->
-<!--        android:text="Rau dền"-->
-<!--        android:textColor="#FAF6F6"-->
-<!--        android:textSize="20sp"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:textStyle="bold"/>-->
+    <!--    <TextView-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:id="@+id/show_favorite_item_tv"-->
+    <!--        android:text="Rau dền"-->
+    <!--        android:textColor="#FAF6F6"-->
+    <!--        android:textSize="20sp"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:textStyle="bold"/>-->
 
     <LinearLayout
         android:orientation="vertical"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-             android:text="Đại Mỗ - Nam Từ Liêm-Hà Nội"
+            android:text="Đại Mỗ - Nam Từ Liêm-Hà Nội"
             android:layout_gravity="center"
             android:id="@+id/addressPartner_food"
             />

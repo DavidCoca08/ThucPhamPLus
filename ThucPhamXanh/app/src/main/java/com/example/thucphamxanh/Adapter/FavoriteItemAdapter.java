@@ -1,5 +1,6 @@
 package com.example.thucphamxanh.Adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +51,16 @@ public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteItemAdapte
 
         }
 
+        if (position == 0){
+            holder.cardView_favItem.setCardBackgroundColor(Color.parseColor("#33A338"));
+        }else if (position == 1) {
+            holder.cardView_favItem.setCardBackgroundColor(Color.parseColor("#2589D8"));
+        }else if (position == 2) {
+            holder.cardView_favItem.setCardBackgroundColor(Color.parseColor("#FA8F6E"));
+        }else {
+            holder.cardView_favItem.setCardBackgroundColor(Color.parseColor("#F16D64"));
+        }
+
         ChildFavoriteAdapter childFavoriteAdapter = new ChildFavoriteAdapter(list);
         holder.child_favorite_rcView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
         holder.child_favorite_rcView.setAdapter(childFavoriteAdapter);
@@ -77,6 +89,7 @@ public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteItemAdapte
         private TextView favoriteItem_tv;
         private ImageView arrowImage;
         private RecyclerView child_favorite_rcView;
+        private CardView cardView_favItem;
         public FavoriteItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -85,7 +98,7 @@ public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteItemAdapte
             favoriteItem_tv = itemView.findViewById(R.id.itemTv);
             arrowImage = itemView.findViewById(R.id.arrow_imageview);
             child_favorite_rcView = itemView.findViewById(R.id.child_favorite_rcView);
-
+            cardView_favItem = itemView.findViewById(R.id.cardView_favItem);
         }
     }
 }
