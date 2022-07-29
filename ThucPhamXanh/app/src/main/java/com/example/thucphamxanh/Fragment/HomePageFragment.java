@@ -100,7 +100,7 @@ public class HomePageFragment extends Fragment {
             replaceFragment(new MeatFragment());
         });
         card_food_home.setOnClickListener(view1 -> {
-            Toast.makeText(getActivity(), "Đồ ăn", Toast.LENGTH_SHORT).show();
+           replaceFragment(new PartnerFoodFragment());
         });
 
 

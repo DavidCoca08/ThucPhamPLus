@@ -6,6 +6,7 @@ public class ProductTop {
     public ProductTop() {
     }
 
+
     public int getIdProduct() {
         return idProduct;
     }
