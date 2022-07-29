@@ -44,6 +44,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
 import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.Model.Cart;
+import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
@@ -204,17 +205,33 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     }
     public void checkUser(){
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
-        String userPhoneNumber = sharedPreferences.getString("username","");
-
-        if (userPhoneNumber.equals("admin")){
+        String user = sharedPreferences.getString("username","");
+        mNavigationView.setVisibility(View.GONE);
+        if (user.equals("admin")){
+            mNavigationView.setVisibility(View.VISIBLE);
             mNavigationView.getMenu().findItem(R.id.nav_Food).setVisible(false);
-        }else if (userPhoneNumber.length()==10){
-            mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
-            mNavigationView.getMenu().findItem(R.id.nav_Partner).setVisible(false);
-        }else {
-//            binding.appBarMain.toolbar.setVisibility(View.GONE);
-            binding.navView.setVisibility(View.GONE);
         }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snap : snapshot.getChildren()){
+                    Partner partner = snap.getValue(Partner.class);
+                    if (user.equals(partner.getUserPartner())){
+                        mNavigationView.setVisibility(View.VISIBLE);
+                        mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
+                        mNavigationView.getMenu().findItem(R.id.nav_Partner).setVisible(false);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
     @Deprecated
     private void initReferent() {
