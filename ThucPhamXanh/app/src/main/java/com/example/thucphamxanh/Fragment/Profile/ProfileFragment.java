@@ -34,9 +34,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -233,7 +230,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         //up ảnh lên storage, lấy Uri storage set vào uriAvatar của user, change user trong ViewModel
         // Get the data from an ImageView as bytes
-        StorageReference spaceRef = mStorageReference.child("images/" + user.getId() + "_avatar.jpg");
+        StorageReference spaceRef = mStorageReference.child("image/" + user.getId() + "_avatar.jpg");
         ivAvatar.setDrawingCacheEnabled(true);
         ivAvatar.buildDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -252,66 +249,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 // ...
-                Log.d(TAG, "onSuccess: ");
-                //user.setUriAvatar(spaceRef.getDownloadUrl().getResult());
-                FirebaseUser userAuth = FirebaseAuth.getInstance().getCurrentUser();
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                        .setDisplayName(user.getName())
-                        .setPhotoUri(Uri.parse(spaceRef.getPath()))
-                        .build();
-
-                userAuth.updateProfile(profileUpdates)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                spaceRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d(TAG, "onSuccess: " + uri);
+                        user.setStrUriAvatar(uri.toString());
+                        DatabaseReference mDatabase;
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        Map<String, Object> userValue = user.toMap();
+                        Map<String, Object> userUpdateValue = new HashMap<>();
+                        userUpdateValue.put("/User/" + user.getId(), userValue);
+                        mDatabase.updateChildren(userUpdateValue).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "onComplete: update profile successful");
-                                    //update thông tin user treng RealTime database
-                                    updateUserOnDatabase();
-                                    //show lại thông tin user trong nav bar
-//                                    ((MainActivity)requireActivity()).showUserInformation();
-                                    //dòng này không nhớ để làm gì
-                                    //có thể setUser cho mainActivity lắng nghe
-                                    //và tương tác với các Fragment khác
-
-                                    profileViewModel.setUser(user);
-                                    return;
-                                }
-                                Log.d(TAG, "onComplete: update profile failure");
-                            }
-
-                            private void updateUserOnDatabase() {
-                                //TODO tách DAO riêng dễ quản lý
-                                DatabaseReference mDatabase;
-                                mDatabase = FirebaseDatabase.getInstance().getReference();
-                                String key = mDatabase.child("users").push().getKey();
-                                Map<String, Object> userValue = user.toMap();
-                                Map<String, Object> userUpdateValue = new HashMap<>();
-                                userUpdateValue.put("/users/" + user.getId(), userValue);
-                                mDatabase.updateChildren(userUpdateValue).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        ((MainActivity)requireActivity()).showUserInformation();
-                                    }
-                                });
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "onFailure: update profile failure");
+                                profileViewModel.setUser(user);
                             }
                         });
+                    }
+                });
+                //user.setUriAvatar(spaceRef.getDownloadUrl().getResult());
 
-                //sửa thông tin trong nav bar
             }
         });
-        Log.d(TAG, "updateUserInfo: end");
-        //use ViewModel communicating with MainAcitivy
 
     }
-
-
-
 
 }

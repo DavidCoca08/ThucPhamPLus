@@ -103,7 +103,26 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 //    private int cartQuantity = 0;
 
 
+    public void loadUserInfoById(String phoneNumber){
+        final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
+        rootReference.child("User").child(phoneNumber)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            MainActivity.this.user = snapshot.getValue(User.class);
+                            Log.d(TAG, "onDataChange: " + user);
+                            profileViewModel.setUser(user);
+                        }
 
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "onCancelled: ", error.toException());
+                    }
+                });
+    }
     //TODO: thử chuyển method sang ProfileFragment
     private final ActivityResultLauncher<Intent> mActivityResultLauncher =
             registerForActivityResult(
@@ -140,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
         setSupportActionBar(binding.appBarMain.toolbar);
         //khởi tạo các tham chiếu API ???
-        initReferent();
+        //initReferent();
         //khởi tạo các view
         initUI();
         checkUser();
@@ -152,6 +171,9 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         getBill();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
         initViewModel();
+        setUserViewModelObserver();
+        initUI();
+        checkUser();
         /*
          * khởi tạo observer cho user khi thay đổi thông tin user bên ProfileFragment
          * */
@@ -182,10 +204,11 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     }
     public void checkUser(){
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
-        String user = sharedPreferences.getString("username","");
-        if (user.equals("admin")){
+        String userPhoneNumber = sharedPreferences.getString("username","");
+
+        if (userPhoneNumber.equals("admin")){
             mNavigationView.getMenu().findItem(R.id.nav_Food).setVisible(false);
-        }else if (user.length()==10){
+        }else if (userPhoneNumber.length()==10){
             mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
             mNavigationView.getMenu().findItem(R.id.nav_Partner).setVisible(false);
         }else {
@@ -193,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             binding.navView.setVisibility(View.GONE);
         }
     }
-
+    @Deprecated
     private void initReferent() {
         user = new User();
         userAuth = FirebaseAuth.getInstance().getCurrentUser();
@@ -206,16 +229,16 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             @Override
             public void onChanged(User user1) {
                 Log.d(TAG, "onChanged: change user information");
-                user.setBitmapAvatar(user1.getBitmapAvatar());
-                user.setName(user1.getName());
-                user.setEmail(user1.getEmail());
-                Log.d(TAG, "onChanged: " + user.toString());
-                changeUserInfo();
+                tvUserEmail.setText(user1.getPhoneNumber());
+                tvUserName.setText(user1.getName());
+                Glide.with(MainActivity.this)
+                        .load(user1.getStrUriAvatar())
+                        .error(R.drawable.ic_avatar_default)
+                        .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+                        .into(ivAvatar);
+                Log.d(TAG, "onChanged: " + user1.toString());
             }
 
-            private void changeUserInfo() {
-                syncView();
-            }
         };
         profileViewModel.getUser().observe(this, userObserver);
     }
@@ -233,7 +256,11 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         tvUserEmail = mNavigationView.getHeaderView(0).findViewById(R.id.tv_MainActivity_userEmail);
     }
     public void showUserInformation() {
-//        loadUserInfo();
+        SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        String userPhoneNumber = sharedPreferences.getString("username","");
+        loadUserInfoById(userPhoneNumber);
+
+        //loadUserInfo();
         /*tvUserEmail.setText(user.getEmail());
         tvUserName.setText(user.getName());
         tvUserName.setVisibility(View.VISIBLE);*/
@@ -403,17 +430,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         intent.setAction(Intent.ACTION_GET_CONTENT);
         mActivityResultLauncher.launch(Intent.createChooser(intent, "Select picture"));
         Log.d(TAG, "openGallery: openGallery method");
-    }
-    public void syncView() {
-        StorageReference storageReference = FirebaseStorage.getInstance().
-                getReference().child((userAuth.getPhotoUrl().toString()).substring(1));
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Glide.with(MainActivity.this).load(uri).error(R.drawable.ic_avatar_default).into(ivAvatar);
-            }
-        });
-        Log.d(TAG, "syncView: ");
     }
     public void getBill(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();

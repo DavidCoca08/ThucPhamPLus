@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.thucphamxanh.Model.Partner;
+import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -103,6 +104,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         progressBar.setVisibility(View.GONE);
                         if (snapshot.exists()) {
+                            User user = snapshot.getValue(User.class);
+                            Log.d(TAG, "onDataChange: " + user.toString());
                             String password = snapshot.child("password").getValue(String.class);
                             if (password.equals(passwordUser)) {
                                 //TODO ĐĂNG NHẬP VÀO APP
