@@ -17,6 +17,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
@@ -83,9 +84,12 @@ public class VoucherFragment extends Fragment {
     }
 
     public void initUI(){
-        getAllVoucher();
+
 //        voucherList = getAllVoucher();
         voucherList = new ArrayList<>();
+        getAllVoucher();
+        LinearLayoutManager linearLayoutManager =new LinearLayoutManager(getContext());
+        recyclerView_Voucher.setLayoutManager(linearLayoutManager);
         voucherAdapter = new VoucherAdapter(voucherList,getContext());
         recyclerView_Voucher.setAdapter(voucherAdapter);
 
