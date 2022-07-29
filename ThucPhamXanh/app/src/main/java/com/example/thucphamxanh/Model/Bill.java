@@ -62,4 +62,17 @@ public class Bill {
     public void setIdClient(String idClient) {
         this.idClient = idClient;
     }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "idBill=" + idBill +
+                ", total=" + total +
+                ", dayOut='" + dayOut + '\'' +
+                ", status='" + status + '\'' +
+                ", idClient='" + idClient + '\'' +
+                ", timeOut='" + timeOut + '\'' +
+                ", idPartner='" + idPartner + '\'' +
+                '}';
+    }
 }

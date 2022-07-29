@@ -4,19 +4,24 @@ import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioAttributes;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +34,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -47,6 +53,7 @@ import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
+import com.example.thucphamxanh.Service.ConnectionReceiver;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -101,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     //ViewModel để giao tiếp dữ liệu với ProfileFragment
     private ProfileViewModel profileViewModel;
     private List<Bill> listBill = new ArrayList<>();
-//    private int cartQuantity = 0;
 
+    ConnectionReceiver connectionReceiver = new ConnectionReceiver();
 
     public void loadUserInfoById(String phoneNumber){
         final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
@@ -157,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         //khởi tạo user được xác thực bằng FirebaseAuthentication
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
 
         setSupportActionBar(binding.appBarMain.toolbar);
         //khởi tạo các tham chiếu API ???
@@ -527,6 +536,16 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     }
 
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectionReceiver, intentFilter);
+        super.onStart();
+    }
 
-
+    @Override
+    protected void onStop() {
+        unregisterReceiver(connectionReceiver);
+        super.onStop();
+    }
 }

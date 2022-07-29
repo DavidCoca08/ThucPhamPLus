@@ -127,7 +127,7 @@ public class CartActivity extends AppCompatActivity {
         String user = preferences.getString("username","");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Bill");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dateFormat.format(Calendar.getInstance().getTime());
         SimpleDateFormat timeFormat = new SimpleDateFormat("k:mm");
         String time = timeFormat.format(Calendar.getInstance().getTime());
