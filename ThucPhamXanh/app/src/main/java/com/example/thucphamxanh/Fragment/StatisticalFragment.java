@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thucphamxanh.Adapter.AdapterBill;
 import com.example.thucphamxanh.Model.Bill;
@@ -155,49 +156,55 @@ public class StatisticalFragment extends Fragment {
 
             String startdate = fromDate.getEditText().getText().toString();
             String todate = toDate.getEditText().getText().toString();
-            final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference("Bill");
-            Log.d(TAG, "getDate: ");
-            rootReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.d(TAG, "onDataChange: " + snapshot.getValue());
-                    int total = 0;
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Bill bill = dataSnapshot.getValue(Bill.class);
-                        if (!bill.getIdPartner().equals(uId))
-                            continue;
-                        Log.d(TAG, "onDataChange: " + bill);
-                        SimpleDateFormat spd = new SimpleDateFormat("yyyy-MM-dd");
-                        try {
-                            Date dayOut = spd.parse(bill.getDayOut());
-                            Date startDate = spd.parse(startdate);
-                            Date toDate = spd.parse(todate);
-                            Log.d(TAG, "onDataChange: " + dayOut.toString());
-                            Log.d(TAG, "onDataChange: " + startDate.toString());
-                            Log.d(TAG, "onDataChange: " + toDate.toString());
-                            Log.d(TAG, "onDataChange: " + bill.getDayOut());
-                            if (dayOut.after(startDate) && dayOut.before(toDate)) {
-                                //TODO hoa don hop le
-                                Log.d(TAG, "onDataChange: ngay xuat hoa don trong ....");
-                                total += bill.getTotal();
+            if(startdate.isEmpty()){
+                Toast.makeText(getContext(), "Vui lòng chọn ngày bắt đầu",Toast.LENGTH_SHORT).show();
+            }else if (todate.isEmpty()){
+                Toast.makeText(getContext(), "Vui lòng chọn ngày kết thúc",Toast.LENGTH_SHORT).show();
+            }else {
+                final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference("Bill");
+                Log.d(TAG, "getDate: ");
+                rootReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Log.d(TAG, "onDataChange: " + snapshot.getValue());
+                        int total = 0;
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Bill bill = dataSnapshot.getValue(Bill.class);
+                            if (!bill.getIdPartner().equals(uId))
+                                continue;
+                            Log.d(TAG, "onDataChange: " + bill);
+                            SimpleDateFormat spd = new SimpleDateFormat("yyyy-MM-dd");
+                            try {
+                                Date dayOut = spd.parse(bill.getDayOut());
+                                Date startDate = spd.parse(startdate);
+                                Date toDate = spd.parse(todate);
+                                Log.d(TAG, "onDataChange: " + dayOut.toString());
+                                Log.d(TAG, "onDataChange: " + startDate.toString());
+                                Log.d(TAG, "onDataChange: " + toDate.toString());
+                                Log.d(TAG, "onDataChange: " + bill.getDayOut());
+                                if (dayOut.after(startDate) && dayOut.before(toDate)) {
+                                    //TODO hoa don hop le
+                                    Log.d(TAG, "onDataChange: ngay xuat hoa don trong ....");
+                                    total += bill.getTotal();
+                                }
+                                else {
+                                    Log.d(TAG, "onDataChange: ngay xuat hoa don kh  hop le");
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                            else {
-                                Log.d(TAG, "onDataChange: ngay xuat hoa don kh  hop le");
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+
                         }
-
+                        totalRevenue.setText(String.valueOf(total));
+                        Log.d(TAG, "onDataChange: ");
                     }
-                    totalRevenue.setText(String.valueOf(total));
-                    Log.d(TAG, "onDataChange: ");
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e(TAG, "onCancelled: ", error.toException() );
-                }
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "onCancelled: ", error.toException() );
+                    }
+                });
+            }
         });
     }
 }
