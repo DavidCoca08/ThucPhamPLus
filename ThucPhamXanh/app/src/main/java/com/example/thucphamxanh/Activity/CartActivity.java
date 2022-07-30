@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -42,8 +43,8 @@ public class CartActivity extends AppCompatActivity {
     private List<ProductTop> listTop = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private CartAdapter adapter;
-    private TextView tvTotalPrice, tvEmptyProduct,tv1;
-    private Button btn_senBill;
+    private TextView tvTotalPrice, tvEmptyProduct,tv1, tvHide1, tvHide2;
+    private Button btn_senBill, btnEmptyProduct;
     private List<Bill> listBill;
     private NumberFormat numberFormat = new DecimalFormat("#,##0");
     @Override
@@ -72,8 +73,12 @@ public class CartActivity extends AppCompatActivity {
         tv1 = findViewById(R.id.tv1_CartActivity_totalPrice);
         btn_senBill = findViewById(R.id.btn_CartActivity_btnPay);
         tvEmptyProduct = findViewById(R.id.tv_CartActivity_emptyProduct);
+        btnEmptyProduct = findViewById(R.id.btn_CartActivity_emptyProduct);
         listBill = getAllBill();
         getProductTop();
+
+        tvHide1 = findViewById(R.id.tvHide1);
+        tvHide2 = findViewById(R.id.tvHide2);
     }
     public  List<Cart> getCartProduct(){
         SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
@@ -99,14 +104,26 @@ public class CartActivity extends AppCompatActivity {
                 }
                 tvTotalPrice.setText(numberFormat.format(sum));
                 tv1.setText(""+sum);
-                if (list1.size()==0){
-                    btn_senBill.setEnabled(false);
-                }else  btn_senBill.setEnabled(true);
-                if(list1.size()<=0){
+//                if (list1.size()==0){
+//                    btn_senBill.setEnabled(false);
+//                }else  btn_senBill.setEnabled(true);
+                if(list1.size()==0){
+                    tvHide1.setVisibility(View.GONE);
+                    tvHide2.setVisibility(View.GONE);
+                    btn_senBill.setVisibility(View.GONE);
+                    tvTotalPrice.setVisibility(View.GONE);
                     tvEmptyProduct.setVisibility(View.VISIBLE);
+                    btnEmptyProduct.setVisibility(View.VISIBLE);
+                    btnEmptyProduct.setOnClickListener(view -> {
+                        startActivity(new Intent(CartActivity.this, MainActivity.class));
+                    });
                     rvCart.setVisibility(View.INVISIBLE);
                 }else {
+                    tvHide1.setVisibility(View.VISIBLE);
+                    tvHide2.setVisibility(View.VISIBLE);
+                    btn_senBill.setVisibility(View.VISIBLE);
                     tvEmptyProduct.setVisibility(View.INVISIBLE);
+                    btnEmptyProduct.setVisibility(View.INVISIBLE);
                     rvCart.setVisibility(View.VISIBLE);
                 }
                 

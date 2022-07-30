@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F0E8D2"
     tools:context=".Fragment.ProductFragments.MeatFragment">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMeat"

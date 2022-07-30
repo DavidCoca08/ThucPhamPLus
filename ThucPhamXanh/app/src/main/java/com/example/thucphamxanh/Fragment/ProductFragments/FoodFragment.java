@@ -16,6 +16,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,6 +73,8 @@ public class FoodFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_food, container, false);
         unitUI();
+        rvFood.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
         sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
         user = sharedPreferences.getString("username","");
         if(user.equals("admin")){

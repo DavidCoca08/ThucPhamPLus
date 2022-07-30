@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -55,12 +57,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
             Product product = list.get(position);
+            NumberFormat numberFormat = new DecimalFormat("#,##0");
             listCart = getAllCart();
             byte[] imgByte = Base64.getDecoder().decode(product.getImgProduct());
             Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
             holder.imgProduct.setImageBitmap(bitmap);
             holder.tvNameProduct.setText(String.valueOf(product.getNameProduct()));
-            holder.tvPriceProduct.setText(String.valueOf(product.getPriceProduct()));
+            holder.tvPriceProduct.setText(numberFormat.format(product.getPriceProduct())+" đ");
             holder.cardProuct.setOnClickListener(view -> {
                 if (holder.btnUpdateProduct.getVisibility()==View.VISIBLE || holder.btnDeleteProduct.getVisibility()==View.VISIBLE){
                     holder.btnUpdateProduct.setVisibility(View.GONE);
@@ -107,7 +110,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         private ImageView imgProduct;
         private CardView cardProuct;
         private Button btnUpdateProduct,btnDeleteProduct;
-        private ImageButton btn_addCart;
+        private Button btn_addCart;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             tvNameProduct = itemView.findViewById(R.id.tvNameProduct_item);
