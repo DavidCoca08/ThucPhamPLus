@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ABCACD"
+    android:background="#A9DCE1"
     tools:context=".Fragment.ProductFragments.FoodFragment">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFood"

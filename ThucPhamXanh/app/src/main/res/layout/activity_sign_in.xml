@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:backgroundTint="#73DE4E"
-                android:text="Sign in"/>
+                android:text="Đăng nhập"/>
             <LinearLayout
                 android:id="@+id/layout_SignInActivity_signIn"
                 android:layout_width="match_parent"
@@ -97,14 +97,14 @@
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:textColor="@color/black"
-                    android:text="Don't have an account ?"/>
+                    android:text="Bạn chưa có tài khoản ?"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/holo_green_dark"
-                    android:text="Sign up"/>
+                    android:layout_marginStart="8dp"
+                    android:textSize="15sp"
+                    android:textColor="#0000ff"
+                    android:text="Đăng ký"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_SignInActivity_forgotAccount"
@@ -113,19 +113,20 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:padding="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
-                    android:text="Forgot password ?"/>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="14sp"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:text="Forgot password ?"/>-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
+                    android:drawableLeft="@drawable/icon_search"
                     android:textColor="@android:color/holo_green_dark"
-                    android:text="Find password"/>
+                    android:text="  Tìm tài khoản của bạn"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

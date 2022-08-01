@@ -116,6 +116,7 @@ public class CartActivity extends AppCompatActivity {
                     btnEmptyProduct.setVisibility(View.VISIBLE);
                     btnEmptyProduct.setOnClickListener(view -> {
                         startActivity(new Intent(CartActivity.this, MainActivity.class));
+                        finish();
                     });
                     rvCart.setVisibility(View.INVISIBLE);
                 }else {

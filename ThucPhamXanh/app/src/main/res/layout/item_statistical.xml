@@ -3,31 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_bill"
     android:layout_marginTop="10dp"
-    app:cardCornerRadius="15dp">
+    app:cardCornerRadius="20dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="9">
             <TextView
-                android:id="@+id/tv_idBill_item"
+                android:id="@+id/tv_ItemStatistical_idBill"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_name_client_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
+
             <LinearLayout
-                android:id="@+id/linear_layout_item_product"
+                android:id="@+id/linearLayout_ItemStatistical_itemProducts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -38,18 +33,18 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Click để xem chi tiết"
+                        android:text="Chi tiết các sản phẩm"
                         android:textSize="17dp"
                         android:layout_weight="9"/>
                     <ImageView
-                        android:id="@+id/img_drop_up"
+                        android:id="@+id/img_ItemStatistical_dropDown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_drop_up"
+                        android:src="@drawable/ic_arrow_drop_down"
                         android:layout_weight="1"/>
                 </LinearLayout>
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_order"
+                    android:id="@+id/recyclerView_ItemStatistical_products"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"/>
@@ -62,29 +57,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Tổng tiền"/>
+                    android:textStyle="italic|bold"
+                    android:textSize="16dp"
+                    android:text="Tổng tiền:"/>
                 <TextView
-                    android:id="@+id/tv_totalOrder_item"
+                    android:id="@+id/tv_ItemStatistical_totalOrder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:textColor="#F44336"
+                    android:textSize="16dp"
                     android:layout_weight="1"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
-                    android:visibility="gone"
-                    android:id="@+id/btn_updateStatusBill_item"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hoàn thành đơn hàng"
-                    android:backgroundTint="#4CAF50"/>
-
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
