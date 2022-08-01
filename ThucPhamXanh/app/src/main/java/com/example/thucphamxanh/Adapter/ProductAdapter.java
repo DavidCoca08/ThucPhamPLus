@@ -1,17 +1,19 @@
 package com.example.thucphamxanh.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,8 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,7 +75,39 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 }
             });
             holder.btnUpdateProduct.setOnClickListener(view -> {
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Thêm sản phẩm");
+                View view1 = LayoutInflater.from(context).inflate(R.layout.dialog_product,null);
+                builder.setView(view1);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                String[] arr = {"Rau củ","Hoa quả","Thịt"};
+                ImageView img_Product = view.findViewById(R.id.imgProduct_dialog);
+                img_Product.setImageBitmap(bitmap);
+                ImageView img_addImageCamera = view.findViewById(R.id.img_addImageCamera_dialog);
+                ImageView img_addImageDevice = view.findViewById(R.id.img_addImageDevice_dialog);
+                TextInputLayout  til_nameProduct =  view.findViewById(R.id.til_NameProduct_dialog);
+                til_nameProduct.getEditText().setText(product.getNameProduct());
+                TextInputLayout  til_priceProduct =  view.findViewById(R.id.til_PriceProduct_dialog);
+                til_priceProduct.getEditText().setText(String.valueOf(product.getPriceProduct()));
+                Button btn_addVegetable =  view.findViewById(R.id.btn_addVegetable_dialog);
+                Button btn_cancleVegetable =  view.findViewById(R.id.btn_cancleVegetable_dialog);
+                Spinner sp_nameCategory = view.findViewById(R.id.sp_nameCategory);
+                SpinnerAdapter adapterSpiner = new ArrayAdapter<>(context,android.R.layout.simple_spinner_dropdown_item,arr);
+                sp_nameCategory.setAdapter(adapterSpiner);
+//                img_addImageCamera.setOnClickListener(view3 -> {
+//                    requestPermissionCamera();
+//                });
+//                img_addImageDevice.setOnClickListener(view3 -> {
+//                    requestPermissionDevice();
+//                });
+//                btn_addVegetable.setOnClickListener(view3 -> {
+//                    getData();
+//                    validate();
+//                });
+//                btn_cancleVegetable.setOnClickListener(view3 -> {
+//                    alertDialog.dismiss();
+//                });
             });
             holder.btnDeleteProduct.setOnClickListener(view -> {
 

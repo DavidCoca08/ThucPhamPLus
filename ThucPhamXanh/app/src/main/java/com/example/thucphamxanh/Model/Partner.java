@@ -4,18 +4,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Partner {
-    private int codePartner;
-    private String namePartner,addressPartner,userPartner,passwordPartner;
+    private int idPartner;
+    private String namePartner,addressPartner,userPartner,passwordPartner,imgPartner;
 
     public Partner() {
     }
 
-    public int getCodePartner() {
-        return codePartner;
+    public String getImgPartner() {
+        return imgPartner;
     }
 
-    public void setCodePartner(int codePartner) {
-        this.codePartner = codePartner;
+    public void setImgPartner(String imgPartner) {
+        this.imgPartner = imgPartner;
+    }
+
+    public int getIdPartner() {
+        return idPartner;
+    }
+
+    public void setIdPartner(int idPartner) {
+        this.idPartner = idPartner;
     }
 
     public String getNamePartner() {

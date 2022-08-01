@@ -74,6 +74,8 @@ public class CurrentOrderFragment extends Fragment {
                     Bill bill = snap.getValue(Bill.class);
                     if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("No")) {
                         listBill.add(bill);
+                    }else if (user.equals(bill.getIdClient()) && bill.getStatus().equals("No")){
+                        listBill.add(bill);
                     }
                 }
                 adapterBill.notifyDataSetChanged();

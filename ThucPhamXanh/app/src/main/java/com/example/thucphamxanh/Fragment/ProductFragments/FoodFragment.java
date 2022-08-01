@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -60,8 +61,7 @@ public class FoodFragment extends Fragment {
     private Partner partner = new Partner();
     private FloatingActionButton fab_addProduct;
     private List<Product> listProduct;
-    private List<Product> listVegetable;
-    private TextInputLayout til_nameProduct,til_priceProduct,til_amountProduct;
+    private TextInputLayout til_nameProduct,til_priceProduct;
     private ImageView img_Product,img_addImageCamera,img_addImageDevice;
     private String nameProduct,imgProduct,userPartner;
     private int codeCategory,priceProduct,amountProduct;
@@ -161,8 +161,8 @@ public class FoodFragment extends Fragment {
             requestPermissionDevice();
         });
         btn_addVegetable.setOnClickListener(view1 -> {
-            getTexts();
-            validate();
+            getData();
+
         });
         btn_cancleVegetable.setOnClickListener(view1 -> {
             alertDialog.dismiss();
@@ -174,7 +174,6 @@ public class FoodFragment extends Fragment {
         img_addImageDevice = view.findViewById(R.id.img_addImageDevice_dialog);
         til_nameProduct =  view.findViewById(R.id.til_NameProduct_dialog);
         til_priceProduct =  view.findViewById(R.id.til_PriceProduct_dialog);
-        til_amountProduct =  view.findViewById(R.id.til_AmountProduct_dialog);
         btn_addVegetable =  view.findViewById(R.id.btn_addVegetable_dialog);
         btn_cancleVegetable =  view.findViewById(R.id.btn_cancleVegetable_dialog);
     }
@@ -253,41 +252,47 @@ public class FoodFragment extends Fragment {
         }
 
     }
-    public void getTexts(){
+    public void getData(){
         nameProduct = til_nameProduct.getEditText().getText().toString();
-        Bitmap bitmap = ((BitmapDrawable)img_Product.getDrawable()).getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
-        byte[] imgByte = outputStream.toByteArray();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            imgProduct = Base64.getEncoder().encodeToString(imgByte);
+        try {
+            Bitmap bitmap = ((BitmapDrawable)img_Product.getDrawable()).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+            byte[] imgByte = outputStream.toByteArray();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                imgProduct = Base64.getEncoder().encodeToString(imgByte);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
+
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
         userPartner = sharedPreferences.getString("username","");
         codeCategory = 4;
         priceProduct = Integer.parseInt(til_priceProduct.getEditText().getText().toString());
-        amountProduct = Integer.parseInt(til_amountProduct.getEditText().getText().toString());
 
     }
     public boolean isEmptys(String str,TextInputLayout til){
         if (str.isEmpty()){
             til.setError("Không được để trống");
             return false;
-        }else til.setError("");
-        return true;
+        }else{
+            til.setError("");
+            return true;
+        }
+
     }
     public void validate(){
-        if (isEmptys(nameProduct,til_nameProduct) && isEmptys(String.valueOf(priceProduct),til_priceProduct)
-                && isEmptys(String.valueOf(amountProduct),til_amountProduct) && !imgProduct.isEmpty()){
+        if (isEmptys(nameProduct,til_nameProduct) && isEmptys(String.valueOf(priceProduct),til_priceProduct) && !imgProduct.isEmpty()){
             setDataProduct();
             removeAll();
         }
     }
     public void removeAll(){
-        til_amountProduct.getEditText().setText("");
         til_nameProduct.getEditText().setText("");
         til_priceProduct.getEditText().setText("");
-        img_Product.setImageResource(R.drawable.ic_menu_camera1);
+        img_Product.setImageResource(R.drawable.ic_baseline_image_24);
     }
     public void setDataProduct(){
         Product product = new Product();
@@ -295,7 +300,6 @@ public class FoodFragment extends Fragment {
         product.setCodeCategory(codeCategory);
         product.setNameProduct(nameProduct);
         product.setPriceProduct(priceProduct);
-        product.setAmountProduct(amountProduct);
         product.setImgProduct(imgProduct);
         addProduct(product);
 
@@ -305,24 +309,13 @@ public class FoodFragment extends Fragment {
         DatabaseReference reference = database.getReference("Product");
         if (listProduct.size()==0){
             product.setCodeProduct(1);
-            product.setCodeCategory(product.getCodeCategory());
-            product.setUserPartner(product.getUserPartner());
-            product.setImgProduct(product.getImgProduct());
-            product.setNameProduct(product.getNameProduct());
-            product.setPriceProduct(product.getPriceProduct());
-            product.setAmountProduct(product.getAmountProduct());
             reference.child("1").setValue(product);
 
         }else {
             int i = listProduct.size()-1;
             int id = listProduct.get(i).getCodeProduct()+1;
             product.setCodeProduct(id);
-            product.setCodeCategory(product.getCodeCategory());
-            product.setUserPartner(product.getUserPartner());
-            product.setImgProduct(product.getImgProduct());
-            product.setNameProduct(product.getNameProduct());
-            product.setPriceProduct(product.getPriceProduct());
-            product.setAmountProduct(product.getAmountProduct());
+
             reference.child(""+id).setValue(product);
         }
     }

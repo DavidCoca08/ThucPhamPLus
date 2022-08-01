@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "690436663700",
+    "firebase_url": "https://thucphamxanh-d6e0d-default-rtdb.firebaseio.com",
     "project_id": "thucphamxanh-d6e0d",
     "storage_bucket": "thucphamxanh-d6e0d.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "690436663700-ht8ftgk03mvi180pc7ee8csnpfmmir7c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.thucphamxanh",
+            "certificate_hash": "9ae28f9e75d75359b42de37e9e7762cff055a36e"
+          }
+        },
         {
           "client_id": "690436663700-tii95h6klhvga2l0j8dcl6o8jlhmngle.apps.googleusercontent.com",
           "client_type": 3

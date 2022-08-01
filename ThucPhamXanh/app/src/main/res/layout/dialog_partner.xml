@@ -6,7 +6,30 @@
     android:orientation="vertical"
     android:layout_margin="15dp">
 
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="10dp">
+        <ImageView
+            android:id="@+id/img_addImageCamera_dialog"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_gravity="bottom"/>
+        <ImageView
+            android:id="@+id/imgPartner_dialog"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/ic_baseline_image_24"/>
+        <ImageView
+            android:id="@+id/img_addImageDevice_dialog"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_baseline_open_in_browser_24"
+            android:layout_gravity="bottom"/>
+    </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_namePartner_dialog"
         android:layout_width="match_parent"

@@ -30,7 +30,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.thucphamxanh.Adapter.ProductAdapter;
 import com.example.thucphamxanh.Adapter.ProductAdapter_tabLayout;
-import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.FragmentProductBinding;
@@ -59,10 +58,10 @@ public class ProductFragment extends Fragment {
     private ProductAdapter_tabLayout adapter_tabLayout;
     private FloatingActionButton fab_addProduct;
     private List<Product> listProduct = new ArrayList<>();
-    private TextInputLayout til_nameProduct,til_priceProduct,til_amountProduct;
+    private TextInputLayout til_nameProduct,til_priceProduct;
     private ImageView img_Product,img_addImageCamera,img_addImageDevice;
     private String nameProduct,imgProduct,userPartner;
-    private int codeCategory,priceProduct,amountProduct;
+    private int codeCategory,priceProduct;
     private Button btn_addVegetable,btn_cancleVegetable;
     private Spinner sp_nameCategory;
     private String[] arr = {"Rau củ","Hoa quả","Thịt"};
@@ -130,7 +129,7 @@ public class ProductFragment extends Fragment {
             requestPermissionDevice();
         });
         btn_addVegetable.setOnClickListener(view1 -> {
-            getTexts();
+            getData();
             validate();
         });
         btn_cancleVegetable.setOnClickListener(view1 -> {
@@ -143,7 +142,6 @@ public class ProductFragment extends Fragment {
         img_addImageDevice = view.findViewById(R.id.img_addImageDevice_dialog);
         til_nameProduct =  view.findViewById(R.id.til_NameProduct_dialog);
         til_priceProduct =  view.findViewById(R.id.til_PriceProduct_dialog);
-        til_amountProduct =  view.findViewById(R.id.til_AmountProduct_dialog);
         btn_addVegetable =  view.findViewById(R.id.btn_addVegetable_dialog);
         btn_cancleVegetable =  view.findViewById(R.id.btn_cancleVegetable_dialog);
         sp_nameCategory = view.findViewById(R.id.sp_nameCategory);
@@ -151,14 +149,18 @@ public class ProductFragment extends Fragment {
         sp_nameCategory.setAdapter(adapterSpiner);
     }
 
-    public void getTexts(){
+    public void getData(){
         nameProduct = til_nameProduct.getEditText().getText().toString();
-        Bitmap bitmap = ((BitmapDrawable)img_Product.getDrawable()).getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
-        byte[] imgByte = outputStream.toByteArray();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            imgProduct = Base64.getEncoder().encodeToString(imgByte);
+        try {
+            Bitmap bitmap = ((BitmapDrawable)img_Product.getDrawable()).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+            byte[] imgByte = outputStream.toByteArray();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                imgProduct = Base64.getEncoder().encodeToString(imgByte);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
         userPartner = sharedPreferences.getString("username","");
@@ -171,9 +173,15 @@ public class ProductFragment extends Fragment {
                 }else  if (category.equals("Thịt")){
                     codeCategory = 3;
                 }
+        try {
+            priceProduct = Integer.parseInt(til_priceProduct.getEditText().getText().toString());
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+            til_priceProduct.setError("Không được để trống");
+        }
 
-        priceProduct = Integer.parseInt(til_priceProduct.getEditText().getText().toString());
-        amountProduct = Integer.parseInt(til_amountProduct.getEditText().getText().toString());
+
+
 
     }
     public void setDataProduct(){
@@ -182,7 +190,6 @@ public class ProductFragment extends Fragment {
         product.setCodeCategory(codeCategory);
         product.setNameProduct(nameProduct);
         product.setPriceProduct(priceProduct);
-        product.setAmountProduct(amountProduct);
         product.setImgProduct(imgProduct);
         addProduct(product);
 
@@ -247,30 +254,18 @@ public class ProductFragment extends Fragment {
 
 
     public void addProduct(Product product){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Product");
-        if (listProduct.size()==0){
-            product.setCodeProduct(1);
-            product.setCodeCategory(product.getCodeCategory());
-            product.setUserPartner(product.getUserPartner());
-            product.setImgProduct(product.getImgProduct());
-            product.setNameProduct(product.getNameProduct());
-            product.setPriceProduct(product.getPriceProduct());
-            product.setAmountProduct(product.getAmountProduct());
-            reference.child("1").setValue(product);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference("Product");
+            if (listProduct.size() == 0) {
+                product.setCodeProduct(1);
+                reference.child("1").setValue(product);
 
-        }else {
-            int i = listProduct.size()-1;
-            int id = listProduct.get(i).getCodeProduct()+1;
-            product.setCodeProduct(id);
-            product.setCodeCategory(product.getCodeCategory());
-            product.setUserPartner(product.getUserPartner());
-            product.setImgProduct(product.getImgProduct());
-            product.setNameProduct(product.getNameProduct());
-            product.setPriceProduct(product.getPriceProduct());
-            product.setAmountProduct(product.getAmountProduct());
-            reference.child(""+id).setValue(product);
-        }
+            } else {
+                int i = listProduct.size() - 1;
+                int id = listProduct.get(i).getCodeProduct() + 1;
+                product.setCodeProduct(id);
+                reference.child("" + id).setValue(product);
+            }
     }
     public void updateProduct(Product product){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -285,19 +280,21 @@ public class ProductFragment extends Fragment {
     public boolean isEmptys(String str,TextInputLayout til){
         if (str.isEmpty()){
             til.setError("Không được để trống");
+            Log.d("ProductFragment","lỗi");
             return false;
         }else til.setError("");
         return true;
     }
     public void validate(){
+        isEmptys(String.valueOf(priceProduct),til_priceProduct);
         if (isEmptys(nameProduct,til_nameProduct) && isEmptys(String.valueOf(priceProduct),til_priceProduct)
-                && isEmptys(String.valueOf(amountProduct),til_amountProduct) && !imgProduct.isEmpty()){
+                 && imgProduct.isEmpty()){
             setDataProduct();
             removeAll();
         }
     }
     public void removeAll(){
-        til_amountProduct.getEditText().setText("");
+
         til_nameProduct.getEditText().setText("");
         til_priceProduct.getEditText().setText("");
         img_Product.setImageResource(R.drawable.ic_menu_camera1);
@@ -306,13 +303,11 @@ public class ProductFragment extends Fragment {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-//                Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
                 captureImage();
             }
 
             @Override
             public void onPermissionDenied(List<String> deniedPermissions) {
-//                Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                 requestPermissionCamera();
             }
         };
@@ -326,13 +321,11 @@ public class ProductFragment extends Fragment {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-//                Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
                 openGallery();
             }
 
             @Override
             public void onPermissionDenied(List<String> deniedPermissions) {
-//                Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                 requestPermissionDevice();
             }
         };

@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0E8D2"
-    tools:context=".Fragment.ProductFragments.MeatFragment">
+    tools:context=".Fragment.ProductFragments.MeatFragment"
+    android:padding="10dp"
+    android:orientation="vertical">
+    <SearchView
+        android:id="@+id/meat_search"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/radius_dialog"
+
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMeat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-</FrameLayout>
+</LinearLayout>

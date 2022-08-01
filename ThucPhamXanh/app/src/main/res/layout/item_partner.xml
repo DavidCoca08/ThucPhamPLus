@@ -9,6 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,14 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
-            <Button
-                android:visibility="gone"
-                android:id="@+id/btn_UpdatePartner"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Update"
-                android:backgroundTint="#4CAF50"/>
+
 
         </LinearLayout>
         <LinearLayout
@@ -61,18 +59,31 @@
                 android:layout_weight="1"
                 android:inputType="textPassword"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-            <Button
-                android:visibility="gone"
-                android:id="@+id/btn_DeletePartner"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Delete"
-                android:layout_marginTop="19dp"
-                android:backgroundTint="#F44336"/>
+
         </LinearLayout>
 
     </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_UpdatePartner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:backgroundTint="#4CAF50"/>
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btn_DeletePartner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:backgroundTint="#F44336"/>
 
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

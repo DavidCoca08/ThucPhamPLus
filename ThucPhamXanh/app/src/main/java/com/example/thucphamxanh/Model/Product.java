@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Product {
-    private int codeProduct,amountProduct,codeCategory,priceProduct;
+    private int codeProduct,codeCategory,priceProduct;
     private String nameProduct,imgProduct,userPartner;
 
     public Product() {
@@ -16,14 +16,6 @@ public class Product {
 
     public void setCodeProduct(int codeProduct) {
         this.codeProduct = codeProduct;
-    }
-
-    public int getAmountProduct() {
-        return amountProduct;
-    }
-
-    public void setAmountProduct(int amountProduct) {
-        this.amountProduct = amountProduct;
     }
 
     public int getCodeCategory() {
@@ -72,7 +64,6 @@ public class Product {
         result.put("userPartner",getUserPartner());
         result.put("nameProduct",getNameProduct());
         result.put("priceProduct",getPriceProduct());
-        result.put("amountProduct",getAmountProduct());
         result.put("imgProduct",getImgProduct());
         return result;
     }

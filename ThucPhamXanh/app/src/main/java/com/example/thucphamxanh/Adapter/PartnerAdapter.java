@@ -1,5 +1,7 @@
 package com.example.thucphamxanh.Adapter;
 
+import android.app.AlertDialog;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.thucphamxanh.Fragment.PartnerFragment;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.viewHolder> {
     List<Partner> list;
-    public PartnerAdapter(List<Partner> list){
-        this.list=list;
+    PartnerFragment fragment;
+
+    public PartnerAdapter(List<Partner> list, PartnerFragment fragment) {
+        this.list = list;
+        this.fragment = fragment;
     }
+
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -30,7 +39,7 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.viewHold
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         Partner partner = list.get(position);
-        holder.tvCodePartner_adapter.setText("Mã ĐT: "+partner.getCodePartner());
+        holder.tvCodePartner_adapter.setText("Mã ĐT: "+partner.getIdPartner());
         holder.tvNamePartner_adapter.setText("Tên ĐT: "+partner.getNamePartner());
         holder.tvAddressPartner_adapter.setText("Địa chỉ: "+partner.getAddressPartner());
         holder.tvUserPartner_adapter.setText("Tài khoản: "+partner.getUserPartner());
@@ -43,6 +52,12 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.viewHold
                 holder.btn_DeletePartner.setVisibility(View.VISIBLE);
                 holder.btn_UpdatePartner.setVisibility(View.VISIBLE);
             }
+        });
+        holder.btn_UpdatePartner.setOnClickListener(view -> {
+
+        });
+        holder.btn_DeletePartner.setOnClickListener(view -> {
+
         });
 
     }
@@ -74,4 +89,15 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.viewHold
         }
 
     }
+    public void updatePartner(Partner partner){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
+        reference.child(""+partner.getIdPartner()).updateChildren(partner.toMap());
+    }
+    public void deletePartner(Partner partner){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Partner");
+        reference.child(""+partner.getIdPartner()).removeValue();
+    }
+
 }
