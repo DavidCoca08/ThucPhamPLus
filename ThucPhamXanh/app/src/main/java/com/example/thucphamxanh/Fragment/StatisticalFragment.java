@@ -32,16 +32,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class StatisticalFragment extends Fragment {
     private final String TAG = "StatisticalFragment";
     private FragmentStatisticalBinding binding;
-    private TextInputLayout getDateSearch;
+    private TextInputLayout fromDate, toDate;
     private Button btnSearch;
     private TextView totalRevenue, tvHide;
     final Calendar myCalendar = Calendar.getInstance();
@@ -64,7 +66,8 @@ public class StatisticalFragment extends Fragment {
     }
 
     public void initUi() {
-        getDateSearch = binding.textStatisticalFragmentGetDateSearch;
+        fromDate = binding.textStatisticalFragmentFromDate;
+        toDate = binding.textStatisticalFragmentToDate;
         btnSearch = binding.btnStatisticalFragmentSearch;
         totalRevenue = binding.tvStatisticalFragmentTotalRevenue;
         recyclerView = binding.recyclerViewStatisticalFragmentItemBill;
@@ -108,20 +111,37 @@ public class StatisticalFragment extends Fragment {
     }
 
     public void getDate() {
-        DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog.OnDateSetListener startDate = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, month);
                 myCalendar.set(Calendar.DAY_OF_MONTH, day);
-                getDateSearch.getEditText().setText(sdf.format(myCalendar.getTime()));
+                fromDate.getEditText().setText(sdf.format(myCalendar.getTime()));
             }
         };
 
-        getDateSearch.setStartIconOnClickListener(new View.OnClickListener() {
+        fromDate.setStartIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(getContext(), onDateSetListener, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(getContext(), startDate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        DatePickerDialog.OnDateSetListener endDate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, day);
+                toDate.getEditText().setText(sdf.format(myCalendar.getTime()));
+            }
+        };
+
+        toDate.setStartIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(), endDate, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -130,9 +150,13 @@ public class StatisticalFragment extends Fragment {
             String user = preferences.getString("username", "");
             recyclerView.setVisibility(View.GONE);
             tvHide.setVisibility(View.GONE);
-            String getdatesearch = getDateSearch.getEditText().getText().toString();
-            if (getdatesearch.isEmpty()) {
-                Toast.makeText(getContext(), "Vui lòng chọn ngày", Toast.LENGTH_SHORT).show();
+            String startdate = fromDate.getEditText().getText().toString();
+            String todate = toDate.getEditText().getText().toString();
+
+            if (startdate.isEmpty()) {
+                Toast.makeText(getContext(), "Vui lòng chọn ngày bắt đầu", Toast.LENGTH_SHORT).show();
+            } else if (todate.isEmpty()) {
+                Toast.makeText(getContext(), "Vui lòng chọn ngày kết thúc", Toast.LENGTH_SHORT).show();
             } else {
                 final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference("Bill");
                 rootReference.addValueEventListener(new ValueEventListener() {
@@ -144,55 +168,38 @@ public class StatisticalFragment extends Fragment {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Bill bill = dataSnapshot.getValue(Bill.class);
                             if (user.equals("admin") && bill.getStatus().equals("Yes")) {
-                                if (getdatesearch.equals(bill.getDayOut())) {
-                                    total += bill.getTotal();
-                                    list.add(bill);
-                                    adapterStatistical = new StatisticalAdapter(list, getContext());
-                                    recyclerView.setAdapter(adapterStatistical);
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                    tvHide.setVisibility(View.VISIBLE);
+                                try {
+                                    Date dayOut = sdf.parse(bill.getDayOut());
+                                    Date startDate = sdf.parse(startdate);
+                                    Date toDate = sdf.parse(todate);
+                                    if (dayOut.compareTo(startDate) >= 0 && dayOut.compareTo(toDate) <= 0) {
+                                        total += bill.getTotal();
+                                        list.add(bill);
+                                        adapterStatistical = new StatisticalAdapter(list, getContext());
+                                        recyclerView.setAdapter(adapterStatistical);
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                        tvHide.setVisibility(View.VISIBLE);
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
                                 }
                             } else if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
-                                if (getdatesearch.equals(bill.getDayOut())) {
-                                    total += bill.getTotal();
-                                    list.add(bill);
-                                    adapterStatistical = new StatisticalAdapter(list, getContext());
-                                    recyclerView.setAdapter(adapterStatistical);
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                    tvHide.setVisibility(View.VISIBLE);
+                                try {
+                                    Date dayOut = sdf.parse(bill.getDayOut());
+                                    Date startDate = sdf.parse(startdate);
+                                    Date toDate = sdf.parse(todate);
+                                    if (dayOut.after(startDate) && dayOut.before(toDate)) {
+                                        total += bill.getTotal();
+                                        list.add(bill);
+                                        adapterStatistical = new StatisticalAdapter(list, getContext());
+                                        recyclerView.setAdapter(adapterStatistical);
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                        tvHide.setVisibility(View.VISIBLE);
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
                                 }
                             }
-//                            if (user.equals("admin") && bill.getStatus().equals("Yes")) {
-//                                try {
-//                                    Date dayOut = spd.parse(bill.getDayOut());
-//                                    Date startDate = sdf.parse(startdate);
-//                                    Date toDate = sdf.parse(todate);
-//                                    if (dayOut.after(startDate) && dayOut.before(toDate)) {
-//                                        //TODO hoa don hop le
-//                                        Log.d(TAG, "onDataChange: ngay xuat hoa don trong ....");
-//                                        total += bill.getTotal();
-//                                    } else {
-//                                        Toast.makeText(getContext(), "Không tìm thấy doanh thu ngày vừa chọn", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            } else if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
-//                                try {
-//                                    Date dayOut = spd.parse(bill.getDayOut());
-//                                    Date startDate = spd.parse(startdate);
-//                                    Date toDate = spd.parse(todate);
-//                                    if (dayOut.after(startDate) && dayOut.before(toDate)) {
-//                                        //TODO hoa don hop le
-//                                        Log.d(TAG, "onDataChange: ngay xuat hoa don trong ....");
-//                                        total += bill.getTotal();
-//                                    } else {
-//                                        Toast.makeText(getContext(), "Không tìm thấy doanh thu ngày vừa chọn", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
                         }
                         totalRevenue.setText(numberFormat.format(total));
                         adapterStatistical.notifyDataSetChanged();

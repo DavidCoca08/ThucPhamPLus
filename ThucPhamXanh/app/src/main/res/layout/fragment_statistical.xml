@@ -10,7 +10,7 @@
     tools:context=".Fragment.StatisticalFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_StatisticalFragment_getDateSearch"
+        android:id="@+id/text_StatisticalFragment_fromDate"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,27 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:gravity="center"
-            android:hint="Chọn khoảng thời gian"
+            android:hint="Chọn ngày bắt đầu"
+            android:textColor="#000000"
+            android:textSize="18dp"
+            android:textStyle="italic" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_StatisticalFragment_toDate"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:startIconDrawable="@drawable/icon_calendar">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:gravity="center"
+            android:hint="Chọn ngày kết thúc"
             android:textColor="#000000"
             android:textSize="18dp"
             android:textStyle="italic" />
