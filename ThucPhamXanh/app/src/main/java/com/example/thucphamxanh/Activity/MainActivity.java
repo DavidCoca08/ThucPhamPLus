@@ -1,10 +1,8 @@
 package com.example.thucphamxanh.Activity;
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,13 +13,12 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +31,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -57,7 +53,6 @@ import com.example.thucphamxanh.Service.ConnectionReceiver;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,10 +62,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -228,6 +219,13 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snap : snapshot.getChildren()){
                     Partner partner = snap.getValue(Partner.class);
+                    tvUserName.setText(partner.getNamePartner());
+                    tvUserEmail.setText(String.valueOf(partner.getUserPartner()));
+                    byte[] decodeString = Base64.decode(partner.getImgPartner(), Base64.DEFAULT);
+                    Glide.with(MainActivity.this).load(decodeString)
+                            .error(R.drawable.ic_avatar_default)
+                            .signature(new ObjectKey(System.currentTimeMillis()))
+                            .into(ivAvatar);
                     if (user.equals(partner.getUserPartner())){
                         mNavigationView.setVisibility(View.VISIBLE);
                         mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
@@ -285,43 +283,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
         String userPhoneNumber = sharedPreferences.getString("username","");
         loadUserInfoById(userPhoneNumber);
-
-        //loadUserInfo();
-        /*tvUserEmail.setText(user.getEmail());
-        tvUserName.setText(user.getName());
-        tvUserName.setVisibility(View.VISIBLE);*/
-        /*Glide.with(MainActivity.this)
-                .load(user.getStrUriAvatar())
-                .placeholder(R.drawable.ic_avatar_default)
-                .error(R.drawable.ic_avatar_default)
-                .into(ivAvatar);
-        try {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference pathRef = storage
-                    .getReference()
-                    .child((user.getUriAvatar().getPath()).substring(1));
-            pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    user.setStrUriAvatar(uri.toString());
-                    Log.d(TAG, "onSuccess: ");
-                    Log.d(TAG, "loadUserInfo: " + user.toString());
-                    Glide.with(MainActivity.this)
-                            .load(user.getStrUriAvatar())
-                            .error(R.drawable.ic_avatar_default)
-                            .into(ivAvatar);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, "onFailure: ", e);
-
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "showUserInformation: ",e );
-        }
-*/
     }
     @Deprecated
     private void loadUserInfo() {
@@ -356,10 +317,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                         Log.e(TAG, "onFailure: ", e);
                 }
         });
-        /*user.setUriAvatar(firebaseUser.getPhotoUrl());
-        user.setName(firebaseUser.getDisplayName());
-        user.setEmail(firebaseUser.getEmail());
-        user.setId(firebaseUser.getUid());*/
         Log.d(TAG, "loadUserInfo: " + user.toString());
     }
 

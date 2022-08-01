@@ -46,6 +46,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         initUI();
         getDataSpf();
         list = getAllPartner();
+        Log.d(TAG, "onCreate: " + list.toString());
 
         getSupportActionBar().hide(); // Ẩn actionbar
     }
@@ -249,6 +250,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     Partner partner = snap.getValue(Partner.class);
                     list1.add(partner);
                 }
+                Log.d(TAG, "onDataChange: " + list.toString());
             }
 
             @Override
