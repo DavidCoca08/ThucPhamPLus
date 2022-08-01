@@ -56,6 +56,8 @@ public class StatisticalAdapter extends RecyclerView.Adapter<StatisticalAdapter.
         holder.rvItemOrder.setLayoutManager(linearLayoutManager);
         holder.rvItemOrder.setAdapter(adapterItemBill);
         holder.tvidBill.setText("Mã HD :"+ bill.getIdBill());
+        holder.tvTimeOut.setText("Thời gian: "+bill.getTimeOut());
+        holder.tvDayOut.setText(String.valueOf(bill.getDayOut()));
         NumberFormat numberFormat = new DecimalFormat("#,##0");
         holder.tvTotal.setText(numberFormat.format(bill.getTotal()));
         holder.linearLayout_itemProducts.setOnClickListener(view -> {
@@ -78,7 +80,7 @@ public class StatisticalAdapter extends RecyclerView.Adapter<StatisticalAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView tvidBill, tvTotal, tvHide;
+        private TextView tvidBill, tvTotal, tvDayOut, tvTimeOut;
         private LinearLayout linearLayout_itemProducts;
         private ImageView img_dropDown;
         private RecyclerView rvItemOrder;
@@ -87,6 +89,8 @@ public class StatisticalAdapter extends RecyclerView.Adapter<StatisticalAdapter.
             super(itemView);
             tvidBill = itemView.findViewById(R.id.tv_ItemStatistical_idBill);
             tvTotal = itemView.findViewById(R.id.tv_ItemStatistical_totalOrder);
+            tvDayOut = itemView.findViewById(R.id.tv_ItemStatistical_dayOut);
+            tvTimeOut = itemView.findViewById(R.id.tv_ItemStatistical_timeOut);
             linearLayout_itemProducts = itemView.findViewById(R.id.linearLayout_ItemStatistical_itemProducts);
             img_dropDown = itemView.findViewById(R.id.img_ItemStatistical_dropDown);
             rvItemOrder = itemView.findViewById(R.id.recyclerView_ItemStatistical_products);

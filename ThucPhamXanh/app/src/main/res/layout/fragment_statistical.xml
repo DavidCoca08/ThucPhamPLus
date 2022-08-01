@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="15dp"
+    android:background="#B4D1C3"
     tools:context=".Fragment.StatisticalFragment">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -22,7 +23,7 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:gravity="center"
-            android:hint="Chọn khoảng thời gian (yyyy-MM-dd)"
+            android:hint="Chọn khoảng thời gian"
             android:textColor="#000000"
             android:textSize="18dp"
             android:textStyle="italic" />
@@ -35,7 +36,7 @@
         android:layout_gravity="center"
         android:backgroundTint="#00B0FF"
         android:drawableLeft="@drawable/icon_search"
-        android:text="Tìm kiém" />
+        android:text="Tìm kiếm" />
 
     <LinearLayout
         android:layout_width="match_parent"
