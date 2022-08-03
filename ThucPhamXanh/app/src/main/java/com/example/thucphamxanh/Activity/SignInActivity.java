@@ -1,5 +1,6 @@
 package com.example.thucphamxanh.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -241,9 +242,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     }
     public List<Partner> getAllPartner(){
+        ProgressDialog progressDialog = new ProgressDialog(this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Partner");
         List<Partner> list1 = new ArrayList<>();
+        progressDialog.show();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -252,12 +255,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     Partner partner = snap.getValue(Partner.class);
                     list1.add(partner);
                 }
+                progressDialog.dismiss();
                 Log.d(TAG, "onDataChange: " + list.toString());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                progressDialog.dismiss();
             }
         });
         return list1;
