@@ -66,4 +66,6 @@ dependencies {
     //thư viện xin quyền truy cập
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
 
+
+
 }

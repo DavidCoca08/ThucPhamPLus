@@ -162,6 +162,7 @@ public class FoodFragment extends Fragment {
         });
         btn_addVegetable.setOnClickListener(view1 -> {
             getData();
+            validate();
 
         });
         btn_cancleVegetable.setOnClickListener(view1 -> {

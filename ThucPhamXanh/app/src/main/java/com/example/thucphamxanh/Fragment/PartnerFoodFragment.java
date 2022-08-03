@@ -1,9 +1,12 @@
 package com.example.thucphamxanh.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.thucphamxanh.Adapter.Partner_FoodAdapter;
+import com.example.thucphamxanh.Fragment.ProductFragments.FoodFragment;
+import com.example.thucphamxanh.Fragment.ProductFragments.FruitFragment;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.R;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PartnerFoodFragment extends Fragment {
+public class PartnerFoodFragment extends Fragment implements Partner_FoodAdapter.ItemClickListener{
     RecyclerView recyclerView_Partner_Food;
     LinearLayoutManager linearLayoutManager;
     List<Partner> list;
@@ -38,14 +43,18 @@ public class PartnerFoodFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view= inflater.inflate(R.layout.fragment_partner_food, container, false);
+
+
         recyclerView_Partner_Food = view.findViewById(R.id.recyclerView_Partner_Food);
 
         list = getAllPartner();
         linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView_Partner_Food.setLayoutManager(linearLayoutManager);
 
-        partner_foodAdapter = new Partner_FoodAdapter(list);
+        partner_foodAdapter = new Partner_FoodAdapter(list,this);
         recyclerView_Partner_Food.setAdapter(partner_foodAdapter);
+
+
 
         return view;
     }
@@ -71,5 +80,17 @@ public class PartnerFoodFragment extends Fragment {
             }
         });
         return list1;
+    }
+
+
+    @Override
+    public void onItemClick(Partner partner) {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Partner", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("partner",partner.getUserPartner());
+        editor.apply();
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_Home, new Food_Of_PartnerFragment(),null).addToBackStack(null).commit();
     }
 }

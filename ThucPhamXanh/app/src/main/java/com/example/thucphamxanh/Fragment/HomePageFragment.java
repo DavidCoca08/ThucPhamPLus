@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.thucphamxanh.Adapter.FavoriteItemAdapter;
+import com.example.thucphamxanh.Fragment.ProductFragments.FoodFragment;
 import com.example.thucphamxanh.Fragment.ProductFragments.FruitFragment;
 import com.example.thucphamxanh.Fragment.ProductFragments.MeatFragment;
 import com.example.thucphamxanh.Fragment.ProductFragments.VegetableFragment;
@@ -32,6 +33,8 @@ public class HomePageFragment extends Fragment {
     private List<FavoviteModel> favoviteModelList;
     private FavoriteItemAdapter favoriteItemAdapter;
 
+
+
     CardView card_vegetable_home,card_fruit_home,card_meat_home,card_food_home;
 
 
@@ -40,6 +43,8 @@ public class HomePageFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
         card_vegetable_home = view.findViewById(R.id.card_vegetable_home);
         card_fruit_home = view.findViewById(R.id.card_fruit_home);
@@ -74,10 +79,10 @@ public class HomePageFragment extends Fragment {
         favoriteFood.add("Phở");
         favoriteFood.add("Cơm rang");
 
-        favoviteModelList.add(new FavoviteModel(favoriteVegetable, "Các loại rau, củ được yêu thích"));
-        favoviteModelList.add(new FavoviteModel(favoriteFruit, "Các loại quả được yêu thích"));
-        favoviteModelList.add(new FavoviteModel(favoriteMeat, "Các loại thịt được yêu thích"));
-        favoviteModelList.add(new FavoviteModel(favoriteFood, "Các loại đồ ăn được yêu thích"));
+        favoviteModelList.add(new FavoviteModel(favoriteVegetable, "Các loại rau, củ bán chạy nhất"));
+        favoviteModelList.add(new FavoviteModel(favoriteFruit, "Các loại quả bán chạy nhất"));
+        favoviteModelList.add(new FavoviteModel(favoriteMeat, "Các loại thịt bán chạy nhất"));
+        favoviteModelList.add(new FavoviteModel(favoriteFood, "Các loại đồ ăn bán chạy nhất"));
 
         favoriteItemAdapter = new FavoriteItemAdapter(favoviteModelList);
         favorite_recyclerView_home.setAdapter(favoriteItemAdapter);
@@ -91,28 +96,34 @@ public class HomePageFragment extends Fragment {
 //
 //            fragmentTransaction.commit();
 
-            replaceFragment(new VegetableFragment());
+//            replaceFragment(new VegetableFragment());
+
+            fragmentManager.beginTransaction().replace(R.id.frame_Home, new VegetableFragment(),null).addToBackStack(null).commit();
+
         });
         card_fruit_home.setOnClickListener(view1 -> {
-            replaceFragment(new FruitFragment());
+//            replaceFragment(new FruitFragment());
+            fragmentManager.beginTransaction().replace(R.id.frame_Home, new FruitFragment(),null).addToBackStack(null).commit();
         });
         card_meat_home.setOnClickListener(view1 -> {
-            replaceFragment(new MeatFragment());
+//            replaceFragment(new MeatFragment());
+            fragmentManager.beginTransaction().replace(R.id.frame_Home, new MeatFragment(),null).addToBackStack(null).commit();
         });
         card_food_home.setOnClickListener(view1 -> {
-           replaceFragment(new PartnerFoodFragment());
+//           replaceFragment(new PartnerFoodFragment());
+            fragmentManager.beginTransaction().replace(R.id.frame_Home, new PartnerFoodFragment(),null).addToBackStack(null).commit();
         });
 
 
         return view;
     }
 
-    private  void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_Home,fragment);
-        fragmentTransaction.commit();
-    }
+//    private  void replaceFragment(Fragment fragment){
+//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.frame_Home,fragment);
+//        fragmentTransaction.commit();
+//    }
 
 
 
