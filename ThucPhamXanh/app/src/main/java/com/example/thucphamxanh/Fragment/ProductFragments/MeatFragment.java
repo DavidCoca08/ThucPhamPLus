@@ -1,16 +1,16 @@
 package com.example.thucphamxanh.Fragment.ProductFragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.thucphamxanh.Adapter.ProductAdapter;
 import com.example.thucphamxanh.Model.Product;
@@ -51,12 +51,16 @@ public class MeatFragment extends Fragment {
     }
 
     public  List<Product> getVegetableProduct(){
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Product");
         List<Product> list1 = new ArrayList<>();
+        //TODO sửa dialog khi load dữ liệu từ firebase lên fragment
+        progressDialog.show();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                progressDialog.dismiss();
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Product product = snap.getValue(Product.class);

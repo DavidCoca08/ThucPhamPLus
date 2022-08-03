@@ -1,6 +1,10 @@
 package com.example.thucphamxanh.Fragment;
 
-import static com.example.thucphamxanh.constant.Profile.*;
+import static com.example.thucphamxanh.constant.Profile.FIELDS_EMPTY;
+import static com.example.thucphamxanh.constant.Profile.PASSWORD_INVALID;
+import static com.example.thucphamxanh.constant.Profile.PASSWORD_INVALID_2;
+import static com.example.thucphamxanh.constant.Profile.PASSWORD_INVALID_3;
+import static com.example.thucphamxanh.constant.Profile.PASSWORD_NOT_MATCH;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +20,16 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
 import com.example.thucphamxanh.Model.Partner;
+import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.databinding.FragmentChangePasswordBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChangePasswordFragment extends Fragment {
     private final String TAG = "ChangePasswordFragment";
@@ -25,6 +37,7 @@ public class ChangePasswordFragment extends Fragment {
     private TextInputLayout oldPass, newPass, reNewPass;
     private Button btnChangePass;
     private Partner mPartner;
+    private User mUser;
     private ProfileViewModel mProfileFragment;
 
     @Override
@@ -43,6 +56,15 @@ public class ChangePasswordFragment extends Fragment {
     }
 
     private void initListener() {
+        if (mPartner != null) {
+            changePasswordPartner();
+        } else if (mUser != null) {
+            changePasswordUser();
+        }
+
+    }
+
+    private void changePasswordPartner() {
         oldPass.setErrorEnabled(true);
         newPass.setErrorEnabled(true);
         reNewPass.setErrorEnabled(true);
@@ -54,8 +76,74 @@ public class ChangePasswordFragment extends Fragment {
                 String strOldPass = oldPass.getEditText().getText().toString();
                 String strNewPass = newPass.getEditText().getText().toString();
                 String strConfirmPass = reNewPass.getEditText().getText().toString();
-                validate(strOldPass, strNewPass, strConfirmPass);
-                changePass();
+                validate(strOldPass, strNewPass, strConfirmPass, mPartner.getPasswordPartner());
+
+                mPartner.setPasswordPartner(strNewPass);
+                Log.d(TAG, "changePass: change password");
+                DatabaseReference mDatabase;
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                Map<String, Object> partnerValue = mPartner.toMap();
+                Map<String, Object> partnerUpdateValue = new HashMap<>();
+                partnerUpdateValue.put("/Partner/" + mPartner.getIdPartner(), partnerValue);
+                mDatabase.updateChildren(partnerUpdateValue).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d(TAG, "onComplete: Đổi mật khẩu đối tác thành công");
+                    }
+                });
+
+
+            } catch (NullPointerException e) {
+                    if (e.getMessage().equals(FIELDS_EMPTY)) {
+                    setErrorEmpty();
+                } else {
+                    Log.e(TAG, "signUp: ", e);
+                }
+            } catch (IllegalArgumentException e) {
+                if (e.getMessage().equals(PASSWORD_INVALID)) {
+                    newPass.setError("Mật khẩu phải từ 6 kí tự trở lên");
+                } else if (e.getMessage().equals(PASSWORD_NOT_MATCH)) {
+                    reNewPass.setError("Mật khẩu mới không trùng nhau");
+                } else if (e.getMessage().equals(PASSWORD_INVALID_2)) {
+                    newPass.setError("Mật khẩu mới không được giống mật khẩu cũ");
+                } else if (e.getMessage().equals(PASSWORD_INVALID_3)) {
+                    oldPass.setError("Mật khẩu cũ không đúng");
+                } else {
+                    Log.e(TAG, "signUp: ", e);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "signUp: ", e);
+            }
+        });
+    }
+
+    private void changePasswordUser() {
+        oldPass.setErrorEnabled(true);
+        newPass.setErrorEnabled(true);
+        reNewPass.setErrorEnabled(true);
+        btnChangePass.setOnClickListener(view -> {
+            oldPass.setError(null);
+            newPass.setError(null);
+            reNewPass.setError(null);
+            try {
+                String strOldPass = oldPass.getEditText().getText().toString();
+                String strNewPass = newPass.getEditText().getText().toString();
+                String strConfirmPass = reNewPass.getEditText().getText().toString();
+                validate(strOldPass, strNewPass, strConfirmPass, mUser.getPassword());
+                mUser.setPassword(strNewPass);
+                Log.d(TAG, "changePass: change password");
+                DatabaseReference mDatabase;
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                Map<String, Object> userValue = mUser.toMap();
+                Map<String, Object> userUpdateValue = new HashMap<>();
+                userUpdateValue.put("/User/" + mUser.getId(), userValue);
+                mDatabase.updateChildren(userUpdateValue).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d(TAG, "onComplete: Đổi mật khẩu user thành công");
+                    }
+                });
+
             } catch (NullPointerException e) {
                 if (e.getMessage().equals(FIELDS_EMPTY)) {
                     setErrorEmpty();
@@ -87,13 +175,11 @@ public class ChangePasswordFragment extends Fragment {
 
     }
 
-    private void changePass() {
-        Log.d(TAG, "changePass: change password");
-    }
 
     private void initViewModel() {
         mProfileFragment = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         mPartner = mProfileFragment.getPartner().getValue();
+        mUser = mProfileFragment.getUser().getValue();
     }
 
     public void initUi(){
@@ -140,17 +226,18 @@ public class ChangePasswordFragment extends Fragment {
         }
         return true;
     }
-    private void validate(String oldPassword,
+    private void validate(String oldPasswordInput,
                           String newPassword,
-                          String ConfirmPassword) {
-        if (oldPassword.isEmpty() ||
+                          String ConfirmPassword,
+                          String oldPasswordAccount) {
+        if (oldPasswordInput.isEmpty() ||
                 newPassword.isEmpty() ||
                 ConfirmPassword.isEmpty())
             throw new NullPointerException(FIELDS_EMPTY);
         if (newPassword.length() < 6) throw  new IllegalArgumentException(PASSWORD_INVALID);
         if (!ConfirmPassword.equals(newPassword)) throw new IllegalArgumentException(PASSWORD_NOT_MATCH);
-        if (newPassword.equals(oldPassword)) throw new IllegalArgumentException(PASSWORD_INVALID_2);
-        if (!oldPassword.equals(mPartner.getPasswordPartner())) throw new IllegalArgumentException(PASSWORD_INVALID_3);
+        if (newPassword.equals(oldPasswordInput)) throw new IllegalArgumentException(PASSWORD_INVALID_2);
+        if (!oldPasswordInput.equals(oldPasswordAccount)) throw new IllegalArgumentException(PASSWORD_INVALID_3);
     }
 
     @Override
