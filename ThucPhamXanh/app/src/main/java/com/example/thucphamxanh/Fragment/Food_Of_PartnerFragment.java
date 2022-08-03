@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,7 +45,6 @@ public class Food_Of_PartnerFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_food__of__partner, container, false);
-
         food_of_partner_recyclerView = view.findViewById(R.id.food_of_partner_recyclerView);
 
         listProduct = loadListFood();
@@ -53,6 +53,7 @@ public class Food_Of_PartnerFragment extends Fragment {
         adapter = new ProductAdapter(listProduct,getContext());
         food_of_partner_recyclerView.setAdapter(adapter);
 
+        food_of_partner_recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         return view;
     }
 
