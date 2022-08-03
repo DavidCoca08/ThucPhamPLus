@@ -1,5 +1,8 @@
 package com.example.thucphamxanh.Activity;
 
+
+import static com.example.thucphamxanh.constant.Profile.*;
+
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,11 +30,6 @@ import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = "SignUpActivity";
-    private static final String NUMBER_PHONE_INVALID = "number phone invalid";
-    private static final String FIELDS_EMPTY = "fields are empty";
-    private static final String REGEX_PHONE_NUMBER = "^(((03||09)[2-8])\\d{7})$";
-    private static final String PASSWORD_INVALID = "password less than 6 characters";
-    private static final String PASSWORD_NOT_MATCH = "password less than 6 characters";
     private TextInputLayout mFormPhoneNumber,
             mFormUserName,
             mFormPassword,
