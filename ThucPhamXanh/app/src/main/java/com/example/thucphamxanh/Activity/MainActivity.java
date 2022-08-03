@@ -91,9 +91,9 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     //object chứa thông tin user sau khi đăng nhập
     //dùng để truyền vào các fragment.....
     private User user;
+    private Partner partner;
 
     //không dùng nữa
-    private Bitmap chooseAvatarBitmap;
 
 
     //ViewModel để giao tiếp dữ liệu với ProfileFragment
@@ -141,10 +141,9 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                                         e.printStackTrace();
                                     }
                                     Log.d(TAG, "onActivityResult: ");
-                                    user.setBitmapAvatar(selectedImageBitmap);
-                                    profileViewModel.setUser(user);
+//                                    user.setBitmapAvatar(selectedImageBitmap);
+                                    profileViewModel.setBitmapImageAvatar(selectedImageBitmap);
                                     //thay đổi viewmodel
-                                    chooseAvatarBitmap = selectedImageBitmap;
                                 }
                             }
                         }
@@ -163,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         //initReferent();
         //khởi tạo các view
         initUI();
+        initViewModel();
         checkUser();
         SharedPreferences preferences1 = getSharedPreferences("Number",MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences1.edit();
@@ -171,16 +171,15 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         editor.apply();
         getBill();
         //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
-        initViewModel();
-        setUserViewModelObserver();
-        initUI();
-        checkUser();
+//        setUserViewModelObserver();
+//        initUI();
+//        checkUser();
         /*
          * khởi tạo observer cho user khi thay đổi thông tin user bên ProfileFragment
          * */
         //setUserViewModelObserver();
         //show thông tin user lên nav header khi đăng nhập
-        showUserInformation();
+        //showUserInformation();
         //set thông tin user vào viewmodel để giao tiếp
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -205,6 +204,35 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     }
     public void checkUser(){
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        String username = sharedPreferences.getString("username","");
+        String userRule = sharedPreferences.getString("role","");
+        String userId = sharedPreferences.getString("id", "");
+        mNavigationView.setVisibility(View.GONE);
+        if (userRule.equals("admin")){
+            Log.d(TAG, "checkUser: admin");
+            mNavigationView.setVisibility(View.VISIBLE);
+            mNavigationView.getMenu().findItem(R.id.nav_Food).setVisible(false);
+        } else if (userRule.equals("partner")) {
+            Log.d(TAG, "checkUser: partner");
+            loadPartnerInfoById(userId);
+            try {
+                setPartnerViewModelObserver();
+            } catch (Exception e) {
+                Log.e(TAG, "checkUser: ", e);
+            }
+
+        } else if (userRule.equals("user")) {
+            loadUserInfoById(username);
+            setUserViewModelObserver();
+            Log.d(TAG, "checkUser: user");
+        }
+
+
+
+
+        /*
+        * //TODO comment code cũ của Quang lại
+        * SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
         String user = sharedPreferences.getString("username","");
         mNavigationView.setVisibility(View.GONE);
         if (user.equals("admin")){
@@ -239,7 +267,72 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
             }
         });
+        * */
     }
+
+    private void setPartnerViewModelObserver() throws Exception {
+        final Observer<Partner> partnerObserver = new Observer<Partner>() {
+            @Override
+            public void onChanged(Partner partner) {
+                Log.d(TAG, "onChanged: change user information");
+                tvUserEmail.setText(partner.getUserPartner());
+                tvUserName.setText(partner.getNamePartner());
+                byte[] decodeString = Base64.decode(partner.getImgPartner(), Base64.DEFAULT);
+                Glide.with(MainActivity.this)
+                        .load(decodeString)
+                        .error(R.drawable.ic_avatar_default)
+                        .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+                        .into(ivAvatar);
+                Log.d(TAG, "onChanged: " + partner.toString());
+            }
+
+        };
+        profileViewModel.getPartner().observe(this, partnerObserver);
+    }
+
+    private void loadPartnerInfoById(String id) {
+        partner = new Partner();
+        Log.d(TAG, "loadPartnerInfoById: " + id);
+        Log.d(TAG, "loadPartnerById: " + partner.toString());
+        final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
+        rootReference.child("Partner").child(id)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            MainActivity.this.partner = snapshot.getValue(Partner.class);
+                            Log.d(TAG, "onDataChange: " + partner);
+                            try {
+                                showPartnerInformation();
+                            } catch ( Exception e) {
+                                Log.e(TAG, "onDataChange: ", e);
+                            }
+//                            profileViewModel.setUser(user);
+                        }
+
+                    }
+
+                    private void showPartnerInformation() throws Exception{
+                        profileViewModel.setPartner(partner);
+//                        tvUserName.setText(partner.getNamePartner());
+//                        tvUserEmail.setText(String.valueOf(partner.getUserPartner()));
+//                        byte[] decodeString = Base64.decode(partner.getImgPartner(), Base64.DEFAULT);
+//                        Glide.with(MainActivity.this).load(decodeString)
+//                                .error(R.drawable.ic_avatar_default)
+//                                .signature(new ObjectKey(System.currentTimeMillis()))
+//                                .into(ivAvatar);
+                        mNavigationView.setVisibility(View.VISIBLE);
+                        mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
+                        mNavigationView.getMenu().findItem(R.id.nav_Partner).setVisible(false);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "onCancelled: ", error.toException());
+                    }
+                });
+    }
+
     @Deprecated
     private void initReferent() {
         user = new User();
@@ -504,5 +597,10 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     protected void onStop() {
         unregisterReceiver(connectionReceiver);
         super.onStop();
+    }
+    //TODO sửa trạng thái khi back press vẫn lưu tài khoản đăng nhập
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

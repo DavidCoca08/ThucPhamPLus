@@ -61,13 +61,24 @@ public class Partner {
 
     public Map<String,Object> toMap(){
         HashMap<String,Object> result = new HashMap<>();
-        result.put("namePartner",getNamePartner());
-        result.put("addressPartner",getAddressPartner());
-        result.put("userPartner",getUserPartner());
-        result.put("passwordPartner",getPasswordPartner());
+        result.put("idPartner",idPartner);
+        result.put("imgPartner",imgPartner);
+        result.put("namePartner",namePartner);
+        result.put("addressPartner",addressPartner);
+        result.put("userPartner",userPartner);
+        result.put("passwordPartner",passwordPartner);
         return result;
+    }
 
-
-
+    @Override
+    public String toString() {
+        return "Partner{" +
+                "idPartner=" + idPartner +
+                ", namePartner='" + namePartner + '\'' +
+                ", addressPartner='" + addressPartner + '\'' +
+                ", userPartner='" + userPartner + '\'' +
+                ", passwordPartner='" + passwordPartner + '\'' +
+                ", imgPartner='" + imgPartner + '\'' +
+                '}';
     }
 }

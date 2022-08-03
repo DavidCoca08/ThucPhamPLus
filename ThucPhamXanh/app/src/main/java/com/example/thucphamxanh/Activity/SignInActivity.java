@@ -111,7 +111,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                             if (password.equals(passwordUser)) {
                                 //TODO ĐĂNG NHẬP VÀO APP
                                 Log.d(TAG, "onDataChange: đăng nhập thành công");
-                                remember();
+                                remember("user", phoneNumber);
                                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finishAffinity();
@@ -184,7 +184,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         String password = formPassword.getEditText().getText().toString().trim();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUserPartner().equals(email) && list.get(i).getPasswordPartner().equals(password)){
-                remember();
+                remember("partner", String.valueOf(list.get(i).getIdPartner()));
                 Log.d("aaaaaa",list.get(i).getUserPartner());
                 Log.d("aaaaaa",list.get(i).getPasswordPartner());
                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
@@ -194,7 +194,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         if (email.equals("admin") && password.equals("admin") ){
-            remember();
+            remember("admin", "admin");
             Intent intent = new Intent(SignInActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -202,13 +202,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
         return false;
     }
-    public void remember(){
+    public void remember(String role, String id){
         String email = formEmail.getEditText().getText().toString().trim();
         String password = formPassword.getEditText().getText().toString().trim();
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("username", email);
         editor.putString("password", password);
+        editor.putString("role", role);
+        editor.putString("id", id);
         editor.apply();
     }
     public void getDataSpf(){

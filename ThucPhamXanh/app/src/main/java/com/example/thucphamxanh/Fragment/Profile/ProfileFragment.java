@@ -9,12 +9,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Activity.MainActivity;
+import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.FragmentProfileBinding;
@@ -51,8 +52,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
     private StorageReference mStorageReference = mStorage.getReference();
     private User user;
+    private Partner partner;
 
-    private EditText etFullName, etEmail;
     private TextInputLayout mLayoutName, mLayoutEmail, mLayoutAddress, mLayoutPhoneNumber;
     private Button btnUpdateInfoUser;
     private ImageView ivAvatar;
@@ -63,6 +64,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "onCreate: start");
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         user = profileViewModel.getUser().getValue();
+        partner = profileViewModel.getPartner().getValue();
+        Log.d(TAG, "onCreate: " + user + "\n" + partner);
         Log.d(TAG, "onCreate: end");
     }
 
@@ -80,9 +83,48 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        showUserInformation();
         initListener();
+        if (user != null) showUserInformation();
+        else if (partner != null) showPartnerInformation();
 //        ivAvatar.setImageBitmap(user.getBitmapAvatar());
+    }
+
+    private void showPartnerInformation() {
+        Log.d(TAG, "showPartnerInformation: start");
+        profileViewModel.getBitmapLiveData().observe(getViewLifecycleOwner(), new Observer<Bitmap>() {
+            @Override
+            public void onChanged(Bitmap bitmap) {
+                Glide.with(requireActivity())
+                        .load(profileViewModel.getBitmapLiveData().getValue())
+                        .error(R.drawable.ic_avatar_default)
+                        .signature(new ObjectKey(System.currentTimeMillis()))
+                        .into(ivAvatar);
+            }
+        });
+        profileViewModel.getPartner().observe(getViewLifecycleOwner(), new Observer<Partner>() {
+            @Override
+            public void onChanged(Partner partner) {
+                try {
+                    mLayoutName.getEditText().setText(partner.getNamePartner());
+//                mLayoutEmail.getEditText().setText(String.valueOf(partner.getIdPartner()));
+                    mLayoutAddress.getEditText().setText(partner.getAddressPartner());
+                    mLayoutPhoneNumber.getEditText().setText(partner.getUserPartner());
+                    byte[] decodeString = Base64.decode(partner.getImgPartner(), Base64.DEFAULT);
+                    Glide.with(requireActivity()).load(decodeString)
+                            .error(R.drawable.ic_avatar_default)
+                            .signature(new ObjectKey(System.currentTimeMillis()))
+                            .into(ivAvatar);
+                    Log.d(TAG, "onChanged() returned: " + "ảnh được lấy từ storage về");
+//                Glide.with(getActivity()).load(user.getBitmapAvatar()).error(R.drawable.ic_avatar_default).into(ivAvatar);
+                    Log.d(TAG, "onChanged: ");
+                    Log.d(TAG, "onChanged: " + partner.toString());
+                } catch (Exception e) {
+                    Log.e(TAG, "onChanged: ", e);
+                }
+
+            }
+        });
+        Log.d(TAG, "showPartnerInformation: end");
     }
 
     @Override
@@ -92,10 +134,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
     private void initUI() {
         ivAvatar = binding.getRoot().findViewById(R.id.iv_profile_fragment_avatar);
-//        etFullName = binding.getRoot().findViewById(R.id.et_profile_fragment_full_name);
-//        etEmail = binding.getRoot().findViewById(R.id.et_profile_fragment_email);
         btnUpdateInfoUser = binding.getRoot().findViewById(R.id.btn_profile_fragment_update);
-        mLayoutEmail = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_email);
+//        mLayoutEmail = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_email);
         mLayoutName = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_full_name);
         mLayoutAddress = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_address);
         mLayoutPhoneNumber = binding.getRoot().findViewById(R.id.text_input_layout_profile_fragment_phone_number);
@@ -105,12 +145,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnUpdateInfoUser.setOnClickListener(this::onClick);
     }
     public void showUserInformation() {
-        Log.d(TAG, "setBitmapAvatarWithViewModel: start");
+        Log.d(TAG, "showUserInformation: start");
+        profileViewModel.getBitmapLiveData().observe(getViewLifecycleOwner(), new Observer<Bitmap>() {
+            @Override
+            public void onChanged(Bitmap bitmap) {
+                Glide.with(requireActivity())
+                        .load(profileViewModel.getBitmapLiveData().getValue())
+                        .error(R.drawable.ic_avatar_default)
+                        .signature(new ObjectKey(System.currentTimeMillis()))
+                        .into(ivAvatar);
+            }
+        });
         profileViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
                 mLayoutName.getEditText().setText(user.getName());
-                mLayoutEmail.getEditText().setText(user.getEmail());
+//                mLayoutEmail.getEditText().setText(user.getEmail());
                 mLayoutAddress.getEditText().setText(user.getAddress());
                 mLayoutPhoneNumber.getEditText().setText(user.getPhoneNumber());
                 if (user.getBitmapAvatar() != null) {
@@ -133,58 +183,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "onChanged: " + user.toString());
             }
         });
-        Log.d(TAG, "setBitmapAvatarWithViewModel: end");
+        Log.d(TAG, "showUserInformation: end");
     }
-    private void setUserInfoToView() {
-        //solution 1 use FirebaseUser
-        User user = profileViewModel.getUser().getValue();
-        Log.d(TAG, "setUserInfoToView: setAvatar on setUserInfo method" );
-        Log.d(TAG, "setUserInfoToView: " + user.toString());
-//        etFullName.setText(user.getName());
-//        etEmail.setText(user.getEmail());
-        mLayoutName.getEditText().setText(user.getName());
-        mLayoutEmail.getEditText().setText(user.getEmail());
-        mLayoutAddress.getEditText().setText(user.getAddress());
-        mLayoutPhoneNumber.getEditText().setText(user.getPhoneNumber());
-        Glide.with(requireActivity())
-                .load(user.getStrUriAvatar())
-                .error(R.drawable.ic_avatar_default)
-                .into(ivAvatar);
-        /*try {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference pathRef = storage
-                    .getReference()
-                    .child((user.getUriAvatar().getPath()).substring(1));
-            pathRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Log.d(TAG, "onSuccess: ");
-                    Glide.with(requireActivity())
-                            .load(user.getStrUriAvatar())
-                            .error(R.drawable.ic_avatar_default)
-                            .into(ivAvatar);
-                    Log.d(TAG, "loadUserInfo: " + user.toString());
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, "onFailure: ", e);
-                    //TODO thông báo cho người dùng các kiểu
-                }
-            });
-        } catch (Exception e) {
-            Log.e(TAG, "setUserInfoToView: ", e);
-        } finally {
-            Glide.with(requireActivity())
-                    .load(user.getStrUriAvatar())
-                    .error(R.drawable.ic_avatar_default)
-                    .into(ivAvatar);
-        }*/
-    }
-
-
-
-
 
     @Override
     public void onClick(View v) {
@@ -195,10 +195,40 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.btn_profile_fragment_update:
                 Log.d(TAG, "onClick: click btn update");
-                updateUserInfo();
+                if(user != null) updateUserInfo();
+                else if (partner != null) updatePartnerInfo();
+                else Log.d(TAG, "onClick: không có đối tượng để update");
                 break;
         }
     }
+
+    private void updatePartnerInfo() {
+        Log.d(TAG, "updatePartnerInfo: start");
+        partner.setNamePartner(mLayoutName.getEditText().getText().toString());
+        partner.setAddressPartner(mLayoutAddress.getEditText().getText().toString());
+        partner.setUserPartner(mLayoutPhoneNumber.getEditText().getText().toString());
+        Bitmap bitmap = ((BitmapDrawable)ivAvatar.getDrawable()).getBitmap();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+        byte[] imgByte = outputStream.toByteArray();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String imgPartner = java.util.Base64.getEncoder().encodeToString(imgByte);
+            partner.setImgPartner(imgPartner);
+        }
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Map<String, Object> userValue = partner.toMap();
+        Map<String, Object> userUpdateValue = new HashMap<>();
+        userUpdateValue.put("/Partner/" + partner.getIdPartner(), userValue);
+        mDatabase.updateChildren(userUpdateValue).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG, "onComplete: ");
+                profileViewModel.setPartner(partner);
+            }
+        });
+    }
+
     private void onClickRequestPermission() {
         MainActivity mainActivity = (MainActivity) getActivity();
         if (mainActivity == null) {
