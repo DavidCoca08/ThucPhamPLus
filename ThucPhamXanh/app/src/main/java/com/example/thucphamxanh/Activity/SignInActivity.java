@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.thucphamxanh.Model.Partner;
-import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -62,8 +61,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         layoutSignUp = findViewById(R.id.layout_SignInActivity_signIn);
         btnSignIn = findViewById(R.id.btn_SignInActivity_signIn);
         progressBar = findViewById(R.id.progressBar_SignInActivity_loadingLogin);
+        progressBar.setVisibility(View.INVISIBLE);
         formEmail = findViewById(R.id.form_SignInActivity_email);
         formPassword = findViewById(R.id.form_SignInActivity_password);
+        formPassword.setErrorEnabled(true);
+        formEmail.setErrorEnabled(true);
         setOnclickListener();
     }
 
@@ -71,13 +73,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_SignInActivity_signIn:
-//                Log.d(TAG,  TAG + " onClick: sign up" );
                 Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
                 startActivity(intent);
                 break;
             case R.id.btn_SignInActivity_signIn:
-//                Log.d(TAG,  TAG + " onClick: sign in" );
-
                 if (logins()== false){
                     userLogin();
                 }
@@ -93,8 +92,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void userLogin() {
-        formEmail.setErrorEnabled(false);
-        formPassword.setErrorEnabled(false);
+        formEmail.setError(null);
+        formPassword.setError(null);
         String phoneNumber = formEmail.getEditText().getText().toString().trim();
         String passwordUser = formPassword.getEditText().getText().toString().trim();
         if (!validate(phoneNumber, passwordUser)) return;
@@ -104,14 +103,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         if (snapshot.exists()) {
-                            User user = snapshot.getValue(User.class);
-                            Log.d(TAG, "onDataChange: " + user.toString());
                             String password = snapshot.child("password").getValue(String.class);
                             if (password.equals(passwordUser)) {
                                 //TODO ĐĂNG NHẬP VÀO APP
-                                Log.d(TAG, "onDataChange: đăng nhập thành công");
                                 remember("user", phoneNumber);
                                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                 startActivity(intent);
@@ -119,20 +115,17 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                                 return;
                             }
                             //TODO THÔNG BÁO MẬT KHẨU KHÔNG ĐÚNG
-                            formPassword.setErrorEnabled(true);
                             formPassword.setError("Mật khẩu không đúng");
                             return;
                         }
                         //TODO THÔNG BÁO TÀI KHOẢN CHƯA TỒN TẠI
-                        formEmail.setErrorEnabled(true);
                         formEmail.setError("Tài khoản không tồn tại");
-                        Log.d(TAG, "onDataChange: not exists");
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         //TODO THÔNG BÁO LỖI KHI ĐĂNG NHẬP
-                        progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         Log.e(TAG, "onCancelled: ", error.toException());
                     }
                 });
@@ -141,7 +134,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void login() {
         String email = formEmail.getEditText().getText().toString().trim();
         String password = formPassword.getEditText().getText().toString().trim();
-        Log.d(TAG, "login: start");
         if (!validate(email, password)) return;
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -181,6 +173,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         Log.d(TAG, "login: end");
     }
     public boolean logins(){
+        //TODO validate partner login
         String email = formEmail.getEditText().getText().toString().trim();
         String password = formPassword.getEditText().getText().toString().trim();
         for (int i = 0; i < list.size(); i++) {

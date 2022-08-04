@@ -107,28 +107,6 @@
                     android:text="Đăng ký"/>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/layout_SignInActivity_forgotAccount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:padding="10dp">
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:textSize="14sp"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:text="Forgot password ?"/>-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:textSize="15sp"
-                    android:drawableLeft="@drawable/icon_search"
-                    android:textColor="@android:color/holo_green_dark"
-                    android:text="  Tìm tài khoản của bạn"/>
-            </LinearLayout>
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -136,7 +114,7 @@
                 android:padding="10dp">
                 <ProgressBar
                     android:id="@+id/progressBar_SignInActivity_loadingLogin"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </LinearLayout>

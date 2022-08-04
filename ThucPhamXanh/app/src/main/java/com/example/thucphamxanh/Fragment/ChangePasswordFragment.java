@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -89,6 +90,12 @@ public class ChangePasswordFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d(TAG, "onComplete: Đổi mật khẩu đối tác thành công");
+                        oldPass.getEditText().setText("");
+                        newPass.getEditText().setText("");
+                        reNewPass.getEditText().setText("");
+                        mPartner.setPasswordPartner(strNewPass);
+                        mProfileFragment.setPartner(mPartner);
+                        Toast.makeText(requireContext(), "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -141,6 +148,12 @@ public class ChangePasswordFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d(TAG, "onComplete: Đổi mật khẩu user thành công");
+                        oldPass.getEditText().setText("");
+                        newPass.getEditText().setText("");
+                        reNewPass.getEditText().setText("");
+                        mUser.setPassword(strNewPass);
+                        mProfileFragment.setUser(mUser);
+                        Toast.makeText(requireContext(), "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
                     }
                 });
 

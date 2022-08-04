@@ -277,6 +277,11 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                 Log.d(TAG, "onChanged: change user information");
                 tvUserEmail.setText(partner.getUserPartner());
                 tvUserName.setText(partner.getNamePartner());
+                SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+                String password = sharedPreferences.getString("password","");
+                if (!partner.getPasswordPartner().equals(password)) {
+                    sharedPreferences.edit().putString("password", partner.getPasswordPartner()).commit();
+                }
                 byte[] decodeString = Base64.decode(partner.getImgPartner(), Base64.DEFAULT);
                 Glide.with(MainActivity.this)
                         .load(decodeString)
@@ -348,6 +353,11 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                 Log.d(TAG, "onChanged: change user information");
                 tvUserEmail.setText(user1.getPhoneNumber());
                 tvUserName.setText(user1.getName());
+                SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+                String password = sharedPreferences.getString("password","");
+                if (!user1.getPassword().equals(password)) {
+                    sharedPreferences.edit().putString("password", user1.getPassword()).commit();
+                }
                 Glide.with(MainActivity.this)
                         .load(user1.getStrUriAvatar())
                         .error(R.drawable.ic_avatar_default)
