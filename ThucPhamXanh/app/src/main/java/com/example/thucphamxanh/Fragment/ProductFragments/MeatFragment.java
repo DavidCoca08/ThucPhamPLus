@@ -32,6 +32,7 @@ public class MeatFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private ProductAdapter adapter;
     private View view;
+    private ProductFragment fragment= new ProductFragment();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,7 +47,7 @@ public class MeatFragment extends Fragment {
         rvMeat = view.findViewById(R.id.rvMeat);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvMeat.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listMeat,getContext());
+        adapter = new ProductAdapter(listMeat,fragment, getActivity());
         rvMeat.setAdapter(adapter);
     }
 

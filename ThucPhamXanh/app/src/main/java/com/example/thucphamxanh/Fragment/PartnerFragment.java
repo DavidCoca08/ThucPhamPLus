@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thucphamxanh.Adapter.PartnerAdapter;
@@ -53,6 +54,7 @@ public class PartnerFragment extends Fragment {
     private List<Partner> listPartner;
     private List<User> listUser;
     private PartnerAdapter adapter;
+    private TextView tvErrorImg;
     private TextInputLayout til_namePartner,til_addressPartner,til_UserPartner,til_PasswordPartner,til_rePasswordPartner;
     private Button btnAddPartner,btnCancelPartner;
     private String namePartner,addressPartner,userPartner,passwordPartner,rePasswordPartner,imgPartner;
@@ -71,12 +73,12 @@ public class PartnerFragment extends Fragment {
         rvPartner.setAdapter(adapter);
         btn_addPartner = view.findViewById(R.id.btn_AddPartner_fragment);
         btn_addPartner.setOnClickListener(view1 -> {
-            addPartner();
+            openDialog();
         });
         return view;
 
     }
-    public void addPartner(){
+    public void openDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Thêm đối tác");
         View view1 = getLayoutInflater().inflate(R.layout.dialog_partner,null);
@@ -142,17 +144,27 @@ public class PartnerFragment extends Fragment {
             return true;
         }
     }
+    public boolean errorImg(String str, TextView tv){
+        if (str != null){
+            tv.setText("");
+            return true;
+        }else {
+            tv.setText("Ảnh không được để trống");
+            return false;
+        }
+    }
 
     public void validate(){
         if(isEmptys(namePartner,til_namePartner) && isEmptys(addressPartner,til_addressPartner)
         && isEmptys(userPartner,til_UserPartner) && isEmptys(passwordPartner,til_PasswordPartner)
-                && checkLengthNumberPhone() && checkPass() && checkNumberPhone() ){
+                && checkLengthNumberPhone() && checkPass() && checkNumberPhone() && errorImg(imgPartner,tvErrorImg) ){
             setDataPartner();
             removeAll();
         }
     }
 
     public void unitUi(View view){
+        tvErrorImg = view.findViewById(R.id.error_img);
         img_Partner = view.findViewById(R.id.imgPartner_dialog);
         imgCamera = view.findViewById(R.id.img_addImageCamera_dialog);
         imgDevice = view.findViewById(R.id.img_addImageDevice_dialog);

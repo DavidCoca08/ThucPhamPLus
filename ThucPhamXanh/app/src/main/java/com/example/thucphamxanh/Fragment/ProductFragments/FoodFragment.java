@@ -68,6 +68,8 @@ public class FoodFragment extends Fragment {
     private Button btn_addVegetable,btn_cancleVegetable;
     private static final int REQUEST_ID_IMAGE_CAPTURE =10;
     private static final int PICK_IMAGE =100;
+    private ProductFragment fragment = new ProductFragment();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,7 +96,7 @@ public class FoodFragment extends Fragment {
         rvFood = view.findViewById(R.id.rvFood);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvFood.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listFood,getContext());
+        adapter = new ProductAdapter(listFood,fragment,getContext());
         rvFood.setAdapter(adapter);
 
     }
@@ -182,13 +184,11 @@ public class FoodFragment extends Fragment {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-//                Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
                 captureImage();
             }
 
             @Override
             public void onPermissionDenied(List<String> deniedPermissions) {
-//                Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                 requestPermissionCamera();
             }
         };

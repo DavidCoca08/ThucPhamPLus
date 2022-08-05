@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -22,13 +23,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.thucphamxanh.Adapter.ProductAdapter;
 import com.example.thucphamxanh.Adapter.ProductAdapter_tabLayout;
 import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.R;
@@ -47,9 +47,8 @@ import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Base64;
+import android.util.Base64;
 import java.util.List;
-
 public class ProductFragment extends Fragment {
 
     private FragmentProductBinding binding;
@@ -59,23 +58,23 @@ public class ProductFragment extends Fragment {
     private FloatingActionButton fab_addProduct;
     private List<Product> listProduct = new ArrayList<>();
     private TextInputLayout til_nameProduct,til_priceProduct;
+    private TextView tvErrorImg;
     private ImageView img_Product,img_addImageCamera,img_addImageDevice;
-    private String nameProduct,imgProduct,userPartner;
-    private int codeCategory,priceProduct;
+    private String nameProduct,imgProduct,userPartner,priceProduct;
+    private int codeCategory;
     private Button btn_addVegetable,btn_cancleVegetable;
     private Spinner sp_nameCategory;
     private String[] arr = {"Rau củ","Hoa quả","Thịt"};
     private ArrayAdapter<String> adapterSpiner;
-    private ProductAdapter adapter;
-    private static final int REQUEST_ID_IMAGE_CAPTURE =10;
-    private static final int PICK_IMAGE =100;
+//    private static final int REQUEST_ID_IMAGE_CAPTURE =10;
+//    private static final int PICK_IMAGE =100;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductBinding.inflate(inflater, container, false);
         tabLayout();
         initUI();
         fab_addProduct.setOnClickListener(view1 -> {
-            dialogProduct();
+            dialogProduct(new Product(),0,getContext());
         });
         return binding.getRoot();
     }
@@ -108,35 +107,55 @@ public class ProductFragment extends Fragment {
     }
     public void initUI(){
         getAllProducts();
-        Log.d("EEeeeeee", String.valueOf(listProduct.size()));
         fab_addProduct = binding.fabAddProductFragment;
-        adapter = new ProductAdapter(listProduct,getContext());
+
 
     }
 
-    private void dialogProduct() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    public void dialogProduct(Product product,int type,Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Thêm sản phẩm");
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_product,null);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_product,null);
         builder.setView(view);
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-        initUiDialog(view);
-        img_addImageCamera.setOnClickListener(view1 -> {
-            requestPermissionCamera();
-        });
-        img_addImageDevice.setOnClickListener(view1 -> {
-            requestPermissionDevice();
-        });
-        btn_addVegetable.setOnClickListener(view1 -> {
-            getData();
-            validate();
-        });
-        btn_cancleVegetable.setOnClickListener(view1 -> {
-            alertDialog.dismiss();
-        });
+        initUiDialog(view,context);
+        if (type ==0) {
+            img_addImageCamera.setOnClickListener(view1 -> {
+                requestPermissionCamera();
+            });
+            img_addImageDevice.setOnClickListener(view1 -> {
+                requestPermissionDevice();
+            });
+            btn_addVegetable.setOnClickListener(view1 -> {
+                getData(context);
+                validate(0);
+            });
+            btn_cancleVegetable.setOnClickListener(view1 -> {
+                alertDialog.dismiss();
+            });
+        }
+        if (type==1){
+            setData(product);
+            img_addImageCamera.setVisibility(View.GONE);
+            img_addImageDevice.setVisibility(View.GONE);
+            btn_addVegetable.setOnClickListener(view1 -> {
+                getData(context);
+                if (validate(1)==1){
+                    product.setNameProduct(nameProduct);
+                    product.setPriceProduct(Integer.parseInt(priceProduct));
+                    product.setCodeCategory(codeCategory);
+                    updateProduct(product);
+                }
+                alertDialog.dismiss();
+            });
+            btn_cancleVegetable.setOnClickListener(view1 -> {
+                alertDialog.dismiss();
+            });
+        }
     }
-    public void initUiDialog(View view){
+    public void initUiDialog(View view,Context context){
+        tvErrorImg = view.findViewById(R.id.error_img);
         img_Product = view.findViewById(R.id.imgProduct_dialog);
         img_addImageCamera = view.findViewById(R.id.img_addImageCamera_dialog);
         img_addImageDevice = view.findViewById(R.id.img_addImageDevice_dialog);
@@ -145,11 +164,23 @@ public class ProductFragment extends Fragment {
         btn_addVegetable =  view.findViewById(R.id.btn_addVegetable_dialog);
         btn_cancleVegetable =  view.findViewById(R.id.btn_cancleVegetable_dialog);
         sp_nameCategory = view.findViewById(R.id.sp_nameCategory);
-        adapterSpiner = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_dropdown_item,arr);
+        adapterSpiner = new ArrayAdapter<>(context,android.R.layout.simple_spinner_dropdown_item,arr);
         sp_nameCategory.setAdapter(adapterSpiner);
     }
 
-    public void getData(){
+    public void setData(Product product){
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            byte[] imgByte = Base64.decode(product.getImgProduct(),Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
+            img_Product.setImageBitmap(bitmap);
+            til_nameProduct.getEditText().setText(product.getNameProduct());
+            til_priceProduct.getEditText().setText(String.valueOf(product.getPriceProduct()));
+        }
+
+    }
+
+    public void getData(Context context){
         nameProduct = til_nameProduct.getEditText().getText().toString();
         try {
             Bitmap bitmap = ((BitmapDrawable)img_Product.getDrawable()).getBitmap();
@@ -157,12 +188,12 @@ public class ProductFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
             byte[] imgByte = outputStream.toByteArray();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                imgProduct = Base64.getEncoder().encodeToString(imgByte);
+                imgProduct = Base64.encodeToString(imgByte,Base64.DEFAULT);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("My_User", Context.MODE_PRIVATE);
         userPartner = sharedPreferences.getString("username","");
 
                 String category = sp_nameCategory.getSelectedItem().toString();
@@ -173,56 +204,49 @@ public class ProductFragment extends Fragment {
                 }else  if (category.equals("Thịt")){
                     codeCategory = 3;
                 }
-        try {
-            priceProduct = Integer.parseInt(til_priceProduct.getEditText().getText().toString());
-        }catch (NumberFormatException e){
-            e.printStackTrace();
-            til_priceProduct.setError("Không được để trống");
+        priceProduct = til_priceProduct.getEditText().getText().toString();
+
         }
 
-
-
-
-    }
     public void setDataProduct(){
         Product product = new Product();
         product.setUserPartner(userPartner);
         product.setCodeCategory(codeCategory);
         product.setNameProduct(nameProduct);
-        product.setPriceProduct(priceProduct);
+        product.setPriceProduct(Integer.parseInt(priceProduct));
         product.setImgProduct(imgProduct);
         addProduct(product);
-
     }
 
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        this.startActivityForResult(intent, REQUEST_ID_IMAGE_CAPTURE);
+       getParentFragment().startActivityForResult(intent, 10);
     }
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
+        getParentFragment().startActivityForResult(gallery, 100);
+
+
     }
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ID_IMAGE_CAPTURE) {
+        if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
                 Bitmap bp = (Bitmap) data.getExtras().get("data");
-                this.img_Product.setImageBitmap(bp);
+                this. img_Product.setImageBitmap(bp);
 
                 Uri imageUri = data.getData();
                 img_Product.setImageURI(imageUri);
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getContext(), "Bạn chưa thêm ảnh", Toast.LENGTH_LONG).show();
+
             } else if (data!=null){
-                Toast.makeText(getContext(), "Lỗi", Toast.LENGTH_LONG).show();
 
             }
         }
-        if (requestCode == PICK_IMAGE) {
+        if (requestCode == 100) {
             if (resultCode == RESULT_OK ) {
                 Uri imageUri = data.getData();
                 this.img_Product.setImageURI(imageUri);
@@ -242,9 +266,7 @@ public class ProductFragment extends Fragment {
                     Product product = snap.getValue(Product.class);
                     listProduct.add(product);
                 }
-                adapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -270,7 +292,9 @@ public class ProductFragment extends Fragment {
     public void updateProduct(Product product){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Product");
-        reference.child(""+product.getCodeProduct()).updateChildren(product.toMap());
+        reference.child(""+product.getCodeProduct()).child("nameProduct").setValue(product.getNameProduct());
+        reference.child(""+product.getCodeProduct()).child("priceProduct").setValue(product.getPriceProduct());
+        reference.child(""+product.getCodeProduct()).child("codeCategory").setValue(product.getCodeCategory());
     }
     public void deleteProduct(Product product){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -285,16 +309,30 @@ public class ProductFragment extends Fragment {
         }else til.setError("");
         return true;
     }
-    public void validate(){
-        isEmptys(String.valueOf(priceProduct),til_priceProduct);
-        if (isEmptys(nameProduct,til_nameProduct) && isEmptys(String.valueOf(priceProduct),til_priceProduct)
-                 && imgProduct.isEmpty()){
-            setDataProduct();
-            removeAll();
+    public boolean errorImg(String str, TextView tv){
+        if (str != null){
+            tv.setText("");
+            return true;
+        }else {
+            tv.setText("Ảnh không được để trống");
+            return false;
         }
     }
+    public int validate(int type){
+        if (type == 0) {
+            if (isEmptys(nameProduct, til_nameProduct) && isEmptys(priceProduct, til_priceProduct) && errorImg(imgProduct, tvErrorImg)) {
+                setDataProduct();
+                removeAll();
+                return 0;
+            }
+        }else if (type==1){
+            if (isEmptys(nameProduct, til_nameProduct) && isEmptys(priceProduct, til_priceProduct) && errorImg(imgProduct, tvErrorImg)) {
+                return 1;
+            }
+        }
+        return 2;
+    }
     public void removeAll(){
-
         til_nameProduct.getEditText().setText("");
         til_priceProduct.getEditText().setText("");
         img_Product.setImageResource(R.drawable.ic_menu_camera1);
@@ -305,7 +343,6 @@ public class ProductFragment extends Fragment {
             public void onPermissionGranted() {
                 captureImage();
             }
-
             @Override
             public void onPermissionDenied(List<String> deniedPermissions) {
                 requestPermissionCamera();

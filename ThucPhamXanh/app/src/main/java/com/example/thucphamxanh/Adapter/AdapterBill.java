@@ -122,7 +122,6 @@ import java.util.List;
                         Cart cart = snap.getValue(Cart.class);
                         list1.add(cart);
                     }
-                    Log.d("AdapterBill",String.valueOf(list1.size()));
                     adapterItemBill.notifyDataSetChanged();
                 }
 

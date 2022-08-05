@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import com.example.thucphamxanh.Adapter.Partner_FoodAdapter;
 import com.example.thucphamxanh.Adapter.ProductAdapter;
 import com.example.thucphamxanh.Fragment.ProductFragments.FoodFragment;
+import com.example.thucphamxanh.Fragment.ProductFragments.ProductFragment;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.R;
@@ -39,6 +40,7 @@ public class Food_Of_PartnerFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     private List<Product> listProduct = new ArrayList<>();
     private ProductAdapter adapter;
+    private ProductFragment fragment= new ProductFragment();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,7 +52,7 @@ public class Food_Of_PartnerFragment extends Fragment {
         listProduct = loadListFood();
         linearLayoutManager = new LinearLayoutManager(getContext());
         food_of_partner_recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listProduct,getContext());
+//        adapter = new ProductAdapter(listProduct,fragment,getContext());
         food_of_partner_recyclerView.setAdapter(adapter);
 
         food_of_partner_recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));

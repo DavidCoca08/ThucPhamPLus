@@ -1,7 +1,7 @@
 package com.example.thucphamxanh.Adapter;
-
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,11 +9,8 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,10 +18,10 @@ import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.thucphamxanh.Fragment.ProductFragments.ProductFragment;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.R;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,16 +31,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Base64;
+import android.util.Base64;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHolder> {
     private List<Product> list;
     private List<Cart> listCart;
+    private ProductFragment fragment;
     private Context context;
 
-    public ProductAdapter(List<Product> list, Context context) {
+    public ProductAdapter(List<Product> list, ProductFragment fragment, Context context) {
         this.list = list;
+        this.fragment = fragment;
         this.context = context;
     }
 
@@ -60,7 +59,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             Product product = list.get(position);
             NumberFormat numberFormat = new DecimalFormat("#,##0");
             listCart = getAllCart();
-            byte[] imgByte = Base64.getDecoder().decode(product.getImgProduct());
+            byte[] imgByte = Base64.decode(product.getImgProduct(),Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
             holder.imgProduct.setImageBitmap(bitmap);
             holder.tvNameProduct.setText(String.valueOf(product.getNameProduct()));
@@ -70,50 +69,33 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                     holder.btnUpdateProduct.setVisibility(View.GONE);
                     holder.btnDeleteProduct.setVisibility(View.GONE);
                 }else {
-                    holder.btnUpdateProduct.setVisibility(View.GONE);
-                    holder.btnDeleteProduct.setVisibility(View.GONE);
+                    holder.btnUpdateProduct.setVisibility(View.VISIBLE);
+                    holder.btnDeleteProduct.setVisibility(View.VISIBLE);
                 }
             });
             holder.btnUpdateProduct.setOnClickListener(view -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Thêm sản phẩm");
-                View view1 = LayoutInflater.from(context).inflate(R.layout.dialog_product,null);
-                builder.setView(view1);
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                String[] arr = {"Rau củ","Hoa quả","Thịt"};
-                ImageView img_Product = view.findViewById(R.id.imgProduct_dialog);
-                img_Product.setImageBitmap(bitmap);
-                ImageView img_addImageCamera = view.findViewById(R.id.img_addImageCamera_dialog);
-                ImageView img_addImageDevice = view.findViewById(R.id.img_addImageDevice_dialog);
-                TextInputLayout  til_nameProduct =  view.findViewById(R.id.til_NameProduct_dialog);
-                til_nameProduct.getEditText().setText(product.getNameProduct());
-                TextInputLayout  til_priceProduct =  view.findViewById(R.id.til_PriceProduct_dialog);
-                til_priceProduct.getEditText().setText(String.valueOf(product.getPriceProduct()));
-                Button btn_addVegetable =  view.findViewById(R.id.btn_addVegetable_dialog);
-                Button btn_cancleVegetable =  view.findViewById(R.id.btn_cancleVegetable_dialog);
-                Spinner sp_nameCategory = view.findViewById(R.id.sp_nameCategory);
-                SpinnerAdapter adapterSpiner = new ArrayAdapter<>(context,android.R.layout.simple_spinner_dropdown_item,arr);
-                sp_nameCategory.setAdapter(adapterSpiner);
-//                img_addImageCamera.setOnClickListener(view3 -> {
-//                    requestPermissionCamera();
-//                });
-//                img_addImageDevice.setOnClickListener(view3 -> {
-//                    requestPermissionDevice();
-//                });
-//                btn_addVegetable.setOnClickListener(view3 -> {
-//                    getData();
-//                    validate();
-//                });
-//                btn_cancleVegetable.setOnClickListener(view3 -> {
-//                    alertDialog.dismiss();
-//                });
+                fragment.dialogProduct(product,1,context);
             });
             holder.btnDeleteProduct.setOnClickListener(view -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Bạn có chắc muốn xóa sản phẩm");
+                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        fragment.deleteProduct(product);
+                    }
+                });
+                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             });
             holder.btn_addCart.setOnClickListener(view -> {
-                SharedPreferences preferences = context.getSharedPreferences("My_User",Context.MODE_PRIVATE);
+                SharedPreferences preferences = fragment.getContext().getSharedPreferences("My_User",Context.MODE_PRIVATE);
                 String user = preferences.getString("username","");
                 Cart cart = new Cart();
                 cart.setUserClient(user);
@@ -153,30 +135,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             btnUpdateProduct = itemView.findViewById(R.id.btn_updateProduct_item);
             btnDeleteProduct = itemView.findViewById(R.id.btn_deleteProduct_item);
             btn_addCart = itemView.findViewById(R.id.btn_addCart_item);
+
         }
-    }
-    public  List<Product> getAllProduct(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Product");
-        List<Product> list1 = new ArrayList<>();
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list1.clear();
-                for(DataSnapshot snap : snapshot.getChildren()){
-                    Product product = snap.getValue(Product.class);
-                    list1.add(product);
-                }
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        return list1;
-    }
+        }
 
     public void addProductCart(Cart cart){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -214,5 +176,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         });
         return list1;
     }
+
+
 
 }

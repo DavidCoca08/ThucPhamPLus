@@ -35,6 +35,7 @@ public class VegetableFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private ProductAdapter adapter;
     private View view;
+    private ProductFragment fragment= new ProductFragment();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +50,7 @@ public class VegetableFragment extends Fragment {
         rvVegetable = view.findViewById(R.id.rvVegetable);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvVegetable.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listVegetable,getContext());
+        adapter = new ProductAdapter(listVegetable,fragment,getContext());
         rvVegetable.setAdapter(adapter);
     }
 
@@ -77,5 +78,6 @@ public class VegetableFragment extends Fragment {
         });
         return list1;
     }
+
 
 }

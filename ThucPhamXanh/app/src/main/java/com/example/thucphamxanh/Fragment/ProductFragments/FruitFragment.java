@@ -32,6 +32,7 @@ public class FruitFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private ProductAdapter adapter;
     private View view;
+    private ProductFragment fragment = new ProductFragment();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,7 +47,7 @@ public class FruitFragment extends Fragment {
         rvFruit = view.findViewById(R.id.rvFruit);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvFruit.setLayoutManager(linearLayoutManager);
-        adapter = new ProductAdapter(listFruit,getContext());
+        adapter = new ProductAdapter(listFruit,fragment,getContext());
         rvFruit.setAdapter(adapter);
     }
 

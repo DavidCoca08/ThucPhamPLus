@@ -72,36 +72,61 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     public static final String TAG = "MainActivity";
     public static final int MY_REQUEST_CODE = 10;
 
-    //Object config layout
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
     private AppBarConfiguration mAppBarConfiguration;
 
-    //binding của main
     private ActivityMainBinding binding;
 
-    //các view show thông tin user trên nav header
     private ImageView ivAvatar;
     private TextView tvUserName;
     private TextView tvUserEmail;
 
-    //các reference để gọi API tới firebase
     private DatabaseReference mDatabase;
     private FirebaseUser userAuth;
-    //object chứa thông tin user sau khi đăng nhập
-    //dùng để truyền vào các fragment.....
+
     private User user;
     private Partner partner;
 
-    //không dùng nữa
-
-
-    //ViewModel để giao tiếp dữ liệu với ProfileFragment
     private ProfileViewModel profileViewModel;
     private List<Bill> listBill = new ArrayList<>();
 
     ConnectionReceiver connectionReceiver = new ConnectionReceiver();
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setSupportActionBar(binding.appBarMain.toolbar);
+        initUI();
+        initViewModel();
+        checkUser();
+        SharedPreferences preferences1 = getSharedPreferences("Number",MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences1.edit();
+        String number = "0";
+        editor.putString("number",""+number);
+        editor.apply();
+        getBill();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home,
+                R.id.nav_Product,
+                R.id.nav_Bill,
+                R.id.nav_Partner,
+                R.id.nav_my_profile,
+                R.id.nav_change_password,
+                R.id.nav_sign_out,
+                R.id.nav_Food)
+                .setOpenableLayout(mDrawerLayout)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(mNavigationView, navController);
+
+        mNavigationView.getMenu().findItem(R.id.nav_sign_out).setOnMenuItemClickListener(this::onMenuItemClick);
+
+    }
     public void loadUserInfoById(String phoneNumber){
         final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
         rootReference.child("User").child(phoneNumber)
@@ -113,9 +138,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                             Log.d(TAG, "onDataChange: " + user);
                             profileViewModel.setUser(user);
                         }
-
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         Log.e(TAG, "onCancelled: ", error.toException());
@@ -141,77 +164,23 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                                         e.printStackTrace();
                                     }
                                     Log.d(TAG, "onActivityResult: ");
-//                                    user.setBitmapAvatar(selectedImageBitmap);
                                     profileViewModel.setBitmapImageAvatar(selectedImageBitmap);
-                                    //thay đổi viewmodel
                                 }
                             }
                         }
                     });
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //khởi tạo user được xác thực bằng FirebaseAuthentication
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-
-
-        setSupportActionBar(binding.appBarMain.toolbar);
-        //khởi tạo các tham chiếu API ???
-        //initReferent();
-        //khởi tạo các view
-        initUI();
-        initViewModel();
-        checkUser();
-        SharedPreferences preferences1 = getSharedPreferences("Number",MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences1.edit();
-        String number = "0";
-        editor.putString("number",""+number);
-        editor.apply();
-        getBill();
-        //get thông tin userAuth từ db và gán vào user để giao tiếp giữa các fragment
-//        setUserViewModelObserver();
-//        initUI();
-//        checkUser();
-        /*
-         * khởi tạo observer cho user khi thay đổi thông tin user bên ProfileFragment
-         * */
-        //setUserViewModelObserver();
-        //show thông tin user lên nav header khi đăng nhập
-        //showUserInformation();
-        //set thông tin user vào viewmodel để giao tiếp
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,
-                R.id.nav_Product,
-                R.id.nav_Bill,
-                R.id.nav_Partner,
-                R.id.nav_my_profile,
-                R.id.nav_change_password,
-                R.id.nav_sign_out,
-                R.id.nav_Food)
-                .setOpenableLayout(mDrawerLayout)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(mNavigationView, navController);
-
-        //set event khi click vào logout navigation
-        mNavigationView.getMenu().findItem(R.id.nav_sign_out).setOnMenuItemClickListener(this::onMenuItemClick);
-
-    }
     public void checkUser(){
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
         String username = sharedPreferences.getString("username","");
         String userRule = sharedPreferences.getString("role","");
         String userId = sharedPreferences.getString("id", "");
         mNavigationView.setVisibility(View.GONE);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         if (userRule.equals("admin")){
             Log.d(TAG, "checkUser: admin");
             mNavigationView.setVisibility(View.VISIBLE);
             mNavigationView.getMenu().findItem(R.id.nav_Food).setVisible(false);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         } else if (userRule.equals("partner")) {
             Log.d(TAG, "checkUser: partner");
             loadPartnerInfoById(userId);
@@ -227,47 +196,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             Log.d(TAG, "checkUser: user");
         }
 
-
-
-
-        /*
-        * //TODO comment code cũ của Quang lại
-        * SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
-        String user = sharedPreferences.getString("username","");
-        mNavigationView.setVisibility(View.GONE);
-        if (user.equals("admin")){
-            mNavigationView.setVisibility(View.VISIBLE);
-            mNavigationView.getMenu().findItem(R.id.nav_Food).setVisible(false);
-        }
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Partner");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snap : snapshot.getChildren()){
-                    Partner partner = snap.getValue(Partner.class);
-                    tvUserName.setText(partner.getNamePartner());
-                    tvUserEmail.setText(String.valueOf(partner.getUserPartner()));
-                    byte[] decodeString = Base64.decode(partner.getImgPartner(), Base64.DEFAULT);
-                    Glide.with(MainActivity.this).load(decodeString)
-                            .error(R.drawable.ic_avatar_default)
-                            .signature(new ObjectKey(System.currentTimeMillis()))
-                            .into(ivAvatar);
-                    if (user.equals(partner.getUserPartner())){
-                        mNavigationView.setVisibility(View.VISIBLE);
-                        mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
-                        mNavigationView.getMenu().findItem(R.id.nav_Partner).setVisible(false);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        * */
     }
 
     private void setPartnerViewModelObserver() throws Exception {
@@ -312,20 +240,13 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                             } catch ( Exception e) {
                                 Log.e(TAG, "onDataChange: ", e);
                             }
-//                            profileViewModel.setUser(user);
                         }
 
                     }
 
                     private void showPartnerInformation() throws Exception{
                         profileViewModel.setPartner(partner);
-//                        tvUserName.setText(partner.getNamePartner());
-//                        tvUserEmail.setText(String.valueOf(partner.getUserPartner()));
-//                        byte[] decodeString = Base64.decode(partner.getImgPartner(), Base64.DEFAULT);
-//                        Glide.with(MainActivity.this).load(decodeString)
-//                                .error(R.drawable.ic_avatar_default)
-//                                .signature(new ObjectKey(System.currentTimeMillis()))
-//                                .into(ivAvatar);
+                        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                         mNavigationView.setVisibility(View.VISIBLE);
                         mNavigationView.getMenu().findItem(R.id.nav_Product).setVisible(false);
                         mNavigationView.getMenu().findItem(R.id.nav_Partner).setVisible(false);
@@ -426,9 +347,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main_activity, menu);
-        // Hùng làm phần này
         final MenuItem menuItem = menu.findItem(R.id.btn_Actionbar_cart);
         View actionView = menuItem.getActionView();
 
@@ -512,7 +430,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             }
         }
     }
-    //mở thư mục ảnh để chọn và set lên imageview trong ProfileFragment
     public void openGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -563,7 +480,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+ getPackageName() + "/" + R.raw.sound);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //For API 26+ you need to put some additional code like below:
         NotificationChannel mChannel;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mChannel = new NotificationChannel(CHANNEL_ID, "Thông báo", NotificationManager.IMPORTANCE_HIGH);
