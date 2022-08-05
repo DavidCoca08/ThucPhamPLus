@@ -18,11 +18,14 @@
             android:id="@+id/iv_profile_fragment_avatar"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/ic_avatar_default"/>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_profile_fragment_full_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:startIconDrawable="@drawable/ic_baseline_email_24"
             app:endIconMode="clear_text">
             <com.google.android.material.textfield.TextInputEditText
@@ -30,7 +33,6 @@
                 android:layout_height="match_parent"
                 android:imeOptions="actionNext"
                 android:maxLength="100"
-                android:text="Họ và tên"
                 android:inputType="text"
                 android:textColor="@color/black"
                 android:layout_marginTop="10dp"
@@ -59,7 +61,9 @@
             android:id="@+id/text_input_layout_profile_fragment_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/ic_baseline_email_24"
+            android:layout_marginBottom="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:startIconDrawable="@drawable/ic_baseline_maps_home_work_24"
             app:endIconMode="clear_text">
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -76,14 +80,15 @@
             android:id="@+id/text_input_layout_profile_fragment_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/ic_baseline_email_24"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:startIconDrawable="@drawable/ic_baseline_phone_24"
             app:endIconMode="clear_text">
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:imeOptions="actionNext"
                 android:maxLength="100"
-                android:text=""
+                android:enabled="false"
                 android:inputType="phone"
                 android:textColor="@color/black"
                 android:layout_marginTop="10dp"
@@ -93,7 +98,7 @@
             android:id="@+id/btn_profile_fragment_update"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Update profile"
+            android:text="@string/update_profile"
             android:layout_marginTop="30dp"/>
 
     </LinearLayout>

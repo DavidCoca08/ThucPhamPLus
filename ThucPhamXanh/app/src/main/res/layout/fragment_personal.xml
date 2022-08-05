@@ -26,7 +26,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_margin="15dp"
-                tools:src="@drawable/icon_search" />
+                tools:src="@drawable/food_home" />
 
             <LinearLayout
                 android:layout_width="match_parent"
