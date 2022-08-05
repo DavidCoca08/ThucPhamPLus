@@ -3,21 +3,21 @@
     <item
         android:id="@+id/action_home"
         android:icon="@drawable/ic_home"
-        android:title="Trang chủ"
+        android:title="@string/trangChu"
         />
     <item
         android:id="@+id/action_voucher"
         android:icon="@drawable/voucher"
-        android:title="Ưu đãi"
+        android:title="@string/uuDai"
         />
     <item
         android:id="@+id/action_order"
         android:icon="@drawable/order"
-        android:title="Đơn hàng"
+        android:title="@string/donHang"
         />
     <item
         android:id="@+id/action_personal"
         android:icon="@drawable/ic_person"
-        android:title="Cá nhân"
+        android:title="@string/caNhan"
         />
 </menu>

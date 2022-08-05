@@ -22,13 +22,13 @@
         android:id="@+id/bottom_nav_Home"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/menu_bottom_nav"
-        app:itemBackground="@color/grey"
+        app:labelVisibilityMode="labeled"
+        app:itemBackground="@color/ic_launcher_background"
         app:itemIconTint="@color/custom_bottom_nav"
         app:itemTextColor="@color/custom_bottom_nav"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:menu="@menu/menu_bottom_nav" />
 </androidx.constraintlayout.widget.ConstraintLayout>
