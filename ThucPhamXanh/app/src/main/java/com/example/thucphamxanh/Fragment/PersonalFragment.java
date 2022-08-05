@@ -9,38 +9,61 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.thucphamxanh.Activity.MainActivity;
 import com.example.thucphamxanh.Activity.SignInActivity;
+import com.example.thucphamxanh.Fragment.Profile.ProfileFragment;
 import com.example.thucphamxanh.R;
+import com.example.thucphamxanh.databinding.FragmentPersonalBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class PersonalFragment extends Fragment {
-
-    Button btn_logout_personal;
-
+    FragmentPersonalBinding binding;
+    Button btn_logout_personal, btn_changepassword_personal;
+    TextView tvNumberPhoneUser, tvEdit;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_personal, container, false);
+//        View view = inflater.inflate(R.layout.fragment_personal, container, false);
+        binding = FragmentPersonalBinding.inflate(inflater, container, false);
+        btn_logout_personal = binding.btnPersonalFragmentLogoutPersonal;
+        btn_changepassword_personal = binding.btnPersonalFragmentChangePasswordPersonal;
+        tvNumberPhoneUser = binding.tvPersonalFragmentNumberPhoneUser;
+        tvEdit = binding.tvPersonalFragmentEditUser;
 
-        btn_logout_personal = view.findViewById(R.id.btn_logout_personal);
-
-        btn_logout_personal.setOnClickListener(new View.OnClickListener() {
+        tvEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-
-                Intent intent = new Intent(getActivity(), SignInActivity.class);
-                startActivity(intent);
-                getActivity().finishAffinity();
 
             }
         });
 
+        btn_logout_personal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SignInActivity.class);
+                startActivity(intent);
+                getActivity().finishAffinity();
+            }
+        });
 
-        return view;
+        btn_changepassword_personal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout, new ChangePasswordFragment()).addToBackStack(null).commit();
+            }
+        });
+
+        tvEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout, new ProfileFragment()).addToBackStack(null).commit();
+            }
+        });
+
+        return binding.getRoot();
     }
 }
