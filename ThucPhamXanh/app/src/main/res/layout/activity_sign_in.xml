@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                app:startIconDrawable="@drawable/ic_baseline_email_24"
+                app:startIconDrawable="@drawable/ic_baseline_phone_24"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:endIconMode="clear_text">
                 <com.google.android.material.textfield.TextInputEditText
@@ -49,11 +49,10 @@
                     android:layout_height="match_parent"
                     android:imeOptions="actionNext"
                     android:maxLength="100"
-                    android:text="tminh400@gmail.com"
-                    android:inputType="textEmailAddress"
+                    android:inputType="phone"
                     android:textColor="@color/black"
                     android:layout_marginTop="10dp"
-                    android:hint="Email"/>
+                    android:hint="@string/phone_number"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,17 +71,26 @@
                     android:inputType="textPassword"
                     android:textColor="@color/black"
                     android:layout_marginTop="10dp"
-                    android:text="123456"
-                    android:hint="Password"/>
+                    android:hint="@string/password"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-
+                    android:text="@string/remember_account"
+            <CheckBox
+                android:id="@+id/chk_sign_in_activity_remember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:checked="true"
+                android:layoutDirection="rtl"
+                android:buttonTint="#7CB342"
+                android:text="@string/remember_account"/>
 
             <Button
                 android:id="@+id/btn_SignInActivity_signIn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:backgroundTint="#73DE4E"
                 android:text="Đăng nhập"/>
             <LinearLayout

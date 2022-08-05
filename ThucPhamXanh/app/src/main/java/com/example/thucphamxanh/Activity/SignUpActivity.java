@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
+import com.example.thucphamxanh.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -36,7 +37,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             mFormConfirmPassword,
             mFormAddress;
     private Button mBtnSignUp;
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mFormConfirmPassword = findViewById(R.id.form_SignUpActivity_confirmPassword);
         mFormAddress = findViewById(R.id.form_SignUpActivity_address);
         mBtnSignUp = findViewById(R.id.btn_SignUpActivity_signUp);
-        mProgressDialog = new ProgressDialog(this);
         setOnclickListener();
     }
 
@@ -73,11 +72,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void signUp() {
         final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
 
-        mFormPhoneNumber.setErrorEnabled(false);
-        mFormUserName.setErrorEnabled(false);
-        mFormPassword.setErrorEnabled(false);
-        mFormConfirmPassword.setErrorEnabled(false);
-        mFormAddress.setErrorEnabled(false);
+        mFormPhoneNumber.setError(null);
+        mFormPassword.setError(null);
+        mFormConfirmPassword.setError(null);
+        mFormUserName.setError(null);
+        mFormAddress.setError(null);
         String strPhoneNumber = Objects.requireNonNull(mFormPhoneNumber.getEditText()).getText().toString().trim();
         String strUserName = mFormUserName.getEditText().getText().toString().trim();
         String strPassword = mFormPassword.getEditText().getText().toString().trim();
@@ -96,10 +95,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             user.setAddress(strAddress);
             user.setStrUriAvatar("");
             user.setId(strPhoneNumber);
-            mProgressDialog.setTitle("Tạo tài khoản");
-            mProgressDialog.setMessage("Vui lòng đợi trong giây lát");
-            mProgressDialog.setCanceledOnTouchOutside(false);
-            mProgressDialog.show();
+            ProgressDialog progressDialog = Utils.createProgressDiaglog(SignUpActivity.this);
+            progressDialog.show();
             rootReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -111,7 +108,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        mProgressDialog.dismiss();
+                                        progressDialog.dismiss();
                                         Toast.makeText(SignUpActivity.this
                                                         , "Tạo tài khoản thành công"
                                                         , Toast.LENGTH_SHORT)
@@ -125,13 +122,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                                         , "Tạo tài khoản thất bại"
                                                         , Toast.LENGTH_LONG)
                                                 .show();
-                                        mProgressDialog.dismiss();
+                                        progressDialog.dismiss();
                                     }
                                 });
                     } else {
                         //TODO thông báo số điện thoại đã tồn tại tới view
-                        mProgressDialog.dismiss();
-                        mFormPhoneNumber.setErrorEnabled(true);
+                        progressDialog.dismiss();
                         mFormPhoneNumber.setError("Số điện thoại đã tồn tại");
                     }
                 }
@@ -154,13 +150,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         } catch (IllegalArgumentException e) {
             if (e.getMessage().equals(NUMBER_PHONE_INVALID)) {
-                mFormPhoneNumber.setErrorEnabled(true);
                 mFormPhoneNumber.setError("Số điện thoại không hợp lệ");
             } else if (e.getMessage().equals(PASSWORD_INVALID)) {
-                mFormPassword.setErrorEnabled(true);
                 mFormPassword.setError("Mật khẩu không hợp lệ");
             } else if (e.getMessage().equals(PASSWORD_NOT_MATCH)) {
-                mFormConfirmPassword.setErrorEnabled(true);
                 mFormConfirmPassword.setError("Mật khẩu không trùng nhau");
             } else {
                 Log.e(TAG, "signUp: ", e);
@@ -252,23 +245,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setErrorEmpty() {
         if (mFormPhoneNumber.getEditText().getText().toString().isEmpty()) {
-            mFormPhoneNumber.setErrorEnabled(true);
             mFormPhoneNumber.setError("Số điện thoại không được để trống");
         }
         if (mFormUserName.getEditText().getText().toString().isEmpty()) {
-            mFormUserName.setErrorEnabled(true);
             mFormUserName.setError("Họ tên không được để trống");
         }
         if (mFormPassword.getEditText().getText().toString().isEmpty()) {
-            mFormPassword.setErrorEnabled(true);
             mFormPassword.setError("Mật khẩu không được để trống");
         }
         if (mFormConfirmPassword.getEditText().getText().toString().isEmpty()) {
-            mFormConfirmPassword.setErrorEnabled(true);
             mFormConfirmPassword.setError("Xác nhận mật khẩu không được để trống");
         }
         if (mFormAddress.getEditText().getText().toString().isEmpty()) {
-            mFormAddress.setErrorEnabled(true);
             mFormAddress.setError("Địa chỉ không được để trống");
         }
 

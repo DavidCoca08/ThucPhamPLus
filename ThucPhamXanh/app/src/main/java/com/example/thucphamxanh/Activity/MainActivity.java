@@ -491,7 +491,10 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         return false;
     }
     private void logout() {
-        FirebaseAuth.getInstance().signOut();
+        SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("logged", false);
+        editor.commit();
         Intent intent = new Intent(MainActivity.this, SignInActivity.class);
         startActivity(intent);
         finishAffinity();
@@ -611,6 +614,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     //TODO sửa trạng thái khi back press vẫn lưu tài khoản đăng nhập
     @Override
     public void onBackPressed() {
+        Log.d(TAG, "onBackPressed: ");
         super.onBackPressed();
     }
 }

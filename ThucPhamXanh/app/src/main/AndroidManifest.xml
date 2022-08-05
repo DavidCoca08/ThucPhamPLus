@@ -27,13 +27,7 @@
             android:exported="false" />
         <activity android:name=".Activity.CartActivity" />
         <activity
-            android:name=".Activity.SignUpByPhoneActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activity.ForgotPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activity.SignInByPhoneActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.SignUpActivity"

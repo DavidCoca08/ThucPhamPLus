@@ -6,6 +6,7 @@ import static com.example.thucphamxanh.constant.Profile.PASSWORD_INVALID_2;
 import static com.example.thucphamxanh.constant.Profile.PASSWORD_INVALID_3;
 import static com.example.thucphamxanh.constant.Profile.PASSWORD_NOT_MATCH;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.databinding.FragmentChangePasswordBinding;
+import com.example.thucphamxanh.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -70,6 +72,8 @@ public class ChangePasswordFragment extends Fragment {
         newPass.setErrorEnabled(true);
         reNewPass.setErrorEnabled(true);
         btnChangePass.setOnClickListener(view -> {
+            ProgressDialog progressDialog = Utils.createProgressDiaglog(requireContext());
+            progressDialog.show();
             oldPass.setError(null);
             newPass.setError(null);
             reNewPass.setError(null);
@@ -90,6 +94,7 @@ public class ChangePasswordFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d(TAG, "onComplete: Đổi mật khẩu đối tác thành công");
+                        progressDialog.dismiss();
                         oldPass.getEditText().setText("");
                         newPass.getEditText().setText("");
                         reNewPass.getEditText().setText("");
@@ -101,12 +106,14 @@ public class ChangePasswordFragment extends Fragment {
 
 
             } catch (NullPointerException e) {
+                progressDialog.dismiss();
                     if (e.getMessage().equals(FIELDS_EMPTY)) {
                     setErrorEmpty();
                 } else {
                     Log.e(TAG, "signUp: ", e);
                 }
             } catch (IllegalArgumentException e) {
+                progressDialog.dismiss();
                 if (e.getMessage().equals(PASSWORD_INVALID)) {
                     newPass.setError("Mật khẩu phải từ 6 kí tự trở lên");
                 } else if (e.getMessage().equals(PASSWORD_NOT_MATCH)) {
@@ -119,6 +126,7 @@ public class ChangePasswordFragment extends Fragment {
                     Log.e(TAG, "signUp: ", e);
                 }
             } catch (Exception e) {
+                progressDialog.dismiss();
                 Log.e(TAG, "signUp: ", e);
             }
         });

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.R;
+import com.example.thucphamxanh.constant.Profile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -38,6 +40,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private Button btnSignIn;
     private ProgressBar progressBar;
     private List<Partner> list;
+    private CheckBox mChkRemember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_sign_in);
         initUI();
         getDataSpf();
+
         list = getAllPartner();
         Log.d(TAG, "onCreate: " + list.toString());
 
@@ -66,6 +70,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         formPassword = findViewById(R.id.form_SignInActivity_password);
         formPassword.setErrorEnabled(true);
         formEmail.setErrorEnabled(true);
+        mChkRemember = findViewById(R.id.chk_sign_in_activity_remember);
         setOnclickListener();
     }
 
@@ -77,13 +82,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(intent);
                 break;
             case R.id.btn_SignInActivity_signIn:
-                if (logins()== false){
+                if (!logins()){
                     userLogin();
                 }
                 logins();
-
-
-
                 break;
             default:
                 Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
@@ -183,7 +185,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 Log.d("aaaaaa",list.get(i).getPasswordPartner());
                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(intent);
-                finish();
+                finishAffinity();
                 return true;
             }
         }
@@ -205,12 +207,17 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         editor.putString("password", password);
         editor.putString("role", role);
         editor.putString("id", id);
+        editor.putBoolean("logged",true);
+        editor.putBoolean("remember", mChkRemember.isChecked());
         editor.apply();
     }
     public void getDataSpf(){
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
-        formEmail.getEditText().setText(sharedPreferences.getString("username",""));
-        formPassword.getEditText().setText(sharedPreferences.getString("password",""));
+        boolean isRemember = sharedPreferences.getBoolean("remember",false);
+        if (isRemember) {
+            formEmail.getEditText().setText(sharedPreferences.getString("username",""));
+            formPassword.getEditText().setText(sharedPreferences.getString("password",""));
+        }
     }
 
     private boolean validate(String email, String password) {
@@ -218,17 +225,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             if (email.isEmpty() && password.isEmpty()) throw new IllegalArgumentException("email and password is empty");
             else if (email.isEmpty()) throw new IllegalArgumentException("email is empty");
             else if (password.isEmpty()) throw new IllegalArgumentException("password is empty");
+            else if (password.length() < 6) throw new IllegalArgumentException(Profile.PASSWORD_INVALID);
         } catch (IllegalArgumentException e) {
             if (e.getMessage().equals("email and password is empty")) {
-                Toast.makeText(this, "Email and Password are empty", Toast.LENGTH_SHORT).show();
+                formEmail.setError("Không được bỏ trống số điện thoại");
+                formPassword.setError("Không được bỏ trống mật khẩu");
+            } else if (e.getMessage().equals("email is empty")) {
+                formEmail.setError("Không được bỏ trống số điện thoại");
+            } else if (e.getMessage().equals("password is empty")) {
+                formPassword.setError("Không được bỏ trống mật khẩu");
+            } else if (e.getMessage().equals(Profile.PASSWORD_INVALID)) {
+                formPassword.setError("Mật khẩu phải từ 6 kí tự trở lên");
             }
-            else if (e.getMessage().equals("email is empty")) {
-                Toast.makeText(this, "Email is empty", Toast.LENGTH_SHORT).show();
-            }
-            else if (e.getMessage().equals("password is empty")) {
-                Toast.makeText(this, "password empty", Toast.LENGTH_SHORT).show();
-            }
-            e.printStackTrace();
+            Log.e(TAG, "validate: ", e);
             return false;
         }
         return true;
@@ -260,4 +269,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         return list1;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: đang stop");
+    }
 }
