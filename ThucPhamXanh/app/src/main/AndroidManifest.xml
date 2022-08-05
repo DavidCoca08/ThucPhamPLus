@@ -19,12 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ThucPhamXanh"
         tools:targetApi="31">
-        <activity
-            android:name=".PartnerFoodActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Food_Of_Partner_Activity"
-            android:exported="false" />
+        
         <activity android:name=".Activity.CartActivity" />
         <activity
             android:name=".Activity.ForgotPasswordActivity"
