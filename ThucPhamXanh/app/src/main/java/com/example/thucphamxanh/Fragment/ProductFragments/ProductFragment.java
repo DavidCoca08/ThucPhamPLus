@@ -66,8 +66,6 @@ public class ProductFragment extends Fragment {
     private Spinner sp_nameCategory;
     private String[] arr = {"Rau củ","Hoa quả","Thịt"};
     private ArrayAdapter<String> adapterSpiner;
-//    private static final int REQUEST_ID_IMAGE_CAPTURE =10;
-//    private static final int PICK_IMAGE =100;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductBinding.inflate(inflater, container, false);
@@ -138,6 +136,12 @@ public class ProductFragment extends Fragment {
         if (type==1){
             setData(product);
             img_addImageCamera.setVisibility(View.GONE);
+            img_addImageDevice.setOnClickListener(view1 -> {
+                openGallery();
+            });
+            img_addImageCamera.setOnClickListener(view1 -> {
+                captureImage();
+            });
             img_addImageDevice.setVisibility(View.GONE);
             btn_addVegetable.setOnClickListener(view1 -> {
                 getData(context);

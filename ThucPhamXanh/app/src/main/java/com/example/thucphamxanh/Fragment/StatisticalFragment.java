@@ -89,15 +89,13 @@ public class StatisticalFragment extends Fragment {
                 listBill.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
                     Bill bill = snap.getValue(Bill.class);
-                    if (user.equals("admin") && bill.getStatus().equals("Yes")) {
+                    if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
                         listBill.add(bill);
-                    } else if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
-                        listBill.add(bill);
-                    }
+                        }
                     int sum = 0;
                     for (int i = 0; i < listBill.size(); i++) {
                         sum += listBill.get(i).getTotal();
-                    }
+                        }
                     totalRevenue.setText(numberFormat.format(sum));
                 }
                 adapterStatistical.notifyDataSetChanged();
@@ -167,23 +165,24 @@ public class StatisticalFragment extends Fragment {
                         List<Bill> list = new ArrayList<>();
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Bill bill = dataSnapshot.getValue(Bill.class);
-                            if (user.equals("admin") && bill.getStatus().equals("Yes")) {
-                                try {
-                                    Date dayOut = sdf.parse(bill.getDayOut());
-                                    Date startDate = sdf.parse(startdate);
-                                    Date toDate = sdf.parse(todate);
-                                    if (dayOut.compareTo(startDate) >= 0 && dayOut.compareTo(toDate) <= 0) {
-                                        total += bill.getTotal();
-                                        list.add(bill);
-                                        adapterStatistical = new StatisticalAdapter(list, getContext());
-                                        recyclerView.setAdapter(adapterStatistical);
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                        tvHide.setVisibility(View.VISIBLE);
-                                    }
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            } else if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
+//                            if (user.equals("admin") && bill.getStatus().equals("Yes")) {
+//                                try {
+//                                    Date dayOut = sdf.parse(bill.getDayOut());
+//                                    Date startDate = sdf.parse(startdate);
+//                                    Date toDate = sdf.parse(todate);
+//                                    if (dayOut.compareTo(startDate) >= 0 && dayOut.compareTo(toDate) <= 0) {
+//                                        total += bill.getTotal();
+//                                        list.add(bill);
+//                                        adapterStatistical = new StatisticalAdapter(list, getContext());
+//                                        recyclerView.setAdapter(adapterStatistical);
+//                                        recyclerView.setVisibility(View.VISIBLE);
+//                                        tvHide.setVisibility(View.VISIBLE);
+//                                    }
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            } else
+                                if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
                                 try {
                                     Date dayOut = sdf.parse(bill.getDayOut());
                                     Date startDate = sdf.parse(startdate);

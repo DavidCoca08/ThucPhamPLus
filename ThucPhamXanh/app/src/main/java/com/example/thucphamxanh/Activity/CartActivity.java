@@ -4,17 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.example.thucphamxanh.Adapter.CartAdapter;
@@ -22,8 +18,6 @@ import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.ProductTop;
 import com.example.thucphamxanh.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -104,9 +98,6 @@ public class CartActivity extends AppCompatActivity {
                 }
                 tvTotalPrice.setText(numberFormat.format(sum));
                 tv1.setText(""+sum);
-//                if (list1.size()==0){
-//                    btn_senBill.setEnabled(false);
-//                }else  btn_senBill.setEnabled(true);
                 if(list1.size()==0){
                     tvHide1.setVisibility(View.GONE);
                     tvHide2.setVisibility(View.GONE);
