@@ -52,7 +52,7 @@ public class Food_Of_PartnerFragment extends Fragment {
         listProduct = loadListFood();
         linearLayoutManager = new LinearLayoutManager(getContext());
         food_of_partner_recyclerView.setLayoutManager(linearLayoutManager);
-//        adapter = new ProductAdapter(listProduct,fragment,getContext());
+        adapter = new ProductAdapter(listProduct,fragment,getContext());
         food_of_partner_recyclerView.setAdapter(adapter);
 
         food_of_partner_recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));

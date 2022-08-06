@@ -91,11 +91,11 @@ public class StatisticalFragment extends Fragment {
                     Bill bill = snap.getValue(Bill.class);
                     if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
                         listBill.add(bill);
-                        }
+                    }
                     int sum = 0;
                     for (int i = 0; i < listBill.size(); i++) {
                         sum += listBill.get(i).getTotal();
-                        }
+                    }
                     totalRevenue.setText(numberFormat.format(sum));
                 }
                 adapterStatistical.notifyDataSetChanged();
@@ -160,34 +160,16 @@ public class StatisticalFragment extends Fragment {
                 rootReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.d(TAG, "onDataChange: " + snapshot.getValue());
                         int total = 0;
                         List<Bill> list = new ArrayList<>();
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Bill bill = dataSnapshot.getValue(Bill.class);
-//                            if (user.equals("admin") && bill.getStatus().equals("Yes")) {
-//                                try {
-//                                    Date dayOut = sdf.parse(bill.getDayOut());
-//                                    Date startDate = sdf.parse(startdate);
-//                                    Date toDate = sdf.parse(todate);
-//                                    if (dayOut.compareTo(startDate) >= 0 && dayOut.compareTo(toDate) <= 0) {
-//                                        total += bill.getTotal();
-//                                        list.add(bill);
-//                                        adapterStatistical = new StatisticalAdapter(list, getContext());
-//                                        recyclerView.setAdapter(adapterStatistical);
-//                                        recyclerView.setVisibility(View.VISIBLE);
-//                                        tvHide.setVisibility(View.VISIBLE);
-//                                    }
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            } else
-                                if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
+                            if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")) {
                                 try {
                                     Date dayOut = sdf.parse(bill.getDayOut());
                                     Date startDate = sdf.parse(startdate);
                                     Date toDate = sdf.parse(todate);
-                                    if (dayOut.after(startDate) && dayOut.before(toDate)) {
+                                    if (dayOut.compareTo(startDate) >= 0 && dayOut.compareTo(toDate) <= 0) {
                                         total += bill.getTotal();
                                         list.add(bill);
                                         adapterStatistical = new StatisticalAdapter(list, getContext());
@@ -202,7 +184,6 @@ public class StatisticalFragment extends Fragment {
                         }
                         totalRevenue.setText(numberFormat.format(total));
                         adapterStatistical.notifyDataSetChanged();
-                        Log.d(TAG, "onDataChange: ");
                     }
 
                     @Override

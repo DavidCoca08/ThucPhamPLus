@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="15dp"
-    android:background="#B4D1C3"
+    android:background="#C0E3B8"
     tools:context=".Fragment.StatisticalFragment">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -103,7 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
-        android:text="Các hoá đơn: "
+        android:text="Chi tiết các hoá đơn: "
         android:textColor="#000000"
         android:textSize="20dp"
         android:textStyle="italic"/>
