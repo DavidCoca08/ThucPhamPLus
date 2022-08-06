@@ -32,6 +32,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import android.util.Base64;
+import android.widget.Toast;
+
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHolder> {
@@ -56,6 +58,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
+        SharedPreferences preferences = context.getSharedPreferences("My_User",Context.MODE_PRIVATE);
+        String user = preferences.getString("username","");
+        String role = preferences.getString("role","");
             Product product = list.get(position);
             NumberFormat numberFormat = new DecimalFormat("#,##0");
             listCart = getAllCart();
@@ -65,38 +70,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
             holder.tvNameProduct.setText(String.valueOf(product.getNameProduct()));
             holder.tvPriceProduct.setText(numberFormat.format(product.getPriceProduct())+" đ");
             holder.cardProuct.setOnClickListener(view -> {
-                if (holder.btnUpdateProduct.getVisibility()==View.VISIBLE || holder.btnDeleteProduct.getVisibility()==View.VISIBLE){
-                    holder.btnUpdateProduct.setVisibility(View.GONE);
-                    holder.btnDeleteProduct.setVisibility(View.GONE);
-                }else {
-                    holder.btnUpdateProduct.setVisibility(View.VISIBLE);
-                    holder.btnDeleteProduct.setVisibility(View.VISIBLE);
+                if (role.equals("admin") || role.equals("partner")) {
+                    if (holder.btnUpdateProduct.getVisibility() == View.VISIBLE || holder.btnDeleteProduct.getVisibility() == View.VISIBLE) {
+                        holder.btnUpdateProduct.setVisibility(View.GONE);
+                        holder.btnDeleteProduct.setVisibility(View.GONE);
+                    } else {
+                        holder.btnUpdateProduct.setVisibility(View.VISIBLE);
+                        holder.btnDeleteProduct.setVisibility(View.VISIBLE);
+                    }
                 }
             });
             holder.btnUpdateProduct.setOnClickListener(view -> {
                 fragment.dialogProduct(product,1,context);
             });
             holder.btnDeleteProduct.setOnClickListener(view -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Bạn có chắc muốn xóa sản phẩm");
-                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        fragment.deleteProduct(product);
-                    }
-                });
-                builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                showDialog(product);
             });
             holder.btn_addCart.setOnClickListener(view -> {
-                SharedPreferences preferences = fragment.getContext().getSharedPreferences("My_User",Context.MODE_PRIVATE);
-                String user = preferences.getString("username","");
+                StringBuilder str = new StringBuilder();
                 Cart cart = new Cart();
                 cart.setUserClient(user);
                 cart.setIdProduct(product.getCodeProduct());
@@ -106,10 +97,38 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 cart.setNumberProduct(1);
                 cart.setIdPartner(product.getUserPartner());
                 cart.setTotalPrice(cart.getPriceProduct()*cart.getNumberProduct());
-                addProductCart(cart);
+                for (int i = 0; i < listCart.size(); i++) {
+                    if (!listCart.get(i).getIdPartner().equals(cart.getIdPartner())){
+                        str.append("1");
+                    }
+                }
+                if (str.length()!=0){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Nếu bạn thêm sản phẩm ở cửa hàng này, sản phẩm ở cửa hàng khác sẽ bị xóa");
+                    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            addProductCart(cart);
+                        }
+                    });
+                    builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }else {
+                    addProductCart(cart);
+                }
+
             });
 
     }
+
+
+
 
     @Override
     public int getItemCount() {
@@ -146,13 +165,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         if (listCart.size()==0){
             cart.setIdCart(1);
             reference.child("1").setValue(cart);
+            Toast.makeText(context, "Bạn đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
 
         }else {
             int i = listCart.size()-1;
             int id = listCart.get(i).getIdCart()+1;
             cart.setIdCart(id);
             reference.child(""+id).setValue(cart);
+            Toast.makeText(context, "Bạn đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
         }
+
     }
     public  List<Cart> getAllCart(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -176,7 +198,26 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         });
         return list1;
     }
+    private void showDialog(Product product) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Bạn có chắc muốn xóa sản phẩm");
+        builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                fragment.deleteProduct(product);
+            }
+        });
+        builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void openDialog() {
 
+    }
 
 }

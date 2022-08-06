@@ -34,21 +34,23 @@ public class MeatFragment extends Fragment {
     private View view;
     private ProductFragment fragment= new ProductFragment();
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_meat, container, false);
-        unitUI();
-        rvMeat.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        initUI();
         return view;
     }
-    public void unitUI(){
+
+    public void initUI(){
         listMeat = getVegetableProduct();
         rvMeat = view.findViewById(R.id.rvMeat);
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvMeat.setLayoutManager(linearLayoutManager);
         adapter = new ProductAdapter(listMeat,fragment, getActivity());
         rvMeat.setAdapter(adapter);
+        rvMeat.setLayoutManager(new GridLayoutManager(getContext(), 2));
     }
 
     public  List<Product> getVegetableProduct(){
@@ -65,8 +67,10 @@ public class MeatFragment extends Fragment {
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Product product = snap.getValue(Product.class);
-                    if (product.getCodeCategory()==3){
-                        list1.add(product);
+                    if (product!=null) {
+                        if (product.getCodeCategory() == 3) {
+                            list1.add(product);
+                        }
                     }
                 }
                 adapter.notifyDataSetChanged();

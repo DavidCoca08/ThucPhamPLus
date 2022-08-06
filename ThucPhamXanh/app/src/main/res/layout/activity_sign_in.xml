@@ -49,7 +49,6 @@
                     android:layout_height="match_parent"
                     android:imeOptions="actionNext"
                     android:maxLength="100"
-                    android:inputType="phone"
                     android:textColor="@color/black"
                     android:layout_marginTop="10dp"
                     android:hint="@string/phone_number"/>

@@ -51,11 +51,7 @@ import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.Service.ConnectionReceiver;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -81,9 +77,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     private ImageView ivAvatar;
     private TextView tvUserName;
     private TextView tvUserEmail;
-
-    private DatabaseReference mDatabase;
-    private FirebaseUser userAuth;
 
     private User user;
     private Partner partner;
@@ -174,8 +167,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         String username = sharedPreferences.getString("username","");
         String userRule = sharedPreferences.getString("role","");
         String userId = sharedPreferences.getString("id", "");
-        mNavigationView.setVisibility(View.GONE);
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
         if (userRule.equals("admin")){
             Log.d(TAG, "checkUser: admin");
             mNavigationView.setVisibility(View.VISIBLE);
@@ -193,6 +185,8 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         } else if (userRule.equals("user")) {
             loadUserInfoById(username);
             setUserViewModelObserver();
+            mNavigationView.setVisibility(View.GONE);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             Log.d(TAG, "checkUser: user");
         }
 
@@ -259,12 +253,12 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                 });
     }
 
-    @Deprecated
-    private void initReferent() {
-        user = new User();
-        userAuth = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-    }
+//    @Deprecated
+//    private void initReferent() {
+//        user = new User();
+//        userAuth = FirebaseAuth.getInstance().getCurrentUser();
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
+//    }
 
     @Deprecated
     private void setUserViewModelObserver() {
@@ -303,52 +297,60 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         tvUserName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_MainActivity_username);
         tvUserEmail = mNavigationView.getHeaderView(0).findViewById(R.id.tv_MainActivity_userEmail);
     }
-    public void showUserInformation() {
-        SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
-        String userPhoneNumber = sharedPreferences.getString("username","");
-        loadUserInfoById(userPhoneNumber);
-    }
-    @Deprecated
-    private void loadUserInfo() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase.child("users")
-                .child(firebaseUser.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
-                            DataSnapshot dataSnapshot = task.getResult();
-                            user = dataSnapshot.getValue(User.class);
-                            tvUserEmail.setText(user.getEmail());
-                            tvUserName.setText(user.getName());
-                            tvUserName.setVisibility(View.VISIBLE);
-                            Glide.with(MainActivity.this)
-                                    .load(user.getStrUriAvatar())
-                                    .error(R.drawable.ic_avatar_default)
-                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
-                                    .into(ivAvatar);
-                            profileViewModel.setUser(user);
-                            Log.i(TAG, "onComplete: info user load from storage: " + user);
-                        } else {
-                            Log.e(TAG, "onComplete: ", task.getException());
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: ", e);
-                }
-        });
-        Log.d(TAG, "loadUserInfo: " + user.toString());
-    }
+//    public void showUserInformation() {
+//        SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+//        String userPhoneNumber = sharedPreferences.getString("username","");
+//        loadUserInfoById(userPhoneNumber);
+//    }
+//    @Deprecated
+//    private void loadUserInfo() {
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        mDatabase.child("users")
+//                .child(firebaseUser.getUid())
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.d(TAG, "onComplete: task " + String.valueOf(task.getResult()));
+//                            DataSnapshot dataSnapshot = task.getResult();
+//                            user = dataSnapshot.getValue(User.class);
+//                            tvUserEmail.setText(user.getEmail());
+//                            tvUserName.setText(user.getName());
+//                            tvUserName.setVisibility(View.VISIBLE);
+//                            Glide.with(MainActivity.this)
+//                                    .load(user.getStrUriAvatar())
+//                                    .error(R.drawable.ic_avatar_default)
+//                                    .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+//                                    .into(ivAvatar);
+//                            profileViewModel.setUser(user);
+//                            Log.i(TAG, "onComplete: info user load from storage: " + user);
+//                        } else {
+//                            Log.e(TAG, "onComplete: ", task.getException());
+//                        }
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e(TAG, "onFailure: ", e);
+//                }
+//        });
+//        Log.d(TAG, "loadUserInfo: " + user.toString());
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         final MenuItem menuItem = menu.findItem(R.id.btn_Actionbar_cart);
         View actionView = menuItem.getActionView();
+        MenuItem menuItem1 = menu.findItem(R.id.searchProduct);
+        menuItem1.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                startActivity(new Intent(MainActivity.this,SearchActivity.class));
+                return true;
+            }
+        });
 
         TextView cartBadgeTextView = actionView.findViewById(R.id.tv_CartActionItem_cart_badge);
         cartBadgeTextView.setVisibility(View.GONE);
@@ -378,8 +380,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             }
         });
 
-
-
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -387,6 +387,13 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             }
         });
         return true;
+    }
+    public void search(Menu menu){
+        MenuItem menuItem = menu.findItem(R.id.searchProduct);
+        View view = menuItem.getActionView();
+        view.setOnClickListener(view1 -> {
+
+        });
     }
 
     @Override
@@ -498,12 +505,10 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
             }
         }
 
-        //General code:
         NotificationCompat.Builder status = new NotificationCompat.Builder(this,CHANNEL_ID);
         status.setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                //.setOnlyAlertOnce(true)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText("Bạn có đơn hàng mới")
                 .setDefaults(Notification.DEFAULT_LIGHTS )

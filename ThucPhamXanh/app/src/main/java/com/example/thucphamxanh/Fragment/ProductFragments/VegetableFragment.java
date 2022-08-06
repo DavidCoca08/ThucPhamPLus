@@ -42,7 +42,6 @@ public class VegetableFragment extends Fragment {
                              Bundle savedInstanceState) {
          view = inflater.inflate(R.layout.fragment_vegetable, container, false);
          unitUI();
-        rvVegetable.setLayoutManager(new GridLayoutManager(getContext(), 2));
         return view;
     }
     public void unitUI(){
@@ -52,6 +51,7 @@ public class VegetableFragment extends Fragment {
         rvVegetable.setLayoutManager(linearLayoutManager);
         adapter = new ProductAdapter(listVegetable,fragment,getContext());
         rvVegetable.setAdapter(adapter);
+        rvVegetable.setLayoutManager(new GridLayoutManager(getContext(), 2));
     }
 
     public  List<Product> getVegetableProduct(){

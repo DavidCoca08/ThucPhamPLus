@@ -51,8 +51,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         list = getAllPartner();
         Log.d(TAG, "onCreate: " + list.toString());
-
-        getSupportActionBar().hide(); // Ẩn actionbar
+        getSupportActionBar().hide();
     }
 
     private void setOnclickListener() {
@@ -133,47 +132,47 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 });
     }
     @Deprecated
-    private void login() {
-        String email = formEmail.getEditText().getText().toString().trim();
-        String password = formPassword.getEditText().getText().toString().trim();
-        if (!validate(email, password)) return;
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        progressBar.setVisibility(View.VISIBLE);
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Successful(task);
-                            Log.d(TAG, "onComplete: Successful");
-//                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            unSuccessful(task);
-                            Log.d(TAG, "onComplete: unSuccessful");
-//                            updateUI(null);
-                        }
-                    }
-
-                    private void unSuccessful(Task<AuthResult> task) {
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(SignInActivity.this, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    private void Successful(Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = auth.getCurrentUser();
-                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finishAffinity();
-                    }
-                });
-        Log.d(TAG, "login: end");
-    }
+//    private void login() {
+//        String email = formEmail.getEditText().getText().toString().trim();
+//        String password = formPassword.getEditText().getText().toString().trim();
+//        if (!validate(email, password)) return;
+//
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        progressBar.setVisibility(View.VISIBLE);
+//        auth.signInWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        progressBar.setVisibility(View.GONE);
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Successful(task);
+//                            Log.d(TAG, "onComplete: Successful");
+////                            updateUI(user);
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            unSuccessful(task);
+//                            Log.d(TAG, "onComplete: unSuccessful");
+////                            updateUI(null);
+//                        }
+//                    }
+//
+//                    private void unSuccessful(Task<AuthResult> task) {
+//                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+//                        Toast.makeText(SignInActivity.this, "Authentication failed.",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    private void Successful(Task<AuthResult> task) {
+//                        Log.d(TAG, "signInWithEmail:success");
+//                        FirebaseUser user = auth.getCurrentUser();
+//                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+//                        startActivity(intent);
+//                        finishAffinity();
+//                    }
+//                });
+//        Log.d(TAG, "login: end");
+//    }
     public boolean logins(){
         //TODO validate partner login
         String email = formEmail.getEditText().getText().toString().trim();
@@ -181,8 +180,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUserPartner().equals(email) && list.get(i).getPasswordPartner().equals(password)){
                 remember("partner", String.valueOf(list.get(i).getIdPartner()));
-                Log.d("aaaaaa",list.get(i).getUserPartner());
-                Log.d("aaaaaa",list.get(i).getPasswordPartner());
                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(intent);
                 finishAffinity();
@@ -193,7 +190,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             remember("admin", "admin");
             Intent intent = new Intent(SignInActivity.this, MainActivity.class);
             startActivity(intent);
-            finish();
+            finishAffinity();
             return true;
         }
         return false;
@@ -258,7 +255,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     list1.add(partner);
                 }
                 progressDialog.dismiss();
-                Log.d(TAG, "onDataChange: " + list.toString());
             }
 
             @Override
