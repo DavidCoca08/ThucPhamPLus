@@ -108,7 +108,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                     builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            for (int j = 0; j < listCart.size(); j++) {
+                                if (user.equals(listCart.get(j).getUserClient())){
+                                    deleteCart(listCart.get(j));
+                                }
+                            }
                             addProductCart(cart);
+
+
                         }
                     });
                     builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
@@ -127,7 +134,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
     }
 
-
+    private void deleteCart(Cart cart) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Cart");
+        reference.child(""+cart.getIdCart()).removeValue();
+    }
 
 
     @Override
@@ -216,8 +227,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-    private void openDialog() {
 
-    }
 
 }

@@ -201,7 +201,7 @@ public class PartnerFragment extends Fragment {
         partner.setUserPartner(userPartner);
         partner.setPasswordPartner(passwordPartner);
         partner.setImgPartner(imgPartner);
-        addPartnerFirebase(partner);
+        addPartner(partner);
     }
     public void removeAll(){
         til_namePartner.getEditText().setText("");
@@ -256,7 +256,7 @@ public class PartnerFragment extends Fragment {
         });
         return list1;
     }
-    public void addPartnerFirebase(Partner partner){
+    public void addPartner(Partner partner){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Partner");
         if (listPartner.size()==0){

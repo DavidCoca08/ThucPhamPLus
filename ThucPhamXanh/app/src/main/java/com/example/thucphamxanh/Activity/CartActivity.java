@@ -50,10 +50,10 @@ public class CartActivity extends AppCompatActivity {
         unitUi();
         btn_senBill.setOnClickListener(view -> {
         addBill();
+        for (int i = 0; i < list.size(); i++) {
+            addProductTop(list.get(i).getIdProduct(),list.get(i).getNumberProduct());
+        }
         deleteCart();
-            for (int i = 0; i < list.size(); i++) {
-                addProductTop(list.get(i).getIdProduct(),list.get(i).getNumberProduct());
-            }
         });
     }
     public void unitUi(){

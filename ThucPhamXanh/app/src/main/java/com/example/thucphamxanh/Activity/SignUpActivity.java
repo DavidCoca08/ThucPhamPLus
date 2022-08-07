@@ -4,6 +4,8 @@ package com.example.thucphamxanh.Activity;
 import static com.example.thucphamxanh.constant.Profile.*;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -71,7 +73,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void signUp() {
         final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
-
         mFormPhoneNumber.setError(null);
         mFormPassword.setError(null);
         mFormConfirmPassword.setError(null);
@@ -113,6 +114,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                                         , "Tạo tài khoản thành công"
                                                         , Toast.LENGTH_SHORT)
                                                 .show();
+                                        remember(strPhoneNumber,strPassword,"user",strPhoneNumber);
+                                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -279,5 +282,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             throw  new IllegalArgumentException(PASSWORD_INVALID);
         if (!strConfirmPassword.equals(strPassword))
             throw new IllegalArgumentException(PASSWORD_NOT_MATCH);
+    }
+    public void remember(String user,String password,String role, String id){
+        SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", user);
+        editor.putString("password", password);
+        editor.putString("role", role);
+        editor.putString("id", id);
+        editor.putBoolean("logged",true);
+        editor.putBoolean("remember", true);
+        editor.apply();
     }
 }

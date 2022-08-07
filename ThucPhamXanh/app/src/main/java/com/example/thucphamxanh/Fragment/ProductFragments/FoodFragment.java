@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thucphamxanh.Adapter.ProductAdapter;
@@ -63,18 +64,19 @@ public class FoodFragment extends Fragment {
     private List<Product> listProduct;
     private TextInputLayout til_nameProduct,til_priceProduct;
     private ImageView img_Product,img_addImageCamera,img_addImageDevice;
-    private String nameProduct,imgProduct,userPartner;
-    private int codeCategory,priceProduct,amountProduct;
+    private String nameProduct,imgProduct,userPartner,priceProduct;
+    private int codeCategory;
     private Button btn_addVegetable,btn_cancleVegetable;
     private static final int REQUEST_ID_IMAGE_CAPTURE =10;
     private static final int PICK_IMAGE =100;
     private ProductFragment fragment = new ProductFragment();
+    private TextView tvErrorImg;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_food, container, false);
-        unitUI();
+        initUI();
         rvFood.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
@@ -90,7 +92,7 @@ public class FoodFragment extends Fragment {
         });
 
         return view;
-    }public void unitUI(){
+    }public void initUI(){
         listProduct = getAllProduct();
         listFood = getProductPartner();
         rvFood = view.findViewById(R.id.rvFood);
@@ -172,6 +174,7 @@ public class FoodFragment extends Fragment {
         });
     }
     public void initUiDialog(View view){
+        tvErrorImg = view.findViewById(R.id.error_img);
         img_Product = view.findViewById(R.id.imgProduct_dialog);
         img_addImageCamera = view.findViewById(R.id.img_addImageCamera_dialog);
         img_addImageDevice = view.findViewById(R.id.img_addImageDevice_dialog);
@@ -271,7 +274,7 @@ public class FoodFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
         userPartner = sharedPreferences.getString("username","");
         codeCategory = 4;
-        priceProduct = Integer.parseInt(til_priceProduct.getEditText().getText().toString());
+        priceProduct = til_priceProduct.getEditText().getText().toString();
 
     }
     public boolean isEmptys(String str,TextInputLayout til){
@@ -284,10 +287,20 @@ public class FoodFragment extends Fragment {
         }
 
     }
+    public boolean errorImg(String str, TextView tv){
+        if (str != null){
+            tv.setText("");
+            return true;
+        }else {
+            tv.setText("Ảnh không được để trống");
+            return false;
+        }
+    }
     public void validate(){
-        if (isEmptys(nameProduct,til_nameProduct) && isEmptys(String.valueOf(priceProduct),til_priceProduct) && !imgProduct.isEmpty()){
+        if (isEmptys(nameProduct, til_nameProduct) && isEmptys(priceProduct, til_priceProduct) && errorImg(imgProduct, tvErrorImg)) {
             setDataProduct();
             removeAll();
+
         }
     }
     public void removeAll(){
@@ -300,7 +313,7 @@ public class FoodFragment extends Fragment {
         product.setUserPartner(userPartner);
         product.setCodeCategory(codeCategory);
         product.setNameProduct(nameProduct);
-        product.setPriceProduct(priceProduct);
+        product.setPriceProduct(Integer.parseInt(priceProduct));
         product.setImgProduct(imgProduct);
         addProduct(product);
 

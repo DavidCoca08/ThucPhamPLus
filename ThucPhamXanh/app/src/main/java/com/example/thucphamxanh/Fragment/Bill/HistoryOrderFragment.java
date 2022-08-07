@@ -59,9 +59,7 @@ public class HistoryOrderFragment extends Fragment {
                 listBill.clear();
                 for (DataSnapshot snap : snapshot.getChildren()){
                     Bill bill = snap.getValue(Bill.class);
-                    if (user.equals("admin") && bill.getStatus().equals("Yes")){
-                        listBill.add(bill);
-                    }else if(user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")){
+                    if(user.equals(bill.getIdPartner()) && bill.getStatus().equals("Yes")){
                         listBill.add(bill);
                     }else if (user.equals(bill.getIdClient()) && bill.getStatus().equals("Yes")){
                         listBill.add(bill);
