@@ -56,7 +56,7 @@ public class PersonalFragment extends Fragment {
         tvNumberPhoneUser.setText(sharedPreferences.getString("username",""));
         tvEdit = binding.tvPersonalFragmentEditUser;
         imgUser = binding.imgPersonalFragmentImgUser;
-        User user = listUser.get(0);
+//        User user = listUser.get(0);
 //        if (user.getStrUriAvatar()!=""){
 //            byte[] imgByte = Base64.decode(user.getStrUriAvatar(),Base64.DEFAULT);
 //            Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
