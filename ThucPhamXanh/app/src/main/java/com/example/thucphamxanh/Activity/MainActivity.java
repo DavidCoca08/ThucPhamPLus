@@ -52,7 +52,6 @@ import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.Service.ConnectionReceiver;
 import com.example.thucphamxanh.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -121,11 +120,14 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
 
     }
     public void loadUserInfoById(String phoneNumber){
+        Log.d(TAG, "loadUserInfoById: ");
+        Log.d(TAG, "loadUserInfoById: " + phoneNumber);
         final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
         rootReference.child("User").child(phoneNumber)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Log.d(TAG, "onDataChange: ");
                         if (snapshot.exists()) {
                             MainActivity.this.user = snapshot.getValue(User.class);
                             Log.d(TAG, "onDataChange: " + user);

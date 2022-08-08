@@ -3,14 +3,7 @@ package com.example.thucphamxanh.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import java.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,31 +11,37 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.thucphamxanh.Activity.MainActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.bumptech.glide.Glide;
 import com.example.thucphamxanh.Activity.SignInActivity;
 import com.example.thucphamxanh.Fragment.Profile.ProfileFragment;
+import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.FragmentPersonalBinding;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PersonalFragment extends Fragment {
+    private static final String TAG = "PersonalFragment";
     FragmentPersonalBinding binding;
     Button btn_logout_personal, btn_changepassword_personal;
     TextView tvNumberPhoneUser, tvEdit;
     ImageView imgUser;
     List<User> listUser = new ArrayList<>();
+    ProfileViewModel profileViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,17 +52,27 @@ public class PersonalFragment extends Fragment {
         btn_logout_personal = binding.btnPersonalFragmentLogoutPersonal;
         btn_changepassword_personal = binding.btnPersonalFragmentChangePasswordPersonal;
         tvNumberPhoneUser = binding.tvPersonalFragmentNumberPhoneUser;
-        tvNumberPhoneUser.setText(sharedPreferences.getString("username",""));
+//        tvNumberPhoneUser.setText(sharedPreferences.getString("username",""));
         tvEdit = binding.tvPersonalFragmentEditUser;
         imgUser = binding.imgPersonalFragmentImgUser;
-        imgUser.setImageResource(R.drawable.ic_avatar_default);
+//        imgUser.setImageResource(R.drawable.ic_avatar_default);
+        Log.d(TAG, "onCreateView: ");
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        profileViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                Log.d("TAG", "onChanged: ");
+                tvNumberPhoneUser.setText(user.getPhoneNumber() + "\n" + user.getName());
+                Glide.with(requireActivity()).load(user.getStrUriAvatar()).error(R.drawable.ic_avatar_default).into(imgUser);
+            }
+        });
         tvEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
-        getUser();
+//        getUser();
 //        imgUser.setOnClickListener(view -> {
 //            Toast.makeText(getContext(), "imgUser.getS00ourceLayoutResId()",Toast.LENGTH_SHORT).show();
 //        });
@@ -73,7 +82,15 @@ public class PersonalFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SignInActivity.class);
                 startActivity(intent);
+                logout();
                 getActivity().finishAffinity();
+            }
+
+            private void logout() {
+                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("My_User",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("logged", false);
+                editor.commit();
             }
         });
 
@@ -93,6 +110,20 @@ public class PersonalFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        User user = profileViewModel.getUser().getValue();
+        Log.d(TAG, "onViewCreated: " + user);
+        profileViewModel.getUser().observe(requireActivity(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                Log.d(TAG, "onChanged: ");
+            }
+        });
+    }
+
     public void getUser(){
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
         String id = sharedPreferences.getString("id","");
