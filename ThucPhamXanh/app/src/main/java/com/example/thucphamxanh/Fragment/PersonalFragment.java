@@ -60,20 +60,10 @@ public class PersonalFragment extends Fragment {
 //        tvNumberPhoneUser.setText(sharedPreferences.getString("username",""));
         tvEdit = binding.tvPersonalFragmentEditUser;
         imgUser = binding.imgPersonalFragmentImgUser;
-//        imgUser.setImageResource(R.drawable.ic_avatar_default);
+        imgUser.setImageResource(R.drawable.ic_avatar_default);
+
         Log.d(TAG, "onCreateView: ");
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-
-        tvEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-//        getUser();
-//        imgUser.setOnClickListener(view -> {
-//            Toast.makeText(getContext(), "imgUser.getS00ourceLayoutResId()",Toast.LENGTH_SHORT).show();
-//        });
 
         btn_logout_personal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +109,7 @@ public class PersonalFragment extends Fragment {
                 @Override
                 public void onChanged(User user) {
                     Log.d("TAG", "onChanged: ");
-                    tvNumberPhoneUser.setText(user.getPhoneNumber() + "\n" + user.getName());
+                    tvNumberPhoneUser.setText(user.getName());
                     Glide.with(requireActivity()).load(user.getStrUriAvatar()).error(R.drawable.ic_avatar_default).into(imgUser);
                 }
             });

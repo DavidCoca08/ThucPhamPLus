@@ -58,7 +58,9 @@ import java.util.List;
             holder.rvItemOrder.setLayoutManager(linearLayoutManager);
             holder.rvItemOrder.setAdapter(adapterItemBill);
             holder.tvidBill.setText("Mã HD :"+ bill.getIdBill());
-            holder.tvNameClient.setText("Tên khách hàng :"+bill.getIdClient());
+            holder.tvNameClient.setText("Số khách hàng: "+bill.getIdClient());
+            holder.tvTime.setText("Thời gian: "+bill.getTimeOut());
+            holder.tvDay.setText(String.valueOf(bill.getDayOut()));
             holder.tvTotal.setText(String.valueOf(bill.getTotal()));
             holder.linearLayout_item_product.setOnClickListener(view -> {
                 if (holder.rvItemOrder.getVisibility() == View.GONE){
@@ -99,7 +101,7 @@ import java.util.List;
         }
 
         public class viewHolder extends RecyclerView.ViewHolder{
-            private TextView tvidBill,tvNameClient,tvTotal;
+            private TextView tvidBill,tvNameClient,tvTotal, tvTime, tvDay;
             private LinearLayout linearLayout_item_product;
             private ImageView img_drop_up;
             private Button btn_updateStatusBill;
@@ -116,6 +118,8 @@ import java.util.List;
                 btn_updateStatusBill = itemView.findViewById(R.id.btn_updateStatusBill_item);
                 rvItemOrder = itemView.findViewById(R.id.rv_order);
                 card_bill = itemView.findViewById(R.id.card_bill);
+                tvTime = itemView.findViewById(R.id.tv_time_item);
+                tvDay = itemView.findViewById(R.id.tv_day_item);
             }
         }
         private List<Cart> getAllCart(int i) {

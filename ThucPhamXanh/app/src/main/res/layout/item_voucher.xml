@@ -2,9 +2,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="10dp"
     android:id="@+id/item_cardView_voucher"
-    android:backgroundTint="@color/grey"
+    android:backgroundTint="#A1FF6D00"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:orientation="vertical">
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
             android:id="@+id/item_imgVoucher"
@@ -22,8 +22,9 @@
             android:layout_height="wrap_content"
             android:textSize="25dp"
             android:id="@+id/item_codeVoucher"
-            android:layout_marginVertical="20dp"
+            android:layout_marginBottom="20dp"
             android:layout_gravity="center"
+            android:textColor="#ffffff"
             android:text="HGDS133"/>
 
         <Button

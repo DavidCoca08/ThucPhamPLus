@@ -63,7 +63,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuItemClickListener {
+public class MainActivity extends AppCompatActivity{
     public static final String TAG = "MainActivity";
     public static final int MY_REQUEST_CODE = 10;
 
@@ -106,9 +106,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                 R.id.nav_Product,
                 R.id.nav_Bill,
                 R.id.nav_Partner,
-                R.id.nav_my_profile,
-                R.id.nav_change_password,
-                R.id.nav_sign_out,
                 R.id.nav_Food)
                 .setOpenableLayout(mDrawerLayout)
                 .build();
@@ -116,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(mNavigationView, navController);
 
-        mNavigationView.getMenu().findItem(R.id.nav_sign_out).setOnMenuItemClickListener(this::onMenuItemClick);
+//        mNavigationView.getMenu().findItem(R.id.nav_sign_out).setOnMenuItemClickListener(this::onMenuItemClick);
 
     }
     public void loadUserInfoById(String phoneNumber){
@@ -401,14 +398,14 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
     protected void onDestroy() {
         super.onDestroy();
     }
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.nav_sign_out) {
-            logout();
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean onMenuItemClick(MenuItem item) {
+//        if (item.getItemId() == R.id.nav_sign_out) {
+//            logout();
+//            return true;
+//        }
+//        return false;
+//    }
     private void logout() {
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

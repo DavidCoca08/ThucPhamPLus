@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -45,7 +47,7 @@ public class CartActivity extends AppCompatActivity {
     private List<ProductTop> listTop = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private CartAdapter adapter;
-    private TextView tvTotalPrice, tvEmptyProduct,tv1, tvHide1, tvHide2;
+    private TextView tvTotalPrice, tvEmptyProduct,tv1, tvHide1, tvHide2, tvVoucher;
     private Button btn_senBill, btnEmptyProduct;
     private List<Bill> listBill;
     private Spinner spinner;
@@ -102,6 +104,7 @@ public class CartActivity extends AppCompatActivity {
         listBill = getAllBill();
         tvHide1 = findViewById(R.id.tvHide1);
         tvHide2 = findViewById(R.id.tvHide2);
+        tvVoucher = findViewById(R.id.tvVoucher);
     }
 
     public void getVoucher(){
@@ -126,14 +129,20 @@ public class CartActivity extends AppCompatActivity {
 
     }
     public  List<Cart> getCartProduct(){
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Vui lòng đợi ...");
+        progressDialog.setCanceledOnTouchOutside(false);
+
         SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
         String user = preferences.getString("username","");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Cart");
         List<Cart> list1 = new ArrayList<>();
+        progressDialog.show();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                progressDialog.dismiss();
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Cart cart = snap.getValue(Cart.class);
@@ -167,7 +176,9 @@ public class CartActivity extends AppCompatActivity {
                     btn_senBill.setVisibility(View.GONE);
                     tvTotalPrice.setVisibility(View.GONE);
                     tvEmptyProduct.setVisibility(View.VISIBLE);
+                    spinner.setVisibility(View.GONE);
                     btnEmptyProduct.setVisibility(View.VISIBLE);
+                    tvVoucher.setVisibility(View.GONE);
                     btnEmptyProduct.setOnClickListener(view -> {
                         startActivity(new Intent(CartActivity.this, MainActivity.class));
                         finish();
@@ -176,6 +187,7 @@ public class CartActivity extends AppCompatActivity {
                 }else {
                     tvHide1.setVisibility(View.VISIBLE);
                     tvHide2.setVisibility(View.VISIBLE);
+                    tvVoucher.setVisibility(View.VISIBLE);
                     btn_senBill.setVisibility(View.VISIBLE);
                     tvEmptyProduct.setVisibility(View.INVISIBLE);
                     btnEmptyProduct.setVisibility(View.INVISIBLE);
