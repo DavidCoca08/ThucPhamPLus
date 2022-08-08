@@ -1,6 +1,7 @@
 package com.example.thucphamxanh.Adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -45,6 +46,10 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.ViewHold
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        SharedPreferences preferences = context.getSharedPreferences("My_User",Context.MODE_PRIVATE);
+        String role = preferences.getString("role","");
+
         Voucher voucher = list.get(position);
         byte[] imgByte = Base64.getDecoder().decode(voucher.getImgVoucher());
         Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
@@ -55,12 +60,16 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.ViewHold
         holder.item_cardView_voucher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (holder.btn_delete_voucher.getVisibility() == View.GONE){
-                    holder.btn_delete_voucher.setVisibility(View.VISIBLE);
-                }else {
-                    holder.btn_delete_voucher.setVisibility(View.GONE);
+                if (role.equals("admin")){
+                    if (holder.btn_delete_voucher.getVisibility() == View.GONE){
+                        holder.btn_delete_voucher.setVisibility(View.VISIBLE);
+                    }else {
+                        holder.btn_delete_voucher.setVisibility(View.GONE);
 
+                    }
                 }
+
+
             }
         });
 

@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -77,6 +78,12 @@ public class VoucherFragment extends Fragment {
         fab_addVoucher = view.findViewById(R.id.fab_voucher);
         recyclerView_Voucher = view.findViewById(R.id.recyclerView_Voucher);
         initUI();
+
+        SharedPreferences preferences = getContext().getSharedPreferences("My_User",Context.MODE_PRIVATE);
+        String role = preferences.getString("role","");
+        if (role.equals("admin")){
+            fab_addVoucher.setVisibility(View.VISIBLE);
+        }
 
         fab_addVoucher.setOnClickListener(view1 -> {
             openDialog();
