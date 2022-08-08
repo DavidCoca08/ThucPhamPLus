@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +20,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Activity.SignInActivity;
 import com.example.thucphamxanh.Fragment.Profile.ProfileFragment;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
+import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
 import com.example.thucphamxanh.databinding.FragmentPersonalBinding;
@@ -41,6 +44,8 @@ public class PersonalFragment extends Fragment {
     TextView tvNumberPhoneUser, tvEdit;
     ImageView imgUser;
     List<User> listUser = new ArrayList<>();
+    User user;
+    Partner partner;
     ProfileViewModel profileViewModel;
 
     @Override
@@ -58,14 +63,7 @@ public class PersonalFragment extends Fragment {
 //        imgUser.setImageResource(R.drawable.ic_avatar_default);
         Log.d(TAG, "onCreateView: ");
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
-        profileViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                Log.d("TAG", "onChanged: ");
-                tvNumberPhoneUser.setText(user.getPhoneNumber() + "\n" + user.getName());
-                Glide.with(requireActivity()).load(user.getStrUriAvatar()).error(R.drawable.ic_avatar_default).into(imgUser);
-            }
-        });
+
         tvEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,6 +113,36 @@ public class PersonalFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         User user = profileViewModel.getUser().getValue();
+        Partner partner = profileViewModel.getPartner().getValue();
+        if (user != null) {
+            profileViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    Log.d("TAG", "onChanged: ");
+                    tvNumberPhoneUser.setText(user.getPhoneNumber() + "\n" + user.getName());
+                    Glide.with(requireActivity()).load(user.getStrUriAvatar()).error(R.drawable.ic_avatar_default).into(imgUser);
+                }
+            });
+        } else if (partner != null) {
+            profileViewModel.getPartner().observe(getViewLifecycleOwner(), new Observer<Partner>() {
+                @Override
+                public void onChanged(Partner partner) {
+                    Log.d("TAG", "onChanged: ");
+                    try {
+                        byte[] decodeString = Base64.decode(partner.getImgPartner(), Base64.DEFAULT);
+                        tvNumberPhoneUser.setText(partner.getUserPartner() + "\n" + partner.getNamePartner());
+                        Glide.with(requireActivity())
+                                .load(decodeString)
+                                .signature(new ObjectKey(Long.toString(System.currentTimeMillis())))
+                                .error(R.drawable.ic_avatar_default)
+                                .into(imgUser);
+                    } catch (Exception e) {
+                        Log.e(TAG, "onChanged: ", e);
+                    }
+
+                }
+            });
+        }
         Log.d(TAG, "onViewCreated: " + user);
         profileViewModel.getUser().observe(requireActivity(), new Observer<User>() {
             @Override

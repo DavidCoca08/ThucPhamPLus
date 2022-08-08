@@ -99,6 +99,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         String passwordUser = formPassword.getEditText().getText().toString().trim();
         if (!validate(phoneNumber, passwordUser)) return;
         progressBar.setVisibility(View.VISIBLE);
+//        progressBar.se
         final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
         rootReference.child("User").child(phoneNumber)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
