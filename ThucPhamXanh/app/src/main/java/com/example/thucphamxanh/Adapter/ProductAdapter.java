@@ -90,6 +90,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 StringBuilder str = new StringBuilder();
                 Cart cart = new Cart();
                 cart.setUserClient(user);
+                cart.setIdCategory(product.getCodeCategory());
                 cart.setIdProduct(product.getCodeProduct());
                 cart.setImgProduct(product.getImgProduct());
                 cart.setNameProduct(product.getNameProduct());

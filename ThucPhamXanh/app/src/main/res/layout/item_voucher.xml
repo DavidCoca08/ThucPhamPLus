@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:layout_width="300dp"
+            android:layout_width="380dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginVertical="10dp"
@@ -25,6 +25,16 @@
             android:layout_marginVertical="20dp"
             android:layout_gravity="center"
             android:text="HGDS133"/>
+
+        <Button
+            android:id="@+id/btn_delete_voucher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Delete"
+            android:backgroundTint="@color/black"
+            android:visibility="gone"
+            />
 
 
     </LinearLayout>

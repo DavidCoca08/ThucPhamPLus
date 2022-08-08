@@ -1,11 +1,19 @@
 package com.example.thucphamxanh.Model;
 
 public class ProductTop {
-    private int idProduct,amountProduct;
+    private int idProduct,amountProduct,idCategory;
+
 
     public ProductTop() {
     }
 
+    public int getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(int idCategory) {
+        this.idCategory = idCategory;
+    }
 
     public int getIdProduct() {
         return idProduct;

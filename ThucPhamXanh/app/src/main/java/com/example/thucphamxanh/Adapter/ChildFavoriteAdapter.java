@@ -3,21 +3,25 @@ package com.example.thucphamxanh.Adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.thucphamxanh.Model.ProductTop;
 import com.example.thucphamxanh.R;
+import com.google.firebase.database.core.Context;
 
 import java.util.List;
 
 public class ChildFavoriteAdapter extends RecyclerView.Adapter<ChildFavoriteAdapter.ChildFavoriteHolder> {
 
-    private List<String> listChild;
+    private List<ProductTop> topList;
 
-    public ChildFavoriteAdapter(List<String> listChild) {
-        this.listChild = listChild;
+
+    public ChildFavoriteAdapter(List<ProductTop> topList) {
+        this.topList = topList;
     }
 
     @NonNull
@@ -29,21 +33,32 @@ public class ChildFavoriteAdapter extends RecyclerView.Adapter<ChildFavoriteAdap
 
     @Override
     public void onBindViewHolder(@NonNull ChildFavoriteHolder holder, int position) {
-//        holder.namePartner_food.setText(listChild.get(position));
+        ProductTop productTop = topList.get(position);
+
+        holder.name_top_product.setText(productTop.getIdProduct());
+        holder.amount_top_product.setText(productTop.getAmountProduct());
+
+
     }
 
     @Override
     public int getItemCount() {
-        return listChild.size();
+
+        if (topList!=null){
+            return topList.size();
+        }
+        return 0;
     }
 
     public class ChildFavoriteHolder extends RecyclerView.ViewHolder{
 
-//        private TextView namePartner_food, addressPartner_food;
+        private TextView name_top_product, amount_top_product;
+        private ImageView img_top_product;
         public ChildFavoriteHolder(@NonNull View itemView) {
             super(itemView);
-//            namePartner_food = itemView.findViewById(R.id.namePartner_food);
-//            addressPartner_food = itemView.findViewById(R.id.addressPartner_food);
+//            img_top_product = itemView.findViewById(R.id.img_top_product);
+            name_top_product = itemView.findViewById(R.id.name_top_product);
+            amount_top_product = itemView.findViewById(R.id.amount_top_product);
 
         }
     }

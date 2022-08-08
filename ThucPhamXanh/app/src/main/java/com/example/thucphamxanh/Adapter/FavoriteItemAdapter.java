@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.thucphamxanh.Model.FavoviteModel;
+import com.example.thucphamxanh.Model.ProductTop;
 import com.example.thucphamxanh.R;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteItemAdapter.FavoriteItemViewHolder> {
 
     private List<FavoviteModel> favoviteModelList;
-    private List<String> list = new ArrayList<>();
+    private List<ProductTop> list = new ArrayList<>();
 
     public FavoriteItemAdapter(List<FavoviteModel> favoviteModelList) {
         this.favoviteModelList = favoviteModelList;
@@ -61,15 +62,18 @@ public class FavoriteItemAdapter extends RecyclerView.Adapter<FavoriteItemAdapte
             holder.cardView_favItem.setCardBackgroundColor(Color.parseColor("#F16D64"));
         }
 
-        ChildFavoriteAdapter childFavoriteAdapter = new ChildFavoriteAdapter(list);
-        holder.child_favorite_rcView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-        holder.child_favorite_rcView.setAdapter(childFavoriteAdapter);
+//        ChildFavoriteAdapter childFavoriteAdapter = new ChildFavoriteAdapter(list);
+//        holder.child_favorite_rcView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+//        holder.child_favorite_rcView.setAdapter(childFavoriteAdapter);
+
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 model.setHidden(!model.isHidden());
-                list = model.getFavoriteList();
+
+
+
                 notifyItemChanged(holder.getAdapterPosition());
             }
         });

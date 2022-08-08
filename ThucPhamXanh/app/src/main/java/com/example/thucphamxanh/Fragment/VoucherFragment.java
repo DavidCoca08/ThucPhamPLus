@@ -7,6 +7,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -90,7 +91,12 @@ public class VoucherFragment extends Fragment {
         getAllVoucher();
         LinearLayoutManager linearLayoutManager =new LinearLayoutManager(getContext());
         recyclerView_Voucher.setLayoutManager(linearLayoutManager);
-        voucherAdapter = new VoucherAdapter(voucherList,getContext());
+        voucherAdapter = new VoucherAdapter(voucherList, new VoucherAdapter.ItemClickListener() {
+            @Override
+            public void onClickDeleteVoucher(Voucher voucher) {
+                onClickDelete(voucher);
+            }
+        }, getContext());
         recyclerView_Voucher.setAdapter(voucherAdapter);
 
     }
@@ -293,5 +299,30 @@ public class VoucherFragment extends Fragment {
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+    private void onClickDelete(Voucher voucher){
+        new AlertDialog.Builder(getActivity()).setTitle("Xóa Voucher")
+                .setMessage("Bạn có chắc chắn muốn xóa Voucher?")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference reference = database.getReference("Voucher");
+
+
+                        reference.child(String.valueOf(voucher.getIdVoucher())).removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                Toast.makeText(getActivity(), "Xóa thành công", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        voucherAdapter.notifyDataSetChanged();
+
+                    }
+                })
+                .setNegativeButton("No",null)
+                .show();
     }
 }

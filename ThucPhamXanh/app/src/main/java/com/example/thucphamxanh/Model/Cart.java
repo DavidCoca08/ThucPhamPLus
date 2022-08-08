@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Cart {
-    private int idProduct,idCart;
+    private int idProduct,idCart,idCategory;
     private String imgProduct,idPartner;
     private String nameProduct,userClient;
     private int priceProduct;
@@ -13,6 +13,14 @@ public class Cart {
     private int totalPrice;
 
     public Cart() {
+    }
+
+    public int getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(int idCategory) {
+        this.idCategory = idCategory;
     }
 
     public int getIdCart() {

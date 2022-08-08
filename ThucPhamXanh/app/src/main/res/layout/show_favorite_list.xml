@@ -9,37 +9,40 @@
     app:cardElevation="1dp"
     android:layout_margin="8dp">
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/show_favorite_item_tv"-->
-<!--        android:text="Rau dền"-->
-<!--        android:textColor="#FAF6F6"-->
-<!--        android:textSize="20sp"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:textStyle="bold"/>-->
-
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25dp"
-            android:text="Đối tác A"
-            android:textColor="#F44336"
-            android:layout_gravity="center"
-            android:id="@+id/namePartner_food"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-             android:text="Đại Mỗ - Nam Từ Liêm-Hà Nội"
-            android:layout_gravity="center"
-            android:id="@+id/addressPartner_food"
-            />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+<!--        <ImageView-->
+<!--            android:layout_width="120dp"-->
+<!--            android:layout_height="120dp"-->
+<!--            android:src="@drawable/fruit_home"-->
+<!--            android:id="@+id/img_top_product"/>-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:text="Cải thìa"
+                android:textColor="#F44336"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:id="@+id/name_top_product"
+
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="Số lượng : 5"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:id="@+id/amount_top_product"
+                />
+        </LinearLayout>
     </LinearLayout>
 
 

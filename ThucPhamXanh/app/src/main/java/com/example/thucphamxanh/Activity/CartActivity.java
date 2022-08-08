@@ -51,7 +51,7 @@ public class CartActivity extends AppCompatActivity {
         btn_senBill.setOnClickListener(view -> {
         addBill();
         for (int i = 0; i < list.size(); i++) {
-            addProductTop(list.get(i).getIdProduct(),list.get(i).getNumberProduct());
+            addProductTop(list.get(i).getIdProduct(),list.get(i).getNumberProduct(),list.get(i).getIdCategory());
         }
         deleteCart();
         });
@@ -201,11 +201,12 @@ public class CartActivity extends AppCompatActivity {
         });
         return list1;
     }
-    public void addProductTop(int id, int amount){
+    public void addProductTop(int id, int amount,int catogory){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("ProductTop");
         ProductTop top = new ProductTop();
         top.setIdProduct(id);
+        top.setIdCategory(catogory);
         top.setAmountProduct(amount);
         if (listTop.size()==0){
             reference.child(""+id).setValue(top);
@@ -219,6 +220,7 @@ public class CartActivity extends AppCompatActivity {
                 }
             }
         }
+        //đợi t chút nhé ok
     }
     public void getProductTop(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();

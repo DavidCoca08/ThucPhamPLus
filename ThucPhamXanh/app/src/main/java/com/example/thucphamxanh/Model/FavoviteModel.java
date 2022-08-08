@@ -1,21 +1,30 @@
 package com.example.thucphamxanh.Model;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 public class FavoviteModel {
 
-    private List<String> favoriteList;
+//    private List<String> favoriteList;
+
+    RecyclerView recyclerViewTop;
     private String itemText;
     private boolean isHidden;
 
-    public FavoviteModel(List<String> favoriteList, String itemText) {
-        this.favoriteList = favoriteList;
+    public FavoviteModel(RecyclerView recyclerView, String itemText) {
+        this.recyclerViewTop = recyclerView;
         this.itemText = itemText;
         isHidden = false;
     }
 
-    public List<String> getFavoriteList() {
-        return favoriteList;
+//    public List<String> getFavoriteList() {
+//        return favoriteList;
+//    }
+
+
+    public RecyclerView getRecyclerViewTop() {
+        return recyclerViewTop;
     }
 
     public String getItemText() {

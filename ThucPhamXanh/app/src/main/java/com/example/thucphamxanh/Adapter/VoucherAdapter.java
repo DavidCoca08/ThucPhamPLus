@@ -8,6 +8,7 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,9 +26,11 @@ import java.util.List;
 public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.ViewHolder> {
     private List<Voucher> list;
     private Context context;
+    private ItemClickListener itemClickListener;
 
-    public VoucherAdapter(List<Voucher> list, Context context) {
+    public VoucherAdapter(List<Voucher> list,ItemClickListener listener, Context context) {
         this.list = list;
+        this.itemClickListener = listener;
         this.context = context;
     }
 
@@ -46,7 +49,28 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.ViewHold
         byte[] imgByte = Base64.getDecoder().decode(voucher.getImgVoucher());
         Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
         holder.item_imgVoucher.setImageBitmap(bitmap);
+
         holder.item_codeVoucher.setText(voucher.getCodeVoucher());
+
+        holder.item_cardView_voucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (holder.btn_delete_voucher.getVisibility() == View.GONE){
+                    holder.btn_delete_voucher.setVisibility(View.VISIBLE);
+                }else {
+                    holder.btn_delete_voucher.setVisibility(View.GONE);
+
+                }
+            }
+        });
+
+        holder.btn_delete_voucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemClickListener.onClickDeleteVoucher(voucher);
+            }
+        });
+
 
     }
 
@@ -63,13 +87,19 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.ViewHold
         private TextView item_codeVoucher;
         private ImageView item_imgVoucher;
         private CardView item_cardView_voucher;
+        Button btn_delete_voucher;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             item_codeVoucher = itemView.findViewById(R.id.item_codeVoucher);
             item_imgVoucher = itemView.findViewById(R.id.item_imgVoucher);
             item_cardView_voucher = itemView.findViewById(R.id.item_cardView_voucher);
+            btn_delete_voucher = itemView.findViewById(R.id.btn_delete_voucher);
 
         }
+    }
+
+    public interface ItemClickListener{
+        void onClickDeleteVoucher(Voucher voucher);
     }
 }
