@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,11 +59,12 @@ public class VoucherFragment extends Fragment {
     FloatingActionButton fab_addVoucher;
     TextView tv_voucher_empty;
 
-    EditText  code_voucher_dialog;
+    EditText  code_voucher_dialog, double_code_voucher;
 
     Button btnSave_voucher_dialog;
     ImageView img_addImageCamera_voucher,imgVoucher_dialog,img_addImageDevice_voucher;
     String codeVoucher,imgVoucher;
+    Double doubleCodeVoucher;
 
     List<Voucher> voucherList;
     VoucherAdapter voucherAdapter;
@@ -118,6 +120,7 @@ public class VoucherFragment extends Fragment {
 
 
         code_voucher_dialog = dialog.findViewById(R.id.code_voucher_dialog);
+        double_code_voucher = dialog.findViewById(R.id.double_code_voucher);
         btnSave_voucher_dialog = dialog.findViewById(R.id.btnSave_voucher_dialog);
         img_addImageCamera_voucher = dialog.findViewById(R.id.img_addImageCamera_voucher);
         imgVoucher_dialog = dialog.findViewById(R.id.imgVoucher_dialog);
@@ -173,7 +176,6 @@ public class VoucherFragment extends Fragment {
     }
 
     public void getValueVoucher(){
-
         Bitmap bitmap = ((BitmapDrawable)imgVoucher_dialog.getDrawable()).getBitmap();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
@@ -183,14 +185,16 @@ public class VoucherFragment extends Fragment {
         }
 
         codeVoucher = code_voucher_dialog.getText().toString();
+
+        doubleCodeVoucher = Double.valueOf(double_code_voucher.getText().toString());
+        Log.d("aaaaaa", String.valueOf(double_code_voucher));
     }
 
     public void setDataVoucher(){
         Voucher voucher = new Voucher();
-
         voucher.setImgVoucher(imgVoucher);
         voucher.setCodeVoucher(codeVoucher);
-
+        voucher.setCodeVoucher_double(doubleCodeVoucher);
         addVoucher(voucher);
     }
 
@@ -248,7 +252,7 @@ public class VoucherFragment extends Fragment {
         return true;
     }
     public void validate(){
-        if (isEmptys(codeVoucher,code_voucher_dialog) && !imgVoucher.isEmpty()){
+        if (isEmptys(codeVoucher,code_voucher_dialog) && !imgVoucher.isEmpty() ){
             setDataVoucher();
             removeAll();
         }
@@ -256,6 +260,7 @@ public class VoucherFragment extends Fragment {
 
     private void removeAll() {
         code_voucher_dialog.setText("");
+        double_code_voucher.setText("");
         imgVoucher_dialog.setImageResource(R.drawable.ic_menu_camera1);
     }
     public void requestPermissionCamera(){

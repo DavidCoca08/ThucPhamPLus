@@ -9,14 +9,20 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.view.View;
 
 import com.example.thucphamxanh.Adapter.CartAdapter;
+import com.example.thucphamxanh.Adapter.VoucherSpinnerAdapter;
 import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.ProductTop;
+import com.example.thucphamxanh.Model.Voucher;
 import com.example.thucphamxanh.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +46,15 @@ public class CartActivity extends AppCompatActivity {
     private TextView tvTotalPrice, tvEmptyProduct,tv1, tvHide1, tvHide2;
     private Button btn_senBill, btnEmptyProduct;
     private List<Bill> listBill;
+
+    private VoucherSpinnerAdapter voucherSpinnerAdapter;
+    private Spinner spinner;
+    private ArrayList<Voucher> listVoucher;
+    private Voucher voucher;
+    private Double double_Code_voucher;
+
+
+
     private NumberFormat numberFormat = new DecimalFormat("#,##0");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +88,52 @@ public class CartActivity extends AppCompatActivity {
 
         tvHide1 = findViewById(R.id.tvHide1);
         tvHide2 = findViewById(R.id.tvHide2);
+
+        listVoucher = (ArrayList<Voucher>) getVoucher();
+        voucher = new Voucher();
+        spinner=findViewById(R.id.spinner_voucher_cart);
+
+        voucherSpinnerAdapter = new VoucherSpinnerAdapter(getApplicationContext(),listVoucher);
+//        voucherSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(voucherSpinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                double_Code_voucher = listVoucher.get(i).getCodeVoucher_double();
+
+                Log.d("rrrrr", String.valueOf(double_Code_voucher));
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    public List<Voucher> getVoucher(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Voucher");
+        List<Voucher> list1 = new ArrayList<>();
+        reference.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list1.clear();
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    Voucher voucher = snap.getValue(Voucher.class);
+                    list1.add(voucher);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return list1;
     }
     public  List<Cart> getCartProduct(){
         SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
@@ -96,6 +157,8 @@ public class CartActivity extends AppCompatActivity {
                 for (int i = 0; i < list1.size(); i++) {
                     sum += list1.get(i).getTotalPrice();
                 }
+                sum = (int) (sum*double_Code_voucher);
+
                 tvTotalPrice.setText(numberFormat.format(sum));
                 tv1.setText(""+sum);
                 if(list1.size()==0){
@@ -130,6 +193,20 @@ public class CartActivity extends AppCompatActivity {
         });
         return list1;
     }
+
+    private void getIdVoucher(Spinner spinner,int sum) {
+        String nameVocher = spinner.getSelectedItem().toString();
+        Log.d("name",nameVocher);
+        double a = 0;
+        for (int i = 0; i < listVoucher.size(); i++) {
+            if (nameVocher.equals(listVoucher.get(i).getCodeVoucher())){
+                a = listVoucher.get(i).getCodeVoucher_double();
+            }
+        }
+        sum = (int) (sum*a);
+
+    }
+
     public void addBill(){
         Bill bill = new Bill();
         SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
@@ -201,12 +278,12 @@ public class CartActivity extends AppCompatActivity {
         });
         return list1;
     }
-    public void addProductTop(int id, int amount,int category){
+    public void addProductTop(int id, int amount,int catogory){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("ProductTop");
         ProductTop top = new ProductTop();
         top.setIdProduct(id);
-        top.setIdCategory(category);
+        top.setIdCategory(catogory);
         top.setAmountProduct(amount);
         if (listTop.size()==0){
             reference.child(""+id).setValue(top);
@@ -215,12 +292,12 @@ public class CartActivity extends AppCompatActivity {
                 if (id == listTop.get(i).getIdProduct()) {
                     int amounts = listTop.get(i).getAmountProduct() + amount;
                     reference.child("" + id).child("amountProduct").setValue(amounts);
-                    return;
                 } else {
                     reference.child("" + id).setValue(top);
                 }
             }
         }
+        //đợi t chút nhé ok
     }
     public void getProductTop(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();

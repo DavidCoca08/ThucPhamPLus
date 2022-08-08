@@ -5,9 +5,18 @@ import java.util.Map;
 
 public class Voucher {
     private int idVoucher;
+    private double codeVoucher_double;
     private String codeVoucher, imgVoucher;
 
     public Voucher() {
+    }
+
+    public double getCodeVoucher_double() {
+        return codeVoucher_double;
+    }
+
+    public void setCodeVoucher_double(double codeVoucher_double) {
+        this.codeVoucher_double = codeVoucher_double;
     }
 
     public int getIdVoucher() {
