@@ -58,7 +58,7 @@ import java.util.List;
             holder.rvItemOrder.setLayoutManager(linearLayoutManager);
             holder.rvItemOrder.setAdapter(adapterItemBill);
             holder.tvidBill.setText("Mã HD :"+ bill.getIdBill());
-            holder.tvNameClient.setText("Số khách hàng: "+bill.getIdClient());
+            holder.tvNameClient.setText("Số điện thoại KH: "+bill.getIdClient());
             holder.tvTime.setText("Thời gian: "+bill.getTimeOut());
             holder.tvDay.setText(String.valueOf(bill.getDayOut()));
             holder.tvTotal.setText(String.valueOf(bill.getTotal()));
