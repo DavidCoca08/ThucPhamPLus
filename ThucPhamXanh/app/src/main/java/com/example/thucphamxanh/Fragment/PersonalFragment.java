@@ -10,7 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Base64;
+import java.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +47,8 @@ public class PersonalFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        getUser();
+
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
-//        View view = inflater.inflate(R.layout.fragment_personal, container, false);
         binding = FragmentPersonalBinding.inflate(inflater, container, false);
         btn_logout_personal = binding.btnPersonalFragmentLogoutPersonal;
         btn_changepassword_personal = binding.btnPersonalFragmentChangePasswordPersonal;
@@ -56,20 +56,14 @@ public class PersonalFragment extends Fragment {
         tvNumberPhoneUser.setText(sharedPreferences.getString("username",""));
         tvEdit = binding.tvPersonalFragmentEditUser;
         imgUser = binding.imgPersonalFragmentImgUser;
-//        User user = listUser.get(0);
-//        if (user.getStrUriAvatar()!=""){
-//            byte[] imgByte = Base64.decode(user.getStrUriAvatar(),Base64.DEFAULT);
-//            Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
-//            imgUser.setImageBitmap(bitmap);
-//        }else {
-//            imgUser.setImageResource(R.drawable.ic_avatar_default);
-//        }
+        imgUser.setImageResource(R.drawable.ic_avatar_default);
         tvEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
+        getUser();
 //        imgUser.setOnClickListener(view -> {
 //            Toast.makeText(getContext(), "imgUser.getS00ourceLayoutResId()",Toast.LENGTH_SHORT).show();
 //        });
@@ -99,28 +93,28 @@ public class PersonalFragment extends Fragment {
 
         return binding.getRoot();
     }
-//    public void getUser(){
-//        SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
-//        String id = sharedPreferences.getString("id","");
-//        Log.d("username", String.valueOf(id));
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference reference = database.getReference("User");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for(DataSnapshot snap : snapshot.getChildren()){
-//                    User user1 = snap.getValue(User.class);
-//                    if (id.equals(user1.getPhoneNumber())){
-//                        listUser.add(user1);
-//                    }
-//                }
-//                Log.d("size", String.valueOf(listUser.size()));
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
+    public void getUser(){
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
+        String id = sharedPreferences.getString("id","");
+        Log.d("username", String.valueOf(id));
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("User");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    User user1 = snap.getValue(User.class);
+                    if (id.equals(user1.getPhoneNumber())){
+                        listUser.add(user1);
+                    }
+                }
+                Log.d("size", String.valueOf(listUser.size()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

@@ -201,12 +201,12 @@ public class CartActivity extends AppCompatActivity {
         });
         return list1;
     }
-    public void addProductTop(int id, int amount,int catogory){
+    public void addProductTop(int id, int amount,int category){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("ProductTop");
         ProductTop top = new ProductTop();
         top.setIdProduct(id);
-        top.setIdCategory(catogory);
+        top.setIdCategory(category);
         top.setAmountProduct(amount);
         if (listTop.size()==0){
             reference.child(""+id).setValue(top);
@@ -215,12 +215,12 @@ public class CartActivity extends AppCompatActivity {
                 if (id == listTop.get(i).getIdProduct()) {
                     int amounts = listTop.get(i).getAmountProduct() + amount;
                     reference.child("" + id).child("amountProduct").setValue(amounts);
+                    return;
                 } else {
                     reference.child("" + id).setValue(top);
                 }
             }
         }
-        //đợi t chút nhé ok
     }
     public void getProductTop(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();

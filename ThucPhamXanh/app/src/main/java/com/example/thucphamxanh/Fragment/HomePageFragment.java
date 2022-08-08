@@ -1,6 +1,5 @@
 package com.example.thucphamxanh.Fragment;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -9,24 +8,21 @@ import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.thucphamxanh.Adapter.ChildFavoriteAdapter;
-import com.example.thucphamxanh.Adapter.FavoriteItemAdapter;
-import com.example.thucphamxanh.Fragment.ProductFragments.FoodFragment;
+import com.example.thucphamxanh.Adapter.ProductAdapter;
 import com.example.thucphamxanh.Fragment.ProductFragments.FruitFragment;
 import com.example.thucphamxanh.Fragment.ProductFragments.MeatFragment;
+import com.example.thucphamxanh.Fragment.ProductFragments.ProductFragment;
 import com.example.thucphamxanh.Fragment.ProductFragments.VegetableFragment;
-import com.example.thucphamxanh.Model.Bill;
-import com.example.thucphamxanh.Model.Cart;
-import com.example.thucphamxanh.Model.FavoviteModel;
 import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.Model.ProductTop;
 import com.example.thucphamxanh.R;
@@ -35,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.Context;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,34 +40,40 @@ import java.util.List;
 
 public class HomePageFragment extends Fragment {
 
-//    private RecyclerView favorite_recyclerView_home;
-//    private List<FavoviteModel> favoviteModelList;
-//    private FavoriteItemAdapter favoriteItemAdapter;
-
     private List<ProductTop> productTopListVegetable = new ArrayList<>();
     private List<ProductTop> productTopListMeat= new ArrayList<>();
     private List<ProductTop> productTopListFruit= new ArrayList<>();
     private List<ProductTop> productTopListFood= new ArrayList<>();
-
+    private List<Product> listVegetable = new ArrayList<>();
+    private List<Product> listMeat= new ArrayList<>();
+    private List<Product> listFruit= new ArrayList<>();
+    private List<Product> listFood= new ArrayList<>();
+    private List<Product> listProduct = new ArrayList<>();
+    List<String> list = new ArrayList<>();
     ChildFavoriteAdapter childFavoriteAdapter;
+    ProductAdapter adapter;
 
-// cái này là để lr     Mỗi cái item sản phẩm top ấy
-//    List<Cart> list = new ArrayList<>();
     CardView card_vegetable_home,card_fruit_home,card_meat_home,card_food_home;
 
     CardView card_Top_Vegetable,card_Top_Fruit,card_Top_Meat,card_Top_Food;
 
     RecyclerView rv_VegetableTop_Home,rv_FruitTop_Home,rv_MeatTop_Home,rv_FoodTop_Home;
+    private ProductFragment fragment = new ProductFragment();
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        list.add("aaaaaaa");
+        list.add("cccccccc");
+        list.add("bbbbbbb");
+        list.add("ddddddđ");
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+        adapter = new ProductAdapter(listVegetable,fragment,getContext());
+        childFavoriteAdapter = new ChildFavoriteAdapter(list);
         getTopProduct();
-
+        getProduct();
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -101,16 +102,16 @@ public class HomePageFragment extends Fragment {
 //        }
 
 //        productTopListVegetable = new ArrayList<>();//đây ô chưa lấy list ra này mới khởi tạo, đã lấy dữ liêu ra đâu
-        Collections.sort(productTopListVegetable,Comparator.comparing(ProductTop::getAmountProduct));
-
-//        productTopListFruit = new ArrayList<>();
-        Collections.sort(productTopListFruit,Comparator.comparing(ProductTop::getAmountProduct));
-
-//        productTopListMeat = new ArrayList<>();
-        Collections.sort(productTopListMeat,Comparator.comparing(ProductTop::getAmountProduct));
-
-//        productTopListFood = new ArrayList<>();
-        Collections.sort(productTopListFood,Comparator.comparing(ProductTop::getAmountProduct));
+//        Collections.sort(productTopListVegetable,Comparator.comparing(ProductTop::getAmountProduct));
+//
+////        productTopListFruit = new ArrayList<>();
+//        Collections.sort(productTopListFruit,Comparator.comparing(ProductTop::getAmountProduct));
+//
+////        productTopListMeat = new ArrayList<>();
+//        Collections.sort(productTopListMeat,Comparator.comparing(ProductTop::getAmountProduct));
+//
+////        productTopListFood = new ArrayList<>();
+//        Collections.sort(productTopListFood,Comparator.comparing(ProductTop::getAmountProduct));
 
 
 
@@ -120,7 +121,6 @@ public class HomePageFragment extends Fragment {
 //        favorite_recyclerView_home.setAdapter(favoriteItemAdapter);
 // ô chuyển đâu rồi
         card_vegetable_home.setOnClickListener(view1 -> {
-
             fragmentManager.beginTransaction().replace(R.id.frame_Home, new VegetableFragment(),null).addToBackStack(null).commit();
 
         });
@@ -138,20 +138,17 @@ public class HomePageFragment extends Fragment {
 
 
         card_Top_Vegetable.setOnClickListener(view1 -> {
-
-            if (rv_VegetableTop_Home.getVisibility() == View.GONE){
-                rv_VegetableTop_Home.setVisibility(View.VISIBLE);
-            }
-            else {
-                rv_VegetableTop_Home.setVisibility(View.GONE);
-            }
-
-            rv_VegetableTop_Home.setLayoutManager(new LinearLayoutManager(getContext()));
-            childFavoriteAdapter = new ChildFavoriteAdapter(productTopListVegetable);
-            rv_VegetableTop_Home.setAdapter(childFavoriteAdapter);
+            onClickItemCart(listVegetable,rv_VegetableTop_Home);
         });
-
         card_Top_Fruit.setOnClickListener(view1 -> {
+            onClickItemCart(listFruit,rv_FruitTop_Home);
+        });
+        card_Top_Meat.setOnClickListener(view1 -> {
+            onClickItemCart(listMeat,rv_MeatTop_Home);
+        });
+        card_Top_Food.setOnClickListener(view1 -> {
+            Log.d("erewerwe","aaaaaaaaaaaa");
+            onClickItemCart(listFood,rv_FoodTop_Home);
 
         });
 
@@ -182,9 +179,10 @@ public class HomePageFragment extends Fragment {
                         }else {productTopListFood.add(top);
                         }
                     }
+                    childFavoriteAdapter.notifyDataSetChanged();
+                    getProduct();
 
                 }
-
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -192,8 +190,88 @@ public class HomePageFragment extends Fragment {
                 }
             });
     }
+    public void getProduct(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Product");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listMeat.clear();
+                listFruit.clear();
+                listVegetable.clear();
+                listFood.clear();
 
+                for (DataSnapshot snapshot1 : snapshot.getChildren()){
+                    Product top = snapshot1.getValue(Product.class);
+                        listProduct.add(top);
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Collections.sort(productTopListVegetable,Comparator.comparing(ProductTop::getAmountProduct).reversed());
+                    Collections.sort(productTopListFruit,Comparator.comparing(ProductTop::getAmountProduct).reversed());
+                    Collections.sort(productTopListFood,Comparator.comparing(ProductTop::getAmountProduct).reversed());
+                    Collections.sort(productTopListMeat,Comparator.comparing(ProductTop::getAmountProduct).reversed());
+                }
+                add(productTopListVegetable,listProduct,listVegetable);
+                add(productTopListFruit,listProduct,listFruit);
+                add(productTopListFood,listProduct,listFood);
+                add(productTopListMeat,listProduct,listMeat);
+                collections(listVegetable);
+                collections(listFruit);
+                collections(listFood);
+                collections(listMeat);
+                adapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+public void add(List<ProductTop> listTop, List<Product> listProduct ,List<Product> listProductTop ){
+    for (int i = 0; i < listTop.size(); i++) {
+        for (int j = 0; j < listProduct.size(); j++) {
+            if (listTop.get(i).getIdProduct() == listProduct.get(j).getCodeProduct() ){
+                listProductTop.add(listProduct.get(j));
+            }
+        }
+
+    }
+}
+    public void collections(List<Product> listProductTop ){
+//        for (int i = 0; i < listTop.size(); i++) {
+//            for (int j = 0; j < listProduct.size(); j++) {
+//                if (listTop.get(i).getIdProduct() == listProduct.get(j).getCodeProduct() ){
+//                    listProductTop.add(listProduct.get(j));
+//                }
+//            }
+//
+//        }
+        try {
+            for (int i = 0; i < listProductTop.size(); i++) {
+                for (int j = 1; j < listProductTop.size(); j++) {
+                    if (listProductTop.get(i).getCodeProduct() == listProductTop.get(j).getCodeProduct() ){
+                        listProductTop.remove(listProductTop.get(i));
+                    }
+                }
+            }
+        }catch (Exception e){
+
+        }
+
+    }
+
+    public void onClickItemCart(List<Product> list,RecyclerView recyclerView){
+        if (recyclerView.getVisibility() == View.GONE){
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            adapter = new ProductAdapter(list,fragment,getContext());
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        }
+        else {
+            recyclerView.setVisibility(View.GONE);
+        }
+    }
 
 
 

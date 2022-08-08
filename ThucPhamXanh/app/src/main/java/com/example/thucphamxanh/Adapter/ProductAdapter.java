@@ -46,6 +46,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         this.list = list;
         this.fragment = fragment;
         this.context = context;
+        notifyDataSetChanged();
     }
 
     @NonNull

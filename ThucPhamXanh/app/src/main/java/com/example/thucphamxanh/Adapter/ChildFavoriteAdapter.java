@@ -17,10 +17,10 @@ import java.util.List;
 
 public class ChildFavoriteAdapter extends RecyclerView.Adapter<ChildFavoriteAdapter.ChildFavoriteHolder> {
 
-    private List<ProductTop> topList;
+    private List<String> topList;
 
 
-    public ChildFavoriteAdapter(List<ProductTop> topList) {
+    public ChildFavoriteAdapter(List<String> topList) {
         this.topList = topList;
     }
 
@@ -33,10 +33,10 @@ public class ChildFavoriteAdapter extends RecyclerView.Adapter<ChildFavoriteAdap
 
     @Override
     public void onBindViewHolder(@NonNull ChildFavoriteHolder holder, int position) {
-        ProductTop productTop = topList.get(position);
+//        ProductTop productTop = topList.get(position);
 
-        holder.name_top_product.setText(productTop.getIdProduct());
-        holder.amount_top_product.setText(productTop.getAmountProduct());
+        holder.name_top_product.setText(String.valueOf(topList.get(position)));
+//        holder.amount_top_product.setText(String.valueOf(productTop.getAmountProduct()));
 
 
     }

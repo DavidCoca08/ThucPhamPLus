@@ -39,7 +39,7 @@ public class FruitFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_fruit, container, false);
         unitUI();
-        rvFruit.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
         return view;
     }
     public void unitUI(){
@@ -49,6 +49,7 @@ public class FruitFragment extends Fragment {
         rvFruit.setLayoutManager(linearLayoutManager);
         adapter = new ProductAdapter(listFruit,fragment,getContext());
         rvFruit.setAdapter(adapter);
+        rvFruit.setLayoutManager(new GridLayoutManager(getContext(), 2));
     }
 
     public void getVegetableProducts(){

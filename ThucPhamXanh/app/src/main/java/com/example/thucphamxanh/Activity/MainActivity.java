@@ -388,14 +388,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
         });
         return true;
     }
-    public void search(Menu menu){
-        MenuItem menuItem = menu.findItem(R.id.searchProduct);
-        View view = menuItem.getActionView();
-        view.setOnClickListener(view1 -> {
-
-        });
-    }
-
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -460,7 +452,6 @@ public class MainActivity extends AppCompatActivity implements MenuItem.OnMenuIt
                     }
                 }
                 SharedPreferences preferences1 = getSharedPreferences("Number",MODE_PRIVATE);
-
                 int number = Integer.parseInt(preferences1.getString("number",""));
                 if (listBill.size()>number){
                     notification();

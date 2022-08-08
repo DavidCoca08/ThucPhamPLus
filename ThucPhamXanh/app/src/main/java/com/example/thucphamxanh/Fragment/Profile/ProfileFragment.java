@@ -258,8 +258,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         user.setPhoneNumber(mLayoutPhoneNumber.getEditText().getText().toString());
         Bitmap bitmap = ((BitmapDrawable) ivAvatar.getDrawable()).getBitmap();
 
-        //up ảnh lên storage, lấy Uri storage set vào uriAvatar của user, change user trong ViewModel
-        // Get the data from an ImageView as bytes
         StorageReference spaceRef = mStorageReference.child("image/" + user.getId() + "_avatar.jpg");
         ivAvatar.setDrawingCacheEnabled(true);
         ivAvatar.buildDrawingCache();
