@@ -51,7 +51,7 @@ public class CartActivity extends AppCompatActivity {
     private Spinner spinner;
     private List<Voucher> listVoucher = new ArrayList<>();
     private SpinerAdapter adapterSpiner;
-    private String[] arr = {"Giảm 50%","Giảm 30%", "Giảm 20%"};
+    private String[] arr = {"","Giảm 50%","Giảm 30%", "Giảm 20%"};
     private NumberFormat numberFormat = new DecimalFormat("#,##0");
     private String voucher;
     @Override
@@ -102,8 +102,6 @@ public class CartActivity extends AppCompatActivity {
         listBill = getAllBill();
         tvHide1 = findViewById(R.id.tvHide1);
         tvHide2 = findViewById(R.id.tvHide2);
-
-
     }
 
     public void getVoucher(){
@@ -139,10 +137,13 @@ public class CartActivity extends AppCompatActivity {
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Cart cart = snap.getValue(Cart.class);
-                    if (cart.getUserClient().equals(user)){
-                        list1.add(cart);
+                    if(cart!=null){
+                        if (cart.getUserClient().equals(user)){
+                            list1.add(cart);
 
+                        }
                     }
+
 
                 }
                 int sum = 0;
@@ -156,7 +157,7 @@ public class CartActivity extends AppCompatActivity {
                     sum = (int) (sum-sum*0.3);
                 }else if (voucher.equals("Giảm 20%")){
                     sum = (int) (sum-sum*0.2);
-                }
+                }else sum = sum;
 
                 tvTotalPrice.setText(numberFormat.format(sum));
                 tv1.setText(""+sum);
@@ -193,18 +194,6 @@ public class CartActivity extends AppCompatActivity {
         return list1;
     }
 
-    private void getIdVoucher(Spinner spinner,int sum) {
-        String nameVocher = spinner.getSelectedItem().toString();
-        Log.d("name",nameVocher);
-        double a = 0;
-        for (int i = 0; i < listVoucher.size(); i++) {
-            if (nameVocher.equals(listVoucher.get(i).getCodeVoucher())){
-                a = listVoucher.get(i).getCodeVoucher_double();
-            }
-        }
-        sum = (int) (sum*a);
-
-    }
 
     public void addBill(){
         Bill bill = new Bill();

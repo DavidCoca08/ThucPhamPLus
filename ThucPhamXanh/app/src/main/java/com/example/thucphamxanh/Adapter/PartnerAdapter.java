@@ -2,6 +2,7 @@ package com.example.thucphamxanh.Adapter;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.thucphamxanh.Fragment.PartnerFragment;
 import com.example.thucphamxanh.Model.Partner;
+import com.example.thucphamxanh.Model.Product;
 import com.example.thucphamxanh.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,11 +55,8 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.viewHold
                 holder.btn_UpdatePartner.setVisibility(View.VISIBLE);
             }
         });
-        holder.btn_UpdatePartner.setOnClickListener(view -> {
-
-        });
         holder.btn_DeletePartner.setOnClickListener(view -> {
-
+            showDialog(partner);
         });
 
     }
@@ -72,7 +71,7 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.viewHold
 
     public class viewHolder extends RecyclerView.ViewHolder{
         private TextView tvCodePartner_adapter,tvNamePartner_adapter,tvAddressPartner_adapter,
-                tvNumberPhonePartner_adapter,tvUserPartner_adapter,tvPasswordPartnre_adapter;
+        tvUserPartner_adapter,tvPasswordPartnre_adapter;
         private Button btn_UpdatePartner,btn_DeletePartner;
         private CardView itemPartner;
         public viewHolder(@NonNull View itemView) {
@@ -89,11 +88,25 @@ public class PartnerAdapter extends RecyclerView.Adapter<PartnerAdapter.viewHold
         }
 
     }
-    public void updatePartner(Partner partner){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("Partner");
-        reference.child(""+partner.getIdPartner()).updateChildren(partner.toMap());
+    private void showDialog(Partner partner) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
+        builder.setMessage("Bạn có chắc muốn xóa đối tác");
+        builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deletePartner(partner);
+            }
+        });
+        builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
+
     public void deletePartner(Partner partner){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Partner");

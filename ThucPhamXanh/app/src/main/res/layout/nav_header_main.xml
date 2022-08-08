@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="@string/nav_header_title"
+        android:text="ADMIN"
         android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
@@ -39,6 +39,6 @@
         android:layout_gravity="center"
         android:textSize="15dp"
         android:textColor="#ffffff"
-        android:textStyle="italic"
-        android:text="@string/nav_header_subtitle" />
+        android:textStyle="italic"/>
+
 </LinearLayout>

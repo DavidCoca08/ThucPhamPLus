@@ -2,6 +2,7 @@
             package com.example.thucphamxanh.Adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,8 @@ import java.util.List;
 
         @Override
         public void onBindViewHolder(@NonNull viewHolder holder, int position) {
+            SharedPreferences preferences = context.getSharedPreferences("My_User",Context.MODE_PRIVATE);
+            String role = preferences.getString("role","");
             Bill bill = list.get(position);
             listCart = getAllCart(position);
             adapterItemBill = new AdapterItemBill(listCart);
@@ -67,9 +70,14 @@ import java.util.List;
                 }
             });
             holder.card_bill.setOnClickListener(view -> {
-                if (holder.btn_updateStatusBill.getVisibility() == View.GONE){
-                    holder.btn_updateStatusBill.setVisibility(View.VISIBLE);
-                }else {
+                if (!role.equals("user")) {
+                    if (holder.btn_updateStatusBill.getVisibility() == View.GONE) {
+                        holder.btn_updateStatusBill.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.btn_updateStatusBill.setVisibility(View.GONE);
+                    }
+                }
+                if (bill.getStatus().equals("Yes")){
                     holder.btn_updateStatusBill.setVisibility(View.GONE);
                 }
             });

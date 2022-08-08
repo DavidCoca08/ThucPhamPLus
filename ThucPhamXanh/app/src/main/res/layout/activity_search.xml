@@ -14,7 +14,7 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/radius_dialog"
         app:defaultQueryHint="Tìm kiếm các thực phẩm"
-        android:clickable="true"
+        app:iconifiedByDefault="false"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearch"
