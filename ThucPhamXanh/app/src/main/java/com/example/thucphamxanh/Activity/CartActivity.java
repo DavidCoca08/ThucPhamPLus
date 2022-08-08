@@ -16,8 +16,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.thucphamxanh.Adapter.CartAdapter;
+import com.example.thucphamxanh.Adapter.SpinerAdapter;
 import com.example.thucphamxanh.Adapter.VoucherSpinnerAdapter;
 import com.example.thucphamxanh.Model.Bill;
 import com.example.thucphamxanh.Model.Cart;
@@ -46,16 +48,12 @@ public class CartActivity extends AppCompatActivity {
     private TextView tvTotalPrice, tvEmptyProduct,tv1, tvHide1, tvHide2;
     private Button btn_senBill, btnEmptyProduct;
     private List<Bill> listBill;
-
-    private VoucherSpinnerAdapter voucherSpinnerAdapter;
     private Spinner spinner;
-    private ArrayList<Voucher> listVoucher;
-    private Voucher voucher;
-    private Double double_Code_voucher;
-
-
-
+    private List<Voucher> listVoucher = new ArrayList<>();
+    private SpinerAdapter adapterSpiner;
+    private String[] arr = {"Giảm 50%","Giảm 30%", "Giảm 20%"};
     private NumberFormat numberFormat = new DecimalFormat("#,##0");
+    private String voucher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +70,24 @@ public class CartActivity extends AppCompatActivity {
         });
     }
     public void unitUi(){
+        getVoucher();
+        getProductTop();
+        spinner = findViewById(R.id.spinner_voucher_cart);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,arr);
+        spinner.setAdapter(adapter1);
+        voucher = spinner.getSelectedItem().toString();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                voucher = spinner.getSelectedItem().toString();
+                getCartProduct();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         rvCart = findViewById(R.id.recyclerView_CartActivity_listCart);
         list = getCartProduct();
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -84,46 +100,22 @@ public class CartActivity extends AppCompatActivity {
         tvEmptyProduct = findViewById(R.id.tv_CartActivity_emptyProduct);
         btnEmptyProduct = findViewById(R.id.btn_CartActivity_emptyProduct);
         listBill = getAllBill();
-        getProductTop();
-
         tvHide1 = findViewById(R.id.tvHide1);
         tvHide2 = findViewById(R.id.tvHide2);
 
-        listVoucher = (ArrayList<Voucher>) getVoucher();
-        voucher = new Voucher();
-        spinner=findViewById(R.id.spinner_voucher_cart);
 
-        voucherSpinnerAdapter = new VoucherSpinnerAdapter(getApplicationContext(),listVoucher);
-//        voucherSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(voucherSpinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                double_Code_voucher = listVoucher.get(i).getCodeVoucher_double();
-
-                Log.d("rrrrr", String.valueOf(double_Code_voucher));
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
     }
 
-    public List<Voucher> getVoucher(){
+    public void getVoucher(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Voucher");
-        List<Voucher> list1 = new ArrayList<>();
         reference.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list1.clear();
+                listVoucher.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Voucher voucher = snap.getValue(Voucher.class);
-                    list1.add(voucher);
+                    listVoucher.add(voucher);
 
                 }
             }
@@ -133,7 +125,7 @@ public class CartActivity extends AppCompatActivity {
 
             }
         });
-        return list1;
+
     }
     public  List<Cart> getCartProduct(){
         SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
@@ -157,7 +149,14 @@ public class CartActivity extends AppCompatActivity {
                 for (int i = 0; i < list1.size(); i++) {
                     sum += list1.get(i).getTotalPrice();
                 }
-                sum = (int) (sum*double_Code_voucher);
+
+                if (voucher.equals("Giảm 50%")){
+                    sum = (int) (sum-sum *0.5);
+                }else if (voucher.equals("Giảm 30%")){
+                    sum = (int) (sum-sum*0.3);
+                }else if (voucher.equals("Giảm 20%")){
+                    sum = (int) (sum-sum*0.2);
+                }
 
                 tvTotalPrice.setText(numberFormat.format(sum));
                 tv1.setText(""+sum);
@@ -278,12 +277,12 @@ public class CartActivity extends AppCompatActivity {
         });
         return list1;
     }
-    public void addProductTop(int id, int amount,int catogory){
+    public void addProductTop(int id, int amount,int category){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("ProductTop");
         ProductTop top = new ProductTop();
         top.setIdProduct(id);
-        top.setIdCategory(catogory);
+        top.setIdCategory(category);
         top.setAmountProduct(amount);
         if (listTop.size()==0){
             reference.child(""+id).setValue(top);
@@ -292,12 +291,12 @@ public class CartActivity extends AppCompatActivity {
                 if (id == listTop.get(i).getIdProduct()) {
                     int amounts = listTop.get(i).getAmountProduct() + amount;
                     reference.child("" + id).child("amountProduct").setValue(amounts);
+                    return;
                 } else {
                     reference.child("" + id).setValue(top);
                 }
             }
         }
-        //đợi t chút nhé ok
     }
     public void getProductTop(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
