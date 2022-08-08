@@ -1,6 +1,7 @@
 package com.example.thucphamxanh.Fragment.ProductFragments;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -55,12 +56,16 @@ public class VegetableFragment extends Fragment {
     }
 
     public  List<Product> getVegetableProduct(){
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Vui lòng đợi ...");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Product");
         List<Product> list1 = new ArrayList<>();
+        progressDialog.show();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                progressDialog.dismiss();
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Product product = snap.getValue(Product.class);

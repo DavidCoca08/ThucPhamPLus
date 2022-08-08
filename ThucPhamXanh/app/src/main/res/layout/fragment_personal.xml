@@ -6,14 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="25dp"
+    android:padding="35dp"
     android:gravity="center"
+    android:background="@drawable/background_personal"
     tools:context=".Fragment.PersonalFragment">
 
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         app:cardCornerRadius="20dp">
 
         <LinearLayout
@@ -70,8 +72,9 @@
         android:id="@+id/btn_PersonalFragment_logoutPersonal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/grey"
+        android:backgroundTint="#00ACC1"
         android:text="Đăng xuất"
-        android:drawableRight="@drawable/ic_baseline_exit_to_app_24"
-        android:textColor="@color/black" />
+        android:layout_marginBottom="30dp"
+        android:textColorHint="#ffffff"
+        android:drawableRight="@drawable/ic_baseline_exit_to_app_24" />
 </LinearLayout>

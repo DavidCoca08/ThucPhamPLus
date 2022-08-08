@@ -55,6 +55,7 @@ public class MeatFragment extends Fragment {
 
     public  List<Product> getVegetableProduct(){
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Vui lòng đợi ...");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Product");
         List<Product> list1 = new ArrayList<>();
