@@ -1,7 +1,11 @@
 package com.example.thucphamxanh.Activity;
 
 
-import static com.example.thucphamxanh.constant.Profile.*;
+import static com.example.thucphamxanh.constant.Profile.FIELDS_EMPTY;
+import static com.example.thucphamxanh.constant.Profile.NUMBER_PHONE_INVALID;
+import static com.example.thucphamxanh.constant.Profile.PASSWORD_INVALID;
+import static com.example.thucphamxanh.constant.Profile.PASSWORD_NOT_MATCH;
+import static com.example.thucphamxanh.constant.Profile.REGEX_PHONE_NUMBER;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -98,14 +102,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             user.setId(strPhoneNumber);
             ProgressDialog progressDialog = Utils.createProgressDiaglog(SignUpActivity.this);
             progressDialog.show();
-            rootReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            rootReference.child("User").child(strPhoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (!snapshot.child("User").child(strPhoneNumber).exists()) {
+                    if (!snapshot.exists()) {
                         Map<String, Object> userDataMap = user.toMap();
                         rootReference.child("User")
                                 .child(strPhoneNumber)
-                                .updateChildren(userDataMap)
+                                .setValue(user)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
