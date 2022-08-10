@@ -37,6 +37,12 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+            <TextView
                 android:id="@+id/tv_name_client_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

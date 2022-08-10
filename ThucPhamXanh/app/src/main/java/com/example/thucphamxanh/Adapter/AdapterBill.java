@@ -58,7 +58,7 @@ import java.util.List;
             holder.rvItemOrder.setLayoutManager(linearLayoutManager);
             holder.rvItemOrder.setAdapter(adapterItemBill);
             holder.tvidBill.setText("Mã HD :"+ bill.getIdBill());
-            holder.tvNameClient.setText("Số điện thoại KH: "+bill.getIdClient());
+            holder.tvPhone.setText("Số điện thoại KH: "+bill.getIdClient());
             holder.tvTime.setText("Thời gian: "+bill.getTimeOut());
             holder.tvDay.setText(String.valueOf(bill.getDayOut()));
             holder.tvTotal.setText(String.valueOf(bill.getTotal()));
@@ -101,7 +101,7 @@ import java.util.List;
         }
 
         public class viewHolder extends RecyclerView.ViewHolder{
-            private TextView tvidBill,tvNameClient,tvTotal, tvTime, tvDay;
+            private TextView tvidBill,tvNameClient,tvTotal, tvTime, tvDay,tvPhone;
             private LinearLayout linearLayout_item_product;
             private ImageView img_drop_up;
             private Button btn_updateStatusBill;
@@ -111,7 +111,7 @@ import java.util.List;
             public viewHolder(@NonNull View itemView) {
                 super(itemView);
                 tvidBill = itemView.findViewById(R.id.tv_idBill_item);
-                tvNameClient = itemView.findViewById(R.id.tv_name_client_item);
+                tvPhone = itemView.findViewById(R.id.tv_phone);
                 tvTotal = itemView.findViewById(R.id.tv_totalOrder_item);
                 linearLayout_item_product = itemView.findViewById(R.id.linear_layout_item_product);
                 img_drop_up = itemView.findViewById(R.id.img_drop_up);
@@ -144,5 +144,6 @@ import java.util.List;
             });
             return list1;
         }
+
     }
 

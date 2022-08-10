@@ -66,6 +66,8 @@ public class ProductFragment extends Fragment {
     private Spinner sp_nameCategory;
     private String[] arr = {"Rau củ","Hoa quả","Thịt"};
     private ArrayAdapter<String> adapterSpiner;
+//    private SharedPreferences sharedPreferences;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProductBinding.inflate(inflater, container, false);
@@ -111,6 +113,8 @@ public class ProductFragment extends Fragment {
     }
 
     public void dialogProduct(Product product,int type,Context context) {
+//        sharedPreferences = getContext().getSharedPreferences("My_User",Context.MODE_PRIVATE);
+//        role = sharedPreferences.getString("role","");
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Thêm sản phẩm");
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_product,null);
@@ -136,12 +140,7 @@ public class ProductFragment extends Fragment {
         if (type==1){
             setData(product);
             img_addImageCamera.setVisibility(View.GONE);
-            img_addImageDevice.setOnClickListener(view1 -> {
-                openGallery();
-            });
-            img_addImageCamera.setOnClickListener(view1 -> {
-                captureImage();
-            });
+
             img_addImageDevice.setVisibility(View.GONE);
             btn_addVegetable.setOnClickListener(view1 -> {
                 getData(context);
@@ -170,6 +169,9 @@ public class ProductFragment extends Fragment {
         sp_nameCategory = view.findViewById(R.id.sp_nameCategory);
         adapterSpiner = new ArrayAdapter<>(context,android.R.layout.simple_spinner_dropdown_item,arr);
         sp_nameCategory.setAdapter(adapterSpiner);
+//        if (!role.equals("admin")){
+//            sp_nameCategory.setVisibility(View.GONE);
+//        }
     }
 
     public void setData(Product product){
@@ -224,11 +226,11 @@ public class ProductFragment extends Fragment {
 
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-       getParentFragment().startActivityForResult(intent, 10);
+       this.startActivityForResult(intent, 10);
     }
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        getParentFragment().startActivityForResult(gallery, 100);
+        this.startActivityForResult(gallery, 100);
 
 
     }
@@ -298,7 +300,12 @@ public class ProductFragment extends Fragment {
         DatabaseReference reference = database.getReference("Product");
         reference.child(""+product.getCodeProduct()).child("nameProduct").setValue(product.getNameProduct());
         reference.child(""+product.getCodeProduct()).child("priceProduct").setValue(product.getPriceProduct());
-        reference.child(""+product.getCodeProduct()).child("codeCategory").setValue(product.getCodeCategory());
+//        if (!role.equals("admin")){
+//            reference.child(""+product.getCodeProduct()).child("codeCategory").setValue("4");
+//        }else {
+//            reference.child(""+product.getCodeProduct()).child("codeCategory").setValue(product.getCodeCategory());
+//        }
+
     }
     public void deleteProduct(Product product){
         FirebaseDatabase database = FirebaseDatabase.getInstance();

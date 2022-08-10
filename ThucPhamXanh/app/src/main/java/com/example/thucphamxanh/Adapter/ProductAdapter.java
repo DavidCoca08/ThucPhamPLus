@@ -117,8 +117,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                                 }
                             }
                             addProductCart(cart);
-
-
                         }
                     });
                     builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {

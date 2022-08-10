@@ -211,13 +211,11 @@ public class FoodFragment extends Fragment {
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-//                Toast.makeText(getContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
                 openGallery();
             }
 
             @Override
             public void onPermissionDenied(List<String> deniedPermissions) {
-//                Toast.makeText(getContext(), "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                 requestPermissionDevice();
             }
         };
@@ -306,7 +304,6 @@ public class FoodFragment extends Fragment {
         if (isEmptys(nameProduct, til_nameProduct) && isEmptys(priceProduct, til_priceProduct) && errorImg(imgProduct, tvErrorImg)) {
             setDataProduct();
             removeAll();
-
         }
     }
     public void removeAll(){
