@@ -78,6 +78,9 @@ public class PersonalFragment extends Fragment {
         }
         Log.d(TAG, "onCreateView: ");
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        btn_login.setOnClickListener(view ->{
+            startActivity(new Intent(getContext(),SignInActivity.class));
+        });
 
         btn_logout_personal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,13 +91,6 @@ public class PersonalFragment extends Fragment {
                 getActivity().finishAffinity();
             }
 
-//            private void logout() {
-//                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("My_User",Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sharedPreferences.edit();
-//                editor.putBoolean("remember", false);
-//                editor.commit();
-//
-//            }
         });
 
         btn_changepassword_personal.setOnClickListener(new View.OnClickListener() {
