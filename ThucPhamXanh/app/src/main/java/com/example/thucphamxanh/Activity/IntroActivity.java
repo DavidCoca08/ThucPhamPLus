@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.thucphamxanh.Activity.SignInActivity;
 import com.example.thucphamxanh.Adapter.SliderAdapter;
 import com.example.thucphamxanh.R;
 
@@ -40,7 +39,7 @@ public class IntroActivity extends AppCompatActivity {
         viewPagerIntro.addOnPageChangeListener(changeListener);
 
         btn_started_intro.setOnClickListener(view -> {
-            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         });
 
         getSupportActionBar().hide(); // Ẩn actionbar

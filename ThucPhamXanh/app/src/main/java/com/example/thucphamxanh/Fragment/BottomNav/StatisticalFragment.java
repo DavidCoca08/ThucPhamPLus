@@ -1,4 +1,4 @@
-package com.example.thucphamxanh.Fragment;
+package com.example.thucphamxanh.Fragment.BottomNav;
 
 
 import android.app.DatePickerDialog;

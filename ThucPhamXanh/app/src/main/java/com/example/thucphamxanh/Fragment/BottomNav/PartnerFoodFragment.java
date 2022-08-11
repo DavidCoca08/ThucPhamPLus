@@ -1,4 +1,4 @@
-package com.example.thucphamxanh.Fragment;
+package com.example.thucphamxanh.Fragment.BottomNav;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,17 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.example.thucphamxanh.Adapter.Partner_FoodAdapter;
-import com.example.thucphamxanh.Fragment.ProductFragments.FoodFragment;
-import com.example.thucphamxanh.Fragment.ProductFragments.FruitFragment;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.R;
 import com.google.firebase.database.DataSnapshot;

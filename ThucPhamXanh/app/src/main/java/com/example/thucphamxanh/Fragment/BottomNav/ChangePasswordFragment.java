@@ -1,4 +1,4 @@
-package com.example.thucphamxanh.Fragment;
+package com.example.thucphamxanh.Fragment.BottomNav;
 
 import static com.example.thucphamxanh.constant.Profile.FIELDS_EMPTY;
 import static com.example.thucphamxanh.constant.Profile.PASSWORD_INVALID;

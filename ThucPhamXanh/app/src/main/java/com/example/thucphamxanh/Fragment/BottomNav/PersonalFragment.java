@@ -1,4 +1,4 @@
-package com.example.thucphamxanh.Fragment;
+package com.example.thucphamxanh.Fragment.BottomNav;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,6 +26,7 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.example.thucphamxanh.Activity.SignInActivity;
 import com.example.thucphamxanh.Fragment.Profile.ProfileFragment;
 import com.example.thucphamxanh.Fragment.Profile.ProfileViewModel;
+import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.Partner;
 import com.example.thucphamxanh.Model.User;
 import com.example.thucphamxanh.R;
@@ -40,28 +43,39 @@ import java.util.List;
 public class PersonalFragment extends Fragment {
     private static final String TAG = "PersonalFragment";
     FragmentPersonalBinding binding;
-    Button btn_logout_personal, btn_changepassword_personal;
+    Button btn_logout_personal, btn_changepassword_personal,btn_login;
     TextView tvNumberPhoneUser, tvEdit;
     ImageView imgUser;
     List<User> listUser = new ArrayList<>();
-    User user;
-    Partner partner;
     ProfileViewModel profileViewModel;
+    CardView itemPerson;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
+        String user = sharedPreferences.getString("username","");
         binding = FragmentPersonalBinding.inflate(inflater, container, false);
+        itemPerson = binding.itemPerson;
         btn_logout_personal = binding.btnPersonalFragmentLogoutPersonal;
+        btn_login = binding.btnPersonalFragmentLogin;
         btn_changepassword_personal = binding.btnPersonalFragmentChangePasswordPersonal;
         tvNumberPhoneUser = binding.tvPersonalFragmentNumberPhoneUser;
-//        tvNumberPhoneUser.setText(sharedPreferences.getString("username",""));
         tvEdit = binding.tvPersonalFragmentEditUser;
         imgUser = binding.imgPersonalFragmentImgUser;
         imgUser.setImageResource(R.drawable.ic_avatar_default);
-
+        if (user.equals("")){
+            btn_logout_personal.setVisibility(View.GONE);
+            btn_login.setVisibility(View.VISIBLE);
+            itemPerson.setEnabled(false);
+            imgUser.setImageResource(R.drawable.ic_avatar_default);
+            btn_changepassword_personal.setVisibility(View.GONE);
+        }else{
+            btn_login.setVisibility(View.GONE);
+            btn_logout_personal.setVisibility(View.VISIBLE);
+            itemPerson.setEnabled(true);
+        }
         Log.d(TAG, "onCreateView: ");
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
@@ -70,16 +84,17 @@ public class PersonalFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SignInActivity.class);
                 startActivity(intent);
-                logout();
+                remember();
                 getActivity().finishAffinity();
             }
 
-            private void logout() {
-                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("My_User",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("logged", false);
-                editor.commit();
-            }
+//            private void logout() {
+//                SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("My_User",Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                editor.putBoolean("remember", false);
+//                editor.commit();
+//
+//            }
         });
 
         btn_changepassword_personal.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +104,7 @@ public class PersonalFragment extends Fragment {
             }
         });
 
-        tvEdit.setOnClickListener(new View.OnClickListener() {
+        itemPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout, new ProfileFragment()).addToBackStack(null).commit();
@@ -129,7 +144,6 @@ public class PersonalFragment extends Fragment {
                     } catch (Exception e) {
                         Log.e(TAG, "onChanged: ", e);
                     }
-
                 }
             });
         }
@@ -141,29 +155,15 @@ public class PersonalFragment extends Fragment {
             }
         });
     }
-
-    public void getUser(){
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User", Context.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id","");
-        Log.d("username", String.valueOf(id));
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("User");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap : snapshot.getChildren()){
-                    User user1 = snap.getValue(User.class);
-                    if (id.equals(user1.getPhoneNumber())){
-                        listUser.add(user1);
-                    }
-                }
-                Log.d("size", String.valueOf(listUser.size()));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+    public void remember(){
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("My_User",getContext().MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", "");
+        editor.putString("password", "");
+        editor.putString("role", "");
+        editor.putString("id", "");
+        editor.putBoolean("remember", false);
+        editor.apply();
     }
+
 }

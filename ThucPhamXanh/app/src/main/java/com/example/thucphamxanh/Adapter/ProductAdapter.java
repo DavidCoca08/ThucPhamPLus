@@ -3,6 +3,7 @@ package com.example.thucphamxanh.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.thucphamxanh.Activity.SignInActivity;
 import com.example.thucphamxanh.Fragment.ProductFragments.ProductFragment;
 import com.example.thucphamxanh.Model.Cart;
 import com.example.thucphamxanh.Model.Product;
@@ -63,14 +65,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         SharedPreferences preferences = context.getSharedPreferences("My_User",Context.MODE_PRIVATE);
         String user = preferences.getString("username","");
         String role = preferences.getString("role","");
+
             Product product = list.get(position);
             NumberFormat numberFormat = new DecimalFormat("#,##0");
             listCart = getAllCart();
-            byte[] imgByte = Base64.decode(product.getImgProduct(),Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
+            byte[] imgByte = Base64.decode(product.getImgProduct(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
             holder.imgProduct.setImageBitmap(bitmap);
             holder.tvNameProduct.setText(String.valueOf(product.getNameProduct()));
-            holder.tvPriceProduct.setText(numberFormat.format(product.getPriceProduct())+" đ");
+            holder.tvPriceProduct.setText(numberFormat.format(product.getPriceProduct()) + " đ");
             holder.cardProuct.setOnClickListener(view -> {
                 if (role.equals("admin") || role.equals("partner")) {
                     if (holder.btnUpdateProduct.getVisibility() == View.VISIBLE || holder.btnDeleteProduct.getVisibility() == View.VISIBLE) {
@@ -83,12 +86,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 }
             });
             holder.btnUpdateProduct.setOnClickListener(view -> {
-                fragment.dialogProduct(product,1,context);
+                fragment.dialogProduct(product, 1, context);
             });
             holder.btnDeleteProduct.setOnClickListener(view -> {
-                showDialog(product);
+                showDialogDelete(product);
             });
+
             holder.btn_addCart.setOnClickListener(view -> {
+                if (!user.equals("")) {
                 StringBuilder str = new StringBuilder();
                 Cart cart = new Cart();
                 cart.setUserClient(user);
@@ -99,20 +104,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 cart.setPriceProduct(product.getPriceProduct());
                 cart.setNumberProduct(1);
                 cart.setIdPartner(product.getUserPartner());
-                cart.setTotalPrice(cart.getPriceProduct()*cart.getNumberProduct());
+                cart.setTotalPrice(cart.getPriceProduct() * cart.getNumberProduct());
                 for (int i = 0; i < listCart.size(); i++) {
-                    if (!listCart.get(i).getIdPartner().equals(cart.getIdPartner())){
+                    if (!listCart.get(i).getIdPartner().equals(cart.getIdPartner())) {
                         str.append("1");
                     }
                 }
-                if (str.length()!=0){
+                if (str.length() != 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage("Nếu bạn thêm sản phẩm ở cửa hàng này, sản phẩm ở cửa hàng khác sẽ bị xóa");
                     builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             for (int j = 0; j < listCart.size(); j++) {
-                                if (user.equals(listCart.get(j).getUserClient())){
+                                if (user.equals(listCart.get(j).getUserClient())) {
                                     deleteCart(listCart.get(j));
                                 }
                             }
@@ -127,11 +132,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                     });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
-                }else {
+                } else {
                     addProductCart(cart);
                 }
-
+                }else {
+                    showDialogLogin();
+                }
             });
+
+
 
     }
 
@@ -210,7 +219,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         });
         return list1;
     }
-    private void showDialog(Product product) {
+    private void showDialogDelete(Product product) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Bạn có chắc muốn xóa sản phẩm");
         builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
@@ -229,5 +238,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
         alertDialog.show();
     }
 
+    public void showDialogLogin() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Bạn phải đăng nhập");
+        builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(context, SignInActivity.class);
+                context.startActivity(intent);
+            }
+        });
+        builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
 }

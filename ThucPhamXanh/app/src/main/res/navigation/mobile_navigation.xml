@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.thucphamxanh.Fragment.HomeFragment"
+        android:name="com.example.thucphamxanh.Fragment.BottomNav.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/nav_statistic"
-        android:name="com.example.thucphamxanh.Fragment.StatisticalFragment"
+        android:name="com.example.thucphamxanh.Fragment.BottomNav.StatisticalFragment"
         android:label="@string/menu_statistic"
         tools:layout="@layout/fragment_statistical" />
     <fragment
@@ -45,7 +45,7 @@
         tools:layout="@layout/fragment_partner"/>
     <fragment
         android:id="@+id/nav_change_password"
-        android:name="com.example.thucphamxanh.Fragment.ChangePasswordFragment"
+        android:name="com.example.thucphamxanh.Fragment.BottomNav.ChangePasswordFragment"
         android:label="@string/menu_change_password"
         tools:layout="@layout/fragment_change_password"/>
 </navigation>

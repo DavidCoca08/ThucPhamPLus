@@ -1,4 +1,4 @@
-package com.example.thucphamxanh.Fragment;
+package com.example.thucphamxanh.Fragment.BottomNav;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;

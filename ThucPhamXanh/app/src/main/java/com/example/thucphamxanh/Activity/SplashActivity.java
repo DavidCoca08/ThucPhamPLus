@@ -42,23 +42,18 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }else {
-            SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
-            boolean wasLogged = sharedPreferences.getBoolean("logged", false);
-            Log.d(TAG, "onCreate: " + wasLogged);
-            if (wasLogged) {
+//            SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
+//            boolean wasLogged = sharedPreferences.getBoolean("remember", false);
+//            Log.d("bbbbbbbbb", String.valueOf(wasLogged));
+//            Log.d(TAG, "onCreate: " + wasLogged);
+//            if (wasLogged==true) {
                 startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            } else {
-                startActivity(new Intent(getApplicationContext(), SignInActivity.class));
-            }
+//            }
+//            else {
+//
+//            }
+
             finishAffinity();
-            /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Intent intent = new Intent(this, SignInActivity.class);
-            if (user != null) {
-                intent = new Intent(this, SignInActivity.class);
-                int a  =1;
-            }
-            startActivity(intent);
-            finish();*/
 
         }
 

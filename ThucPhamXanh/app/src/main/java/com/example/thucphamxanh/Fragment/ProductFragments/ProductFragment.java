@@ -60,13 +60,13 @@ public class ProductFragment extends Fragment {
     private TextInputLayout til_nameProduct,til_priceProduct;
     private TextView tvErrorImg;
     private ImageView img_Product,img_addImageCamera,img_addImageDevice;
-    private String nameProduct,imgProduct,userPartner,priceProduct;
+    private String nameProduct,imgProduct,userPartner,priceProduct,role;
     private int codeCategory;
     private Button btn_addVegetable,btn_cancleVegetable;
     private Spinner sp_nameCategory;
     private String[] arr = {"Rau củ","Hoa quả","Thịt"};
     private ArrayAdapter<String> adapterSpiner;
-//    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -113,8 +113,8 @@ public class ProductFragment extends Fragment {
     }
 
     public void dialogProduct(Product product,int type,Context context) {
-//        sharedPreferences = getContext().getSharedPreferences("My_User",Context.MODE_PRIVATE);
-//        role = sharedPreferences.getString("role","");
+        sharedPreferences = context.getSharedPreferences("My_User",Context.MODE_PRIVATE);
+        role = sharedPreferences.getString("role","");
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Thêm sản phẩm");
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_product,null);
@@ -169,9 +169,9 @@ public class ProductFragment extends Fragment {
         sp_nameCategory = view.findViewById(R.id.sp_nameCategory);
         adapterSpiner = new ArrayAdapter<>(context,android.R.layout.simple_spinner_dropdown_item,arr);
         sp_nameCategory.setAdapter(adapterSpiner);
-//        if (!role.equals("admin")){
-//            sp_nameCategory.setVisibility(View.GONE);
-//        }
+        if (!role.equals("admin")){
+            sp_nameCategory.setVisibility(View.GONE);
+        }
     }
 
     public void setData(Product product){

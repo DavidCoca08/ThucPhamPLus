@@ -99,7 +99,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         String passwordUser = formPassword.getEditText().getText().toString().trim();
         if (!validate(phoneNumber, passwordUser)) return;
         progressBar.setVisibility(View.VISIBLE);
-//        progressBar.se
         final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
         rootReference.child("User").child(phoneNumber)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -174,6 +173,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 //                });
 //        Log.d(TAG, "login: end");
 //    }
+
     public boolean logins(){
         //TODO validate partner login
         String email = formEmail.getEditText().getText().toString().trim();
@@ -205,7 +205,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         editor.putString("password", password);
         editor.putString("role", role);
         editor.putString("id", id);
-        editor.putBoolean("logged",true);
         editor.putBoolean("remember", mChkRemember.isChecked());
         editor.apply();
     }

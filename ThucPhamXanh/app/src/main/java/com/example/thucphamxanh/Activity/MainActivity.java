@@ -34,6 +34,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -113,7 +115,6 @@ public class MainActivity extends AppCompatActivity{
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(mNavigationView, navController);
 
-//        mNavigationView.getMenu().findItem(R.id.nav_sign_out).setOnMenuItemClickListener(this::onMenuItemClick);
 
     }
     public void loadUserInfoById(String phoneNumber){
@@ -187,6 +188,9 @@ public class MainActivity extends AppCompatActivity{
             mNavigationView.setVisibility(View.GONE);
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             Log.d(TAG, "checkUser: user");
+        } else {
+            mNavigationView.setVisibility(View.GONE);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
 
     }
@@ -398,14 +402,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
     }
-//    @Override
-//    public boolean onMenuItemClick(MenuItem item) {
-//        if (item.getItemId() == R.id.nav_sign_out) {
-//            logout();
-//            return true;
-//        }
-//        return false;
-//    }
     private void logout() {
         SharedPreferences sharedPreferences = getSharedPreferences("My_User",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -522,10 +518,8 @@ public class MainActivity extends AppCompatActivity{
         unregisterReceiver(connectionReceiver);
         super.onStop();
     }
-    //TODO sửa trạng thái khi back press vẫn lưu tài khoản đăng nhập
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed: ");
         super.onBackPressed();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.thucphamxanh.Fragment;
+package com.example.thucphamxanh.Fragment.BottomNav;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -49,8 +49,6 @@ public class HomePageFragment extends Fragment {
     private List<Product> listFruit= new ArrayList<>();
     private List<Product> listFood= new ArrayList<>();
     private List<Product> listProduct = new ArrayList<>();
-    List<String> list = new ArrayList<>();
-    ChildFavoriteAdapter childFavoriteAdapter;
     ProductAdapter adapter;
 
     CardView card_vegetable_home,card_fruit_home,card_meat_home,card_food_home;
@@ -65,13 +63,8 @@ public class HomePageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        list.add("aaaaaaa");
-        list.add("cccccccc");
-        list.add("bbbbbbb");
-        list.add("ddddddđ");
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
         adapter = new ProductAdapter(listVegetable,fragment,getContext());
-        childFavoriteAdapter = new ChildFavoriteAdapter(list);
         getTopProduct();
         getProduct();
 
@@ -91,35 +84,6 @@ public class HomePageFragment extends Fragment {
         rv_FruitTop_Home = view.findViewById(R.id.rv_FruitTop_Home);
         rv_MeatTop_Home = view.findViewById(R.id.rv_MeatTop_Home);
         rv_FoodTop_Home = view.findViewById(R.id.rv_FoodTop_Home);
-
-
-//        favorite_recyclerView_home = view.findViewById(R.id.favorite_recyclerView_home);
-//        favorite_recyclerView_home.setLayoutManager(new LinearLayoutManager(getContext()));
-
-//        favoviteModelList = new ArrayList<>();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            Collections.sort(favoviteModelList, Comparator.comparing(FavoviteModel::getItemText));
-//        }
-
-//        productTopListVegetable = new ArrayList<>();//đây ô chưa lấy list ra này mới khởi tạo, đã lấy dữ liêu ra đâu
-//        Collections.sort(productTopListVegetable,Comparator.comparing(ProductTop::getAmountProduct));
-//
-////        productTopListFruit = new ArrayList<>();
-//        Collections.sort(productTopListFruit,Comparator.comparing(ProductTop::getAmountProduct));
-//
-////        productTopListMeat = new ArrayList<>();
-//        Collections.sort(productTopListMeat,Comparator.comparing(ProductTop::getAmountProduct));
-//
-////        productTopListFood = new ArrayList<>();
-//        Collections.sort(productTopListFood,Comparator.comparing(ProductTop::getAmountProduct));
-
-
-
-
-
-//        favoriteItemAdapter = new FavoriteItemAdapter(favoviteModelList);
-//        favorite_recyclerView_home.setAdapter(favoriteItemAdapter);
-// ô chuyển đâu rồi
         card_vegetable_home.setOnClickListener(view1 -> {
             fragmentManager.beginTransaction().replace(R.id.frame_Home, new VegetableFragment(),null).addToBackStack(null).commit();
 
@@ -179,7 +143,6 @@ public class HomePageFragment extends Fragment {
                         }else {productTopListFood.add(top);
                         }
                     }
-                    childFavoriteAdapter.notifyDataSetChanged();
                     getProduct();
 
                 }
