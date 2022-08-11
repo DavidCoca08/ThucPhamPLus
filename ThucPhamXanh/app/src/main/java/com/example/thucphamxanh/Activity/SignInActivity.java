@@ -242,6 +242,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
     public List<Partner> getAllPartner(){
         ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Vui lòng đợi ...");
+        progressDialog.setCanceledOnTouchOutside(false);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Partner");
         List<Partner> list1 = new ArrayList<>();
@@ -249,6 +251,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                progressDialog.dismiss();
                 list1.clear();
                 for (DataSnapshot snap : snapshot.getChildren()){
                     Partner partner = snap.getValue(Partner.class);
