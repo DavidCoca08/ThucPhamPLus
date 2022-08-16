@@ -1,4 +1,4 @@
-package com.example.thucphamxanh.Activity;
+package com.example.thucphamxanh2.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,12 +18,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.view.View;
 
-import com.example.thucphamxanh.Adapter.CartAdapter;
-import com.example.thucphamxanh.Model.Bill;
-import com.example.thucphamxanh.Model.Cart;
-import com.example.thucphamxanh.Model.ProductTop;
-import com.example.thucphamxanh.Model.Voucher;
-import com.example.thucphamxanh.R;
+import com.example.thucphamxanh2.Adapter.CartAdapter;
+import com.example.thucphamxanh2.Model.Bill;
+import com.example.thucphamxanh2.Model.Cart;
+import com.example.thucphamxanh2.Model.ProductTop;
+import com.example.thucphamxanh2.Model.Voucher;
+import com.example.thucphamxanh2.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,7 +48,7 @@ public class CartActivity extends AppCompatActivity {
     private List<Bill> listBill;
     private Spinner spinner;
     private List<Voucher> listVoucher = new ArrayList<>();
-    private String[] arr = {"","Giảm 50%","Giảm 30%", "Giảm 20%"};
+    private String[] arr = {"Không có ưu đãi","Giảm 50%","Giảm 30%", "Giảm 20%"};
     private NumberFormat numberFormat = new DecimalFormat("#,##0");
     private String voucher;
     @Override
@@ -124,20 +124,20 @@ public class CartActivity extends AppCompatActivity {
 
     }
     public  List<Cart> getCartProduct(){
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Vui lòng đợi ...");
-        progressDialog.setCanceledOnTouchOutside(false);
+//        ProgressDialog progressDialog = new ProgressDialog(this);
+//        progressDialog.setMessage("Vui lòng đợi ...");
+//        progressDialog.setCanceledOnTouchOutside(false);
 
         SharedPreferences preferences = getSharedPreferences("My_User",MODE_PRIVATE);
         String user = preferences.getString("username","");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Cart");
         List<Cart> list1 = new ArrayList<>();
-        progressDialog.show();
+//        progressDialog.show();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Cart cart = snap.getValue(Cart.class);
