@@ -110,7 +110,7 @@ public class HomePageFragment extends Fragment {
             onClickItemCart(listMeat,rv_MeatTop_Home);
         });
         card_Top_Food.setOnClickListener(view1 -> {
-            Log.d("erewerwe","aaaaaaaaaaaa");
+
             onClickItemCart(listFood,rv_FoodTop_Home);
 
         });

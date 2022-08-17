@@ -46,7 +46,7 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void skip(View view){
-        startActivity(new Intent(getApplicationContext(),SignInActivity.class));
+        startActivity(new Intent(getApplicationContext(),MainActivity.class));
         finish();
     }
 

@@ -442,11 +442,13 @@ public class MainActivity extends AppCompatActivity{
                     Bill bill = snap.getValue(Bill.class);
                     if (user.equals(bill.getIdPartner()) && bill.getStatus().equals("No")) {
                         listBill.add(bill);
+                    }else if (user.equals(bill.getIdClient()) && bill.getStatus().equals("No")){
+                        listBill.add(bill);
                     }
                 }
                 SharedPreferences preferences1 = getSharedPreferences("Number",MODE_PRIVATE);
                 int number = Integer.parseInt(preferences1.getString("number",""));
-                if (listBill.size()>number){
+                if (listBill.size()>number ){
                     notification();
                     SharedPreferences.Editor editor = preferences1.edit();
                     editor.putString("number", String.valueOf(listBill.size()));
