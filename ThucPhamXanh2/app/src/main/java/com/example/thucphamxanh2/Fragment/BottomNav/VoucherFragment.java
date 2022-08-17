@@ -84,7 +84,6 @@ public class VoucherFragment extends Fragment {
         if (role.equals("admin")){
             fab_addVoucher.setVisibility(View.VISIBLE);
         }
-
         fab_addVoucher.setOnClickListener(view1 -> {
             openDialog();
         });
@@ -115,10 +114,7 @@ public class VoucherFragment extends Fragment {
         builder.setView(view);
         AlertDialog dialog = builder.create();
         dialog.show();
-
-
         code_voucher_dialog = dialog.findViewById(R.id.code_voucher_dialog);
-        double_code_voucher = dialog.findViewById(R.id.double_code_voucher);
         btnSave_voucher_dialog = dialog.findViewById(R.id.btnSave_voucher_dialog);
         img_addImageCamera_voucher = dialog.findViewById(R.id.img_addImageCamera_voucher);
         imgVoucher_dialog = dialog.findViewById(R.id.imgVoucher_dialog);
@@ -178,25 +174,24 @@ public class VoucherFragment extends Fragment {
     }
 
     public void getValueVoucher(){
-        Bitmap bitmap = ((BitmapDrawable)imgVoucher_dialog.getDrawable()).getBitmap();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
-        byte[] imgByte = outputStream.toByteArray();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            imgVoucher = Base64.getEncoder().encodeToString(imgByte);
+        try {
+            Bitmap bitmap = ((BitmapDrawable)imgVoucher_dialog.getDrawable()).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+            byte[] imgByte = outputStream.toByteArray();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                imgVoucher = Base64.getEncoder().encodeToString(imgByte);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
         codeVoucher = code_voucher_dialog.getText().toString();
-
-        doubleCodeVoucher = Double.valueOf(double_code_voucher.getText().toString());
-        Log.d("aaaaaa", String.valueOf(double_code_voucher));
     }
 
     public void setDataVoucher(){
         Voucher voucher = new Voucher();
         voucher.setImgVoucher(imgVoucher);
         voucher.setCodeVoucher(codeVoucher);
-        voucher.setCodeVoucher_double(doubleCodeVoucher);
         addVoucher(voucher);
     }
 
@@ -250,19 +245,27 @@ public class VoucherFragment extends Fragment {
         if (str.isEmpty()){
             edt.setError("Không được để trống");
             return false;
-        }else edt.setError("");
+        }else edt.setError(null);
         return true;
     }
+    public boolean errorImg(String str){
+        if (str != null){
+            return true;
+        }else {
+            Toast.makeText(getContext(), "Ảnh không được để trống", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
     public void validate(){
-        if (isEmptys(codeVoucher,code_voucher_dialog) && !imgVoucher.isEmpty() ){
+        if (isEmptys(codeVoucher,code_voucher_dialog)  && errorImg(imgVoucher) ){
             setDataVoucher();
             removeAll();
         }
     }
 
     private void removeAll() {
-        code_voucher_dialog.setText("");
-        double_code_voucher.setText("");
+        code_voucher_dialog.setText(null);
+        double_code_voucher.setText(null);
         imgVoucher_dialog.setImageResource(R.drawable.ic_menu_camera1);
     }
     public void requestPermissionCamera(){

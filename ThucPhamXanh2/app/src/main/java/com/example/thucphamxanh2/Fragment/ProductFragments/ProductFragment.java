@@ -317,7 +317,7 @@ public class ProductFragment extends Fragment {
             til.setError("Không được để trống");
             Log.d("ProductFragment","lỗi");
             return false;
-        }else til.setError("");
+        }else til.setError(null);
         return true;
     }
     public boolean errorImg(String str, TextView tv){
