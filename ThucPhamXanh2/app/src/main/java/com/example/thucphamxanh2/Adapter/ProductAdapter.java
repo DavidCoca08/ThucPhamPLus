@@ -198,6 +198,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
 
     }
     public  List<Cart> getAllCart(){
+        SharedPreferences preferences = context.getSharedPreferences("My_User",context.MODE_PRIVATE);
+        String user = preferences.getString("username","");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Cart");
         List<Cart> list1 = new ArrayList<>();
@@ -207,7 +209,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.viewHold
                 list1.clear();
                 for(DataSnapshot snap : snapshot.getChildren()){
                     Cart cart = snap.getValue(Cart.class);
-                    list1.add(cart);
+                    if(cart!=null){
+                        if (cart.getUserClient().equals(user)){
+                            list1.add(cart);
+
+                        }
+                    }
                 }
 
             }
