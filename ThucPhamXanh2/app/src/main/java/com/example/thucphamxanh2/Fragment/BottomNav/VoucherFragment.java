@@ -265,7 +265,6 @@ public class VoucherFragment extends Fragment {
 
     private void removeAll() {
         code_voucher_dialog.setText(null);
-        double_code_voucher.setText(null);
         imgVoucher_dialog.setImageResource(R.drawable.ic_menu_camera1);
     }
     public void requestPermissionCamera(){
