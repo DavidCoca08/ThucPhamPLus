@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.thucphamxanh2.Adapter.ProductAdapter;
 import com.example.thucphamxanh2.Fragment.ProductFragments.FruitFragment;
@@ -55,6 +56,8 @@ public class HomePageFragment extends Fragment {
     CardView card_Top_Vegetable,card_Top_Fruit,card_Top_Meat,card_Top_Food;
 
     RecyclerView rv_VegetableTop_Home,rv_FruitTop_Home,rv_MeatTop_Home,rv_FoodTop_Home;
+
+    ImageView arrow1,arrow2,arrow3,arrow4;
     private ProductFragment fragment = new ProductFragment();
 
 
@@ -68,6 +71,11 @@ public class HomePageFragment extends Fragment {
         getProduct();
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        arrow1 = view.findViewById(R.id.arrow1);
+        arrow2 = view.findViewById(R.id.arrow2);
+        arrow3 = view.findViewById(R.id.arrow3);
+        arrow4 = view.findViewById(R.id.arrow4);
 
         card_vegetable_home = view.findViewById(R.id.card_vegetable_home);
         card_fruit_home = view.findViewById(R.id.card_fruit_home);
@@ -114,7 +122,6 @@ public class HomePageFragment extends Fragment {
             onClickItemCart(listFood,rv_FoodTop_Home);
 
         });
-
 
 
         return view;
@@ -224,6 +231,10 @@ public void add(List<ProductTop> listTop, List<Product> listProduct ,List<Produc
 
     public void onClickItemCart(List<Product> list,RecyclerView recyclerView){
         if (recyclerView.getVisibility() == View.GONE){
+            arrow1.setImageResource(R.drawable.ic_arrow_drop_down);
+            arrow2.setImageResource(R.drawable.ic_arrow_drop_down);
+            arrow3.setImageResource(R.drawable.ic_arrow_drop_down);
+            arrow4.setImageResource(R.drawable.ic_arrow_drop_down);
             recyclerView.setVisibility(View.VISIBLE);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             adapter = new ProductAdapter(list,fragment,getContext());
@@ -232,6 +243,10 @@ public void add(List<ProductTop> listTop, List<Product> listProduct ,List<Produc
         }
         else {
             recyclerView.setVisibility(View.GONE);
+            arrow1.setImageResource(R.drawable.ic_arrow_drop_up);
+            arrow2.setImageResource(R.drawable.ic_arrow_drop_up);
+            arrow3.setImageResource(R.drawable.ic_arrow_drop_up);
+            arrow4.setImageResource(R.drawable.ic_arrow_drop_up);
         }
     }
 

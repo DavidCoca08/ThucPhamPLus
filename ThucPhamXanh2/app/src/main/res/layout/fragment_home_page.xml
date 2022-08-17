@@ -165,20 +165,21 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="330dp"
                                 android:layout_height="wrap_content"
                                 android:textStyle="bold"
                                 android:textSize="20dp"
                                 android:textColor="@color/white"
                                 android:text="Những loại rau củ mua nhiều nhất"/>
                             <ImageView
+                                android:id="@+id/arrow1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="#F1EAEA"
                                 android:layout_marginTop="5dp"
-                                android:layout_marginLeft="45dp"
+                                android:src="@drawable/ic_arrow_drop_up"
                                 android:visibility="visible"
-                                android:background="@drawable/ic_arrow_drop_up"/>
+                                />
                         </LinearLayout>
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_VegetableTop_Home"
@@ -206,20 +207,20 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="330dp"
                                 android:layout_height="wrap_content"
                                 android:textStyle="bold"
                                 android:textSize="20dp"
                                 android:textColor="@color/white"
                                 android:text="Những loại hoa quả mua nhiều nhất"/>
                             <ImageView
+                                android:id="@+id/arrow2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="#F1EAEA"
                                 android:layout_marginTop="5dp"
-                                android:layout_marginLeft="28dp"
                                 android:visibility="visible"
-                                android:background="@drawable/ic_arrow_drop_up"/>
+                                android:src="@drawable/ic_arrow_drop_up"/>
                         </LinearLayout>
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_FruitTop_Home"
@@ -286,19 +287,19 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="330dp"
                                 android:layout_height="wrap_content"
                                 android:textStyle="bold"
                                 android:textSize="20dp"
                                 android:textColor="@color/white"
                                 android:text="Những loại thịt mua nhiều nhất"/>
                             <ImageView
+                                android:id="@+id/arrow3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="#F1EAEA"
                                 android:layout_marginTop="5dp"
-                                android:layout_marginLeft="65dp"
-                                android:background="@drawable/ic_arrow_drop_up"/>
+                                android:src="@drawable/ic_arrow_drop_up"/>
                         </LinearLayout>
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_MeatTop_Home"
@@ -325,19 +326,19 @@
                             android:layout_height="match_parent"
                             android:orientation="horizontal">
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="330dp"
                                 android:layout_height="wrap_content"
                                 android:textStyle="bold"
                                 android:textSize="20dp"
                                 android:textColor="@color/white"
                                 android:text="Những loại đồ ăn mua nhiều nhất"/>
                             <ImageView
+                                android:id="@+id/arrow4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="#F1EAEA"
                                 android:layout_marginTop="5dp"
-                                android:layout_marginLeft="45dp"
-                                android:background="@drawable/ic_arrow_drop_up"/>
+                                android:src="@drawable/ic_arrow_drop_up"/>
                         </LinearLayout>
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rv_FoodTop_Home"
